@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="text-3xl font-bold text-gray-900 mb-6">{{ _('Patient Dashboard') }}</h1>
+
+<!-- Top Section: Booking and Active Appointments -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <!-- Appointment Booking Form -->
+    <div class="bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-xl font-semibold mb-4">{{ _('Request a New Appointment') }}</h2>
+        <a href="{{ url_for('doctors') }}" class="inline-block mb-4 text-blue-600 hover:underline">
+            → Or, browse our full list of doctors first
+        </a>
+
+        <!-- Search Form -->
+        <form method="GET" action="{{ url_for('patient_dashboard') }}" class="mb-6 flex">
+            <input type="search" name="search" placeholder="Search by name or speciality..." class="w-full px-3 py-2 border border-gray-300 rounded-l-md" value="{{ search_query or '' }}">
+            <button type="submit" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-r-md">Search</button>
+        </form>
+
+        <!-- Main Booking Form -->
+        <form action="" method="post" novalidate>
+            {{ form.hidden_tag() }}
+            
+            <!-- Doctor Selection List (Corrected) -->
+            <div class="space-y-4 max-h-60 overflow-y-auto border p-4 rounded-md mb-4">
+                <label class="block text-sm font-medium text-gray-700">{{ form.doctor_id.label }}</label>
+                
+                {% for subfield in form.doctor_id %}
+                    {% set doctor = doctors|selectattr('id', 'equalto', subfield.data)|first %}
+                    {% if doctor %}
+                        <label for="{{ subfield.id }}" class="flex p-3 rounded-md hover:bg-gray-50 border cursor-pointer">
+                            {{ subfield(class="mt-1 flex-shrink-0") }}
+                            <div class="ml-3">
+                                <p class="font-bold text-gray-800">Dr. {{ doctor.username }}</p>
+                                <p class="text-sm text-gray-600">{{ doctor.speciality or 'No speciality listed' }}</p>
+                                <p class="text-xs text-gray-500">{{ doctor.experience_years or 'N/A' }} years of experience</p>
+                            </div>
+                        </label>
+                    {% endif %}
+                {% else %}
+                    <p class="text-gray-600">No doctors found matching your search.</p>
+                {% endfor %}
+            </div>
+            {% for error in form.doctor_id.errors %}
+                <span class="text-red-500 text-sm">{{ error }}</span>
+            {% endfor %}
+
+            <!-- Other Form Fields -->
+            <div class="space-y-4 mt-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">{{ form.appointment_time.label }}</label>
+                    {{ form.appointment_time(class="w-full px-3 py-2 border border-gray-300 rounded-md") }}
+                    {% for error in form.appointment_time.errors %}
+                        <span class="text-red-500 text-sm">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">{{ form.notes.label }}</label>
+                    {{ form.notes(rows=3, class="w-full px-3 py-2 border border-gray-300 rounded-md") }}
+                </div>
+                <div>
+                    {{ form.submit(class="w-full flex justify-center py-2 px-4 border rounded-md text-white bg-blue-600 hover:bg-blue-700") }}
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Your Scheduled (Active) Appointments -->
+    <div class="bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-xl font-semibold mb-4">{{ _('Your Scheduled Appointments') }}</h2>
+        {% if appointments %}
+        <ul class="divide-y divide-gray-200">
+            {% for appt in appointments %}
+            <li class="py-4 space-y-2">
+                <p><strong>{{ _('Doctor') }}:</strong> Dr. {{ appt.doctor.username }}</p>
+                <p><strong>{{ _('Time') }}:</strong> {{ appt.appointment_time.strftime('%Y-%m-%d %H:%M') }}</p>
+                <p><strong>{{ _('Status') }}:</strong> <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                    {% if appt.status == 'confirmed' %} bg-green-100 text-green-800 
+                    {% elif appt.status == 'pending' %} bg-yellow-100 text-yellow-800 
+                    {% elif appt.status == 'declined' %} bg-red-100 text-red-800 
+                    {% else %} bg-gray-100 text-gray-800 
+                    {% endif %}">
+                    {{ appt.status }}
+                </span></p>
+
+                {% if appt.status == 'confirmed' %}
+                <div class="pt-2">
+                    <a href="{{ url_for('consultation', appointment_id=appt.id) }}" class="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        {{ _('Join Consultation') }}
+                    </a>
+                </div>
+                {% elif appt.status == 'declined' %}
+                <p class="text-red-600 text-sm pt-2">{{ _('This appointment was declined. Please book another.') }}</p>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>{{ _('You have no scheduled appointments.') }}</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Bottom Section: Follow-ups from Completed Appointments -->
+<div class="mt-12">
+    <h2 class="text-2xl font-bold text-gray-800 mb-4">{{ _('Care Plans & Follow-Ups') }}</h2>
+    {% if completed_appointments %}
+        {% for appt in completed_appointments %}
+            <div class="bg-white shadow-md rounded-lg p-6 mb-4">
+                <h3 class="text-lg font-semibold border-b pb-2 mb-4">{{ _('Follow-up from your appointment on') }} {{ appt.appointment_time.strftime('%b %d, %Y') }} {{ _('with') }} Dr. {{ appt.doctor.username }}</h3>
+                
+                <div class="space-y-6">
+                    <!-- Custom Notes Section -->
+                    {% if appt.custom_follow_up_notes %}
+                    <div>
+                        <h4 class="font-semibold text-gray-700">{{ _('Doctor\'s Notes:') }}</h4>
+                        <p class="mt-1 text-gray-600 whitespace-pre-wrap">{{ appt.custom_follow_up_notes }}</p>
+                    </div>
+                    {% endif %}
+
+                    <!-- Recommended Articles Section -->
+                    {% if appt.recommended_articles.all() %}
+                    <div>
+                        <h4 class="font-semibold text-gray-700">{{ _('Recommended Reading:') }}</h4>
+                        <ul class="list-disc list-inside mt-1 space-y-1">
+                            {% for rec in appt.recommended_articles %}
+                                <li><a href="{{ url_for('view_article', article_id=rec.article.id) }}" class="text-blue-600 hover:underline">{{ rec.article.title }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+
+                    <!-- Document Download Section -->
+                    {% if appt.uploaded_document_filename %}
+                    <div>
+                        <h4 class="font-semibold text-gray-700">{{ _('Attached Document:') }}</h4>
+                        <a href="{{ url_for('download_document', appointment_id=appt.id) }}" class="mt-1 inline-block bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-3 rounded text-sm">
+                            ↓ Download {{ appt.uploaded_document_filename }}
+                        </a>
+                    </div>
+                    {% endif %}
+
+                    <!-- YouTube Video Section -->
+                    {% if appt.youtube_video_url %}
+                    <div>
+                        <h4 class="font-semibold text-gray-700">{{ _('Recommended Video:') }}</h4>
+                        <div class="aspect-w-16 aspect-h-9 mt-2">
+                            <iframe src="https://www.youtube.com/embed/{{ appt.youtube_video_url | youtube_id }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="rounded-lg shadow-md w-full h-full"></iframe>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- No Follow-ups Message -->
+                    {% if not appt.custom_follow_up_notes and not appt.recommended_articles.all() and not appt.uploaded_document_filename and not appt.youtube_video_url %}
+                        <p class="text-gray-600">{{ _('No specific follow-up instructions were provided for this appointment.') }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        	    <!-- NEW REVIEW BUTTON LOGIC -->
+        	    <div class="border-t pt-4 mt-4">
+            		{% if appt.review %}
+                	    <p class="text-sm text-green-600">✓ You have already reviewed this appointment.</p>
+            		{% else %}
+                	    <a href="{{ url_for('leave_review', appointment_id=appt.id) }}" class="inline-block bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded">
+                    		Leave a Review
+                	    </a>
+            		{% endif %}
+        	     </div>
+    		   </div>
+		</div>
+        {% endfor %}
+    {% else %}
+        <div class="bg-white shadow-md rounded-lg p-6">
+            <p>{{ _('You have no completed care plans yet.') }}</p>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

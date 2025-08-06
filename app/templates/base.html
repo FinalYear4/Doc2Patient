@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} - Doc2Patient</title>
+    
+    <!-- Favicon Links -->
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='logo.svg') }}">
+    <link rel="alternate icon" href="{{ url_for('static', filename='logo.png') }}">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- === NEW CSS FOR BACKGROUND === -->
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* A fallback color */
+        }
+        #background-slider { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            z-index: -2; 
+            background-size: cover; 
+            background-position: center; 
+            transition: background-image 1.2s ease-in-out; 
+        }
+        .overlay { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background-color: rgba(243, 244, 246, 0.8); /* A light, semi-transparent overlay */
+            backdrop-filter: blur(5px); /* Frosted glass effect */
+            z-index: -1; 
+        }
+    </style>
+    <!-- ============================ -->
+
+</head>
+<body class="min-h-screen">
+
+    <!-- === NEW BACKGROUND AND OVERLAY DIVS === -->
+    <div id="background-slider"></div>
+    <div class="overlay"></div>
+    <!-- ======================================= -->
+
+    <div class="relative z-10">
+        <nav class="bg-white shadow-md">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <div class="flex-shrink-0">
+                        <a href="{{ url_for('index') if current_user.is_authenticated else url_for('landing') }}" class="flex items-center space-x-3">
+                            <img src="{{ url_for('static', filename='logo.png') }}" alt="Doc2Patient Logo" class="h-8">
+                            <span class="text-xl font-bold text-blue-600">Doc2Patient</span>
+                        </a>
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            {% if current_user.is_anonymous %}
+                                <a href="{{ url_for('login') }}" class="text-gray-700 hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium">Login</a>
+                                <a href="{{ url_for('register') }}" class="text-gray-700 hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium">Register</a>
+                            {% else %}
+                                <a href="{{ url_for('index') }}" class="text-gray-700 hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
+                                {% if current_user.role == 'patient' %}
+                                <a href="{{ url_for('my_vitals') }}" class="text-gray-700 hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium">My Vitals</a>
+                                {% endif %}
+                                <a href="{{ url_for('health_library') }}" class="text-gray-700 hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium">Health Library</a>
+                                <a href="{{ url_for('profile') }}" class="text-gray-700 hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium">Profile</a>
+                                <a href="{{ url_for('logout') }}" class="text-gray-700 hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium">Logout</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <main>
+            <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+                <!-- Flash messages -->
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                        <div class="p-4 mb-4 text-sm rounded-lg
+                            {% if category == 'success' %} bg-green-100 text-green-700
+                            {% elif category == 'danger' %} bg-red-100 text-red-700
+                            {% else %} bg-yellow-100 text-yellow-700 {% endif %}" role="alert">
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+                </div>
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+
+    <!-- === NEW JAVASCRIPT FOR BACKGROUND === -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const slider = document.getElementById('background-slider');
+            if (slider) {
+                const images = [
+                    "{{ url_for('static', filename='images/bg1.jpg') }}",
+                    "{{ url_for('static', filename='images/bg2.jpg') }}",
+                    "{{ url_for('static', filename='images/bg3.jpg') }}"
+                ];
+                let currentImageIndex = 0;
+                function changeBackgroundImage() {
+                    slider.style.backgroundImage = `url('${images[currentImageIndex]}')`;
+                    currentImageIndex = (currentImageIndex + 1) % images.length;
+                }
+                changeBackgroundImage();
+                setInterval(changeBackgroundImage, 5000);
+            }
+        });
+    </script>
+    <!-- =================================== -->
+</body>
+</html>

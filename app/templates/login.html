@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="flex items-center justify-center">
+    <div class="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
+        <h2 class="text-2xl font-bold text-center text-gray-900">Sign in to your account</h2>
+        <form class="space-y-6" action="" method="post" novalidate>
+            {{ form.hidden_tag() }}
+            <div>
+                <label for="username" class="block text-sm font-medium text-gray-700">{{ form.username.label }}</label>
+                <div class="mt-1">
+                    {{ form.username(class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500", size=32) }}
+                    {% for error in form.username.errors %}
+                    <span class="text-red-500 text-sm">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-700">{{ form.password.label }}</label>
+                <div class="mt-1">
+                    {{ form.password(class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500", size=32) }}
+                    {% for error in form.password.errors %}
+                    <span class="text-red-500 text-sm">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    {{ form.remember_me() }}
+                    <label for="remember_me" class="ml-2 block text-sm text-gray-900">{{ form.remember_me.label }}</label>
+                </div>
+                <div class="text-sm">
+                    <a href="{{ url_for('reset_password_request') }}" class="font-medium text-blue-600 hover:text-blue-500">
+                        Forgot your password?
+                    </a>
+                </div>
+            </div>
+            <div>
+                {{ form.submit(class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500") }}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

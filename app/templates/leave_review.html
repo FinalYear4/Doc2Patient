@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="text-3xl font-bold text-gray-900 mb-2">Leave a Review</h1>
+<p class="text-gray-600 mb-6">For your appointment with Dr. {{ appointment.doctor.username }}</p>
+
+<div class="bg-white p-8 rounded-lg shadow-md max-w-2xl mx-auto">
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <div class="space-y-6">
+            <!-- Star Rating -->
+            <div>
+    		<label class="block text-sm font-medium text-gray-700">{{ form.rating.label }}</label>
+    		<div class="mt-2 flex items-center space-x-2">
+        	    {% for subfield in form.rating %}
+            		<label for="{{ subfield.id }}" class="flex items-center justify-center w-12 h-12 border rounded-full cursor-pointer transition-colors duration-200 
+                	    has-[:checked]:bg-blue-600 has-[:checked]:text-white has-[:checked]:border-blue-600
+                	    hover:bg-blue-100 hover:border-blue-300">
+                	    {{ subfield(class="hidden") }}
+                	    <span class="text-lg font-semibold">{{ subfield.label.text }}</span>
+            		</label>
+        	    {% endfor %}
+    		   </div>
+		</div>
+            <!-- Testimonial -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700">{{ form.testimonial.label }}</label>
+                {{ form.testimonial(rows=4, class="w-full mt-1 p-2 border border-gray-300 rounded-md shadow-sm") }}
+            </div>
+            <!-- Featured Checkbox -->
+            <div class="flex items-center">
+                {{ form.is_featured(class="h-4 w-4 text-blue-600 border-gray-300 rounded") }}
+                <label for="is_featured" class="ml-2 block text-sm text-gray-900">{{ form.is_featured.label }}</label>
+            </div>
+            <!-- Submit -->
+            <div>
+                {{ form.submit(class="w-full flex justify-center py-2 px-4 border rounded-md text-white bg-blue-600 hover:bg-blue-700") }}
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

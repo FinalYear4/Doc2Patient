@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="bg-white p-8 rounded-lg shadow-md max-w-4xl mx-auto">
+    <!-- Article Header -->
+    <div class="mb-8 text-center">
+        <p class="text-blue-600 font-semibold">{{ article.category | trans }}</p>
+        <h1 class="text-4xl font-extrabold text-gray-900 mt-2">{{ article.title | trans }}</h1>
+    </div>
+    
+    <!-- Author Bio Box -->
+    <div class="flex items-center bg-gray-50 p-4 rounded-lg mb-8 border">
+        <img class="rounded-full h-16 w-16 object-cover" src="{{ url_for('static', filename='profile_pics/' + article.author.image_file) }}" alt="Author profile picture">
+        <div class="ml-4">
+            <p class="text-lg font-bold text-gray-800">Dr. {{ article.author.username }}</p>
+            <p class="text-sm text-gray-600">{{ article.author.speciality or 'Medical Professional' }}</p>
+        </div>
+    </div>
+
+    <!-- Article Content -->
+    <div class="prose lg:prose-xl max-w-none">
+        {{ article.content | trans | markdown | safe }}
+    </div>
+
+    <a href="{{ url_for('health_library') }}" class="mt-8 inline-block text-blue-600 hover:underline">← Back to Library</a>
+</div>
+{% endblock %}

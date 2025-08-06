@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    /* Custom CSS for the BMI Gauge */
+    .gauge { width: 100%; max-width: 250px; }
+    .gauge__body { width: 100%; height: 0; padding-bottom: 50%; background: #e0e0e0; position: relative; border-top-left-radius: 100% 200%; border-top-right-radius: 100% 200%; overflow: hidden; }
+    .gauge__fill { position: absolute; top: 100%; left: 0; width: inherit; height: 100%; background: #009578; transform-origin: center top; transform: rotate(0.25turn); transition: transform 0.8s ease-out; }
+    .gauge__cover { width: 75%; height: 150%; background: #ffffff; border-radius: 50%; position: absolute; top: 25%; left: 50%; transform: translateX(-50%); }
+    .gauge__value { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -10%); font-size: 2.5rem; font-weight: bold; }
+    .gauge__category { position: absolute; top: 65%; left: 50%; transform: translateX(-50%); font-size: 1rem; font-weight: 500; }
+</style>
+
+<h1 class="text-3xl font-bold text-gray-900 mb-6">{{ _('My Vitals Health Dashboard') }}</h1>
+
+<!-- Health Overview Section -->
+{% if analysis %}
+<div class="mb-8 bg-white p-6 rounded-lg shadow-md">
+    <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">Your Latest Health Overview</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- BMI Gauge -->
+        <div class="md:col-span-1 flex flex-col items-center">
+            <h3 class="font-semibold text-lg text-gray-700">Body Mass Index (BMI)</h3>
+            {% if analysis.bmi %}
+            <div class="gauge mt-4">
+                <div class="gauge__body">
+                    <div class="gauge__fill"></div>
+                    <div class="gauge__cover">
+                        <div class="gauge__value">{{ analysis.bmi.value }}</div>
+                        <div class="gauge__category 
+                            {% if analysis.bmi.color == 'green' %} text-green-600 
+                            {% elif analysis.bmi.color == 'yellow' %} text-yellow-600
+                            {% elif analysis.bmi.color == 'red' %} text-red-600
+                            {% else %} text-blue-600 {% endif %}">
+                            {{ analysis.bmi.category }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <p class="mt-4 text-gray-500">Log your height and weight to calculate your BMI.</p>
+            {% endif %}
+        </div>
+        <!-- Vitals Alerts -->
+        <div class="md:col-span-2">
+            <h3 class="font-semibold text-lg text-gray-700">Vitals Alerts</h3>
+            <div class="mt-4 space-y-3">
+                {% for vital in analysis.vitals %}
+                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-md">
+                    <span class="font-medium text-gray-600">{{ vital.name }}</span>
+                    <div class="flex items-center">
+                        <span class="font-bold text-gray-800 text-lg">{{ vital.value }}</span>
+                        <span class="ml-4 px-2 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full 
+                            {% if vital.color == 'green' %} bg-green-100 text-green-800 
+                            {% elif vital.color == 'yellow' %} bg-yellow-100 text-yellow-800
+                            {% elif vital.color == 'red' %} bg-red-100 text-red-800
+                            {% else %} bg-blue-100 text-blue-800 {% endif %}">
+                            {{ vital.status }}
+                        </span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <!-- Health Advice -->
+    {% if analysis.bmi and analysis.bmi.advice %}
+    <div class="mt-6 p-4 rounded-md flex items-start
+        {% if analysis.bmi.color == 'green' %} bg-green-50 
+        {% elif analysis.bmi.color == 'yellow' %} bg-yellow-50
+        {% elif analysis.bmi.color == 'red' %} bg-red-50
+        {% else %} bg-blue-50 {% endif %}">
+        <div class="flex-shrink-0">
+            <svg class="h-6 w-6 
+                {% if analysis.bmi.color == 'green' %} text-green-500 
+                {% elif analysis.bmi.color == 'yellow' %} text-yellow-500
+                {% elif analysis.bmi.color == 'red' %} text-red-500
+                {% else %} text-blue-500 {% endif %}" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" /></svg>
+        </div>
+        <div class="ml-3">
+            <h3 class="text-sm font-medium 
+                {% if analysis.bmi.color == 'green' %} text-green-800 
+                {% elif analysis.bmi.color == 'yellow' %} text-yellow-800
+                {% elif analysis.bmi.color == 'red' %} text-red-800
+                {% else %} text-blue-800 {% endif %}">
+                Health Advice based on your BMI
+            </h3>
+            <div class="mt-2 text-sm 
+                {% if analysis.bmi.color == 'green' %} text-green-700 
+                {% elif analysis.bmi.color == 'yellow' %} text-yellow-700
+                {% elif analysis.bmi.color == 'red' %} text-red-700
+                {% else %} text-blue-700 {% endif %}">
+                <p>{{ analysis.bmi.advice }}</p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Vitals Entry Form -->
+    <div class="lg:col-span-1">
+        <form method="POST" class="bg-white p-6 rounded-lg shadow-md space-y-4">
+            <h2 class="text-xl font-semibold mb-4">{{ _('Add New Vitals Reading') }}</h2>
+            {{ form.hidden_tag() }}
+            
+            {% for field in form if field.type != 'SubmitField' and field.type != 'CSRFTokenField' %}
+            <div>
+                <label for="{{ field.id }}" class="block text-sm font-medium text-gray-700">{{ field.label.text }}</label>
+                {{ field(class="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm") }}
+            </div>
+            {% endfor %}
+
+            {{ form.submit(class="w-full mt-4 flex justify-center py-2 px-4 border rounded-md text-white bg-blue-600 hover:bg-blue-700") }}
+        </form>
+    </div>
+
+    <!-- Vitals History -->
+    <div class="lg:col-span-2">
+        <h2 class="text-xl font-semibold mb-4">{{ _('Your Vitals History') }}</h2>
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            {% if vitals_history %}
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Height</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Weight</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">BP</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">HR</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">SpO2</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for record in vitals_history %}
+                        <tr>
+                            <td class="px-4 py-4 whitespace-nowrap text-sm">{{ record.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+                            <td class="px-4 py-4 whitespace-nowrap text-sm">{{ record.height or '--' }}</td>
+                            <td class="px-4 py-4 whitespace-nowrap text-sm">{{ record.weight or '--' }}</td>
+                            <td class="px-4 py-4 whitespace-nowrap text-sm">{{ record.blood_pressure_systolic or '--' }}/{{ record.blood_pressure_diastolic or '--' }}</td>
+                            <td class="px-4 py-4 whitespace-nowrap text-sm">{{ record.heart_rate or '--' }}</td>
+                            <td class="px-4 py-4 whitespace-nowrap text-sm">{{ record.oxygen_saturation or '--' }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p>{{ _('You have not recorded any vitals yet.') }}</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript to control the BMI Gauge -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const gaugeFill = document.querySelector('.gauge__fill');
+        {% if analysis and analysis.bmi %}
+            const bmi = {{ analysis.bmi.value }};
+            const bmiCategory = "{{ analysis.bmi.category }}";
+            let rotation = 0;
+            if (bmi < 18.5) { rotation = (bmi / 18.5) * 0.125; }
+            else if (bmi < 25) { rotation = 0.125 + ((bmi - 18.5) / 6.5) * 0.125; }
+            else if (bmi < 30) { rotation = 0.25 + ((bmi - 25) / 5) * 0.125; }
+            else { rotation = 0.375 + ((bmi - 30) / 10) * 0.125; }
+            rotation = Math.min(rotation, 0.5); // Cap at 180 degrees
+            
+            let color = '#2563eb'; // Default to blue for Underweight
+            if (bmiCategory === 'Normal') color = '#16a34a'; // Green
+            else if (bmiCategory === 'Overweight') color = '#f59e0b'; // Yellow
+            else if (bmiCategory === 'Obese') color = '#dc2626'; // Red
+
+            gaugeFill.style.transform = `rotate(${rotation}turn)`;
+            gaugeFill.style.background = color;
+        {% endif %}
+    });
+</script>
+{% endblock %}

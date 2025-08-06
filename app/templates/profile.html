@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="text-3xl font-bold text-gray-900 mb-6">{{ _('Edit Profile') }}</h1>
+<div class="flex items-center justify-center">
+    <div class="w-full max-w-lg p-8 space-y-6 bg-white rounded-lg shadow-md">
+        <div class="flex flex-col items-center">
+            <img class="rounded-full h-32 w-32 object-cover" src="{{ image_file }}" alt="Profile Picture">
+            <h2 class="text-2xl font-semibold mt-4">{{ current_user.username }}</h2>
+        </div>
+        
+        <form method="POST" action="" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <div class="space-y-4">
+                <!-- Standard fields for everyone -->
+                <div><label class="block text-sm font-medium text-gray-700">{{ form.username.label }}</label>{{ form.username(class="w-full px-3 py-2 mt-1 border rounded-md") }}</div>
+                <div><label class="block text-sm font-medium text-gray-700">{{ form.email.label }}</label>{{ form.email(class="w-full px-3 py-2 mt-1 border rounded-md") }}</div>
+
+                <!-- Patient-only fields -->
+                {% if current_user.role == 'patient' %}
+                <hr class="my-6">
+                <div><label class="block text-sm font-medium text-gray-700">{{ form.phone_number.label }}</label>{{ form.phone_number(class="w-full px-3 py-2 mt-1 border rounded-md") }}</div>
+                <div><label class="block text-sm font-medium text-gray-700">{{ form.region.label }}</label>{{ form.region(class="w-full px-3 py-2 mt-1 border rounded-md") }}</div>
+                {% endif %}
+
+                <!-- Doctor-only fields -->
+                {% if current_user.role == 'doctor' %}
+                <hr class="my-6">
+                <div><label class="block text-sm font-medium text-gray-700">{{ form.speciality.label }}</label>{{ form.speciality(class="w-full px-3 py-2 mt-1 border rounded-md") }}</div>
+                <div><label class="block text-sm font-medium text-gray-700">{{ form.experience_years.label }}</label>{{ form.experience_years(class="w-full px-3 py-2 mt-1 border rounded-md") }}</div>
+                <div><label class="block text-sm font-medium text-gray-700">{{ form.bio.label }}</label>{{ form.bio(rows=3, class="w-full px-3 py-2 mt-1 border rounded-md") }}</div>
+                {% endif %}
+
+                <!-- Picture upload for everyone -->
+                <hr class="my-6">
+                <div><label class="block text-sm font-medium text-gray-700">{{ form.picture.label }}</label>{{ form.picture(class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100") }}</div>
+
+                <div>{{ form.submit(class="w-full flex justify-center py-2 px-4 border rounded-md text-white bg-blue-600 hover:bg-blue-700") }}</div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto px-6 py-12">
+    <h1 class="text-4xl font-extrabold text-center mb-12 text-gray-800">{{ _('Frequently Asked Questions') }}</h1>
+    
+    <div class="max-w-3xl mx-auto space-y-4">
+        <!-- FAQ Item 1 -->
+        <div class="border rounded-lg bg-white shadow-sm">
+            <button class="faq-question w-full text-left p-4 font-semibold text-lg flex justify-between items-center focus:outline-none">
+                <span>{{ _('Is my data secure?') }}</span>
+                <span class="transform transition-transform duration-300 text-blue-600">+</span>
+            </button>
+            <div class="faq-answer px-4 pb-4 text-gray-600">
+                <p>{{ _('Yes, absolutely. We use industry-standard encryption and security protocols to ensure all your personal and health information is kept confidential and secure.') }}</p>
+            </div>
+        </div>
+        <!-- FAQ Item 2 -->
+        <div class="border rounded-lg bg-white shadow-sm">
+            <button class="faq-question w-full text-left p-4 font-semibold text-lg flex justify-between items-center focus:outline-none">
+                <span>{{ _('What equipment do I need?') }}</span>
+                <span class="transform transition-transform duration-300 text-blue-600">+</span>
+            </button>
+            <div class="faq-answer px-4 pb-4 text-gray-600">
+                <p>{{ _('All you need is a device with an internet connection, a web browser, and a working camera and microphone (like a smartphone, laptop, or tablet). No special software is required.') }}</p>
+            </div>
+        </div>
+        <!-- FAQ Item 3 -->
+        <div class="border rounded-lg bg-white shadow-sm">
+            <button class="faq-question w-full text-left p-4 font-semibold text-lg flex justify-between items-center focus:outline-none">
+                <span>{{ _('Can I get a prescription?') }}</span>
+                <span class="transform transition-transform duration-300 text-blue-600">+</span>
+            </button>
+            <div class="faq-answer px-4 pb-4 text-gray-600">
+                <p>{{ _('Yes. If the doctor determines a prescription is medically necessary, they can upload a secure digital copy for you to download from your dashboard after the consultation.') }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .faq-answer {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease-in-out;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const faqQuestions = document.querySelectorAll('.faq-question');
+        faqQuestions.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('span:last-child');
+
+                // Close all other open FAQs
+                faqQuestions.forEach(otherButton => {
+                    if (otherButton !== button) {
+                        otherButton.nextElementSibling.style.maxHeight = null;
+                        otherButton.querySelector('span:last-child').style.transform = 'rotate(0deg)';
+                    }
+                });
+
+                // Toggle the clicked FAQ
+                if (answer.style.maxHeight) {
+                    answer.style.maxHeight = null;
+                    icon.style.transform = 'rotate(0deg)';
+                } else {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.style.transform = 'rotate(45deg)';
+                } 
+            });
+        });
+    });
+</script>
+{% endblock %}

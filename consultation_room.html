@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="text-3xl font-bold text-gray-900 mb-2">Consultation Room</h1>
+<p class="mb-6">With {% if current_user.role == 'patient' %} Dr. {{ appointment.doctor.username }} {% else %} {{ appointment.patient.username }} {% endif %}</p>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <!-- Chat Interface -->
+    <div class="md:col-span-2 bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-xl font-semibold mb-4">Live Chat</h2>
+        <div id="messages" class="h-96 overflow-y-auto p-4 border rounded-md mb-4 bg-gray-50">
+            <!-- Messages will be injected here by JavaScript -->
+        </div>
+        <form id="message-form" class="flex">
+            <input id="message-input" type="text" placeholder="Type your message..." class="flex-grow px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-r-md hover:bg-blue-700">Send</button>
+        </form>
+    </div>
+
+    <!-- Simulated Telemetry -->
+    <div class="bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-xl font-semibold mb-4">Simulated Vitals</h2>
+        <div class="space-y-4">
+            <div>
+                <strong>Temperature:</strong> <span id="temp-data">--</span> °C
+            </div>
+            <div>
+                <strong>Heart Rate:</strong> <span id="pulse-data">--</span> BPM
+            </div>
+            <div>
+                <strong>Blood Pressure:</strong> <span id="bp-data">--/--</span> mmHg
+            </div>
+        </div>
+        {% if current_user.role == 'patient' %}
+            <button id="send-vitals-btn" class="mt-6 w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
+                Simulate & Send Vitals
+            </button>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Socket.IO client library -->
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const socket = io();
+        const room = "{{ appointment.id }}";
+
+        // 1. Join the room when the page loads
+        socket.on('connect', () => {
+            socket.emit('join', { room: room });
+        });
+
+        // 2. Handle incoming messages
+        socket.on('message', (data) => {
+            const messagesDiv = document.getElementById('messages');
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('mb-2');
+            messageElement.innerHTML = `<strong>${data.username}:</strong> ${data.msg}`;
+            messagesDiv.appendChild(messageElement);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight; // Auto-scroll to bottom
+        });
+
+        // 3. Send a message when the form is submitted
+        document.getElementById('message-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const input = document.getElementById('message-input');
+            const message = input.value;
+            if (message) {
+                socket.emit('message', { room: room, msg: message, username: "{{ current_user.username }}" });
+                input.value = '';
+            }
+        });
+
+        // --- Telemetry Simulation ---
+        const tempDisplay = document.getElementById('temp-data');
+        const pulseDisplay = document.getElementById('pulse-data');
+        const bpDisplay = document.getElementById('bp-data');
+
+        // 4. Handle incoming vitals data
+        socket.on('vitals_update', (data) => {
+            tempDisplay.textContent = data.temperature;
+            pulseDisplay.textContent = data.pulse;
+            bpDisplay.textContent = data.bp;
+            // Optional: add a visual flash to show data updated
+            document.getElementById('vitals-data-container')?.classList.add('flash-update');
+            setTimeout(() => {
+                document.getElementById('vitals-data-container')?.classList.remove('flash-update');
+            }, 500);
+        });
+
+        // 5. Send vitals data (patient only)
+        const sendVitalsBtn = document.getElementById('send-vitals-btn');
+        if (sendVitalsBtn) {
+            sendVitalsBtn.addEventListener('click', () => {
+                const temp = (36.5 + Math.random()).toFixed(1); // Simulate normal to slight fever
+                const pulse = Math.floor(60 + Math.random() * 20); // 60-80 BPM
+                const bp_sys = Math.floor(110 + Math.random() * 10); // 110-120
+                const bp_dia = Math.floor(70 + Math.random() * 10); // 70-80
+                
+                const vitals = {
+                    room: room,
+                    temperature: temp,
+                    pulse: pulse,
+                    bp: `${bp_sys}/${bp_dia}`
+                };
+                socket.emit('send_vitals', vitals);
+                
+                // Display locally for the patient immediately
+                tempDisplay.textContent = vitals.temperature;
+                pulseDisplay.textContent = vitals.pulse;
+                bpDisplay.textContent = vitals.bp;
+            });
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,981 @@
+# French translations for PROJECT.
+# Copyright (C) 2025 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2025-07-21 17:38+0000\n"
+"PO-Revision-Date: 2025-07-18 04:19+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fr\n"
+"Language-Team: fr <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: app/templates/consultation_room.html:4
+msgid "Consultation Room"
+msgstr "Salle de consultation"
+
+#: app/templates/consultation_room.html:37
+msgid "Live Chat"
+msgstr "Discussion en direct"
+
+#: app/templates/consultation_room.html:44
+msgid "Type your message..."
+msgstr "Tapez votre message..."
+
+#: app/templates/consultation_room.html:46
+msgid "Send"
+msgstr "Envoyer"
+
+#: app/templates/consultation_room.html:52
+msgid "Latest Vitals"
+msgstr "Derniers signes vitaux"
+
+#: app/templates/consultation_room.html:55
+msgid "Blood Pressure"
+msgstr "Pression artérielle"
+
+#: app/templates/consultation_room.html:56
+msgid "Heart Rate"
+msgstr "Fréquence cardiaque"
+
+#: app/templates/consultation_room.html:57
+msgid "Temperature"
+msgstr "Température"
+
+#: app/templates/consultation_room.html:58
+msgid "Oxygen (SpO2)"
+msgstr "Oxygène (SpO2)"
+
+#: app/templates/consultation_room.html:59
+msgid "Resp. Rate"
+msgstr "Fréquence respiratoire"
+
+#: app/templates/consultation_room.html:60
+msgid "Blood Sugar"
+msgstr "Glycémie"
+
+#: app/templates/consultation_room.html:61
+msgid "Weight"
+msgstr "Poids"
+
+#: app/templates/consultation_room.html:62
+msgid "Height"
+msgstr "Taille"
+
+#: app/templates/consultation_room.html:66
+msgid "Send My Latest Vitals"
+msgstr "Envoyer mes derniers signes vitaux"
+
+#: app/templates/contact.html:5
+msgid "Research & Devlopment Team"
+msgstr "Équipe de recherche et développement"
+
+#: app/templates/contact.html:12
+msgid "Principal Investigator"
+msgstr "Chercheur principal"
+
+#: app/templates/contact.html:19 app/templates/contact.html:26
+#: app/templates/contact.html:33 app/templates/contact.html:40
+msgid "Co-developer"
+msgstr "Co-développeur"
+
+#: app/templates/doctor_dashboard.html:4
+msgid "Doctor Dashboard"
+msgstr "Tableau de bord du médecin"
+
+#: app/templates/doctor_dashboard.html:6
+msgid "Your Upcoming Appointments"
+msgstr "Vos prochains rendez-vous"
+
+#: app/templates/doctor_dashboard.html:11
+msgid "Patient"
+msgstr "Patient"
+
+#: app/templates/doctor_dashboard.html:12
+#: app/templates/patient_dashboard.html:70
+msgid "Time"
+msgstr "Heure"
+
+#: app/templates/doctor_dashboard.html:13
+#: app/templates/patient_dashboard.html:71
+msgid "Status"
+msgstr "Statut"
+
+#: app/templates/doctor_dashboard.html:17
+msgid "Reason"
+msgstr "Raison"
+
+#: app/templates/doctor_dashboard.html:25
+msgid "Confirm"
+msgstr "Confirmer"
+
+#: app/templates/doctor_dashboard.html:31
+msgid "Decline"
+msgstr "Refuser"
+
+#: app/templates/doctor_dashboard.html:36
+#: app/templates/patient_dashboard.html:84
+msgid "Join Consultation"
+msgstr "Rejoindre la consultation"
+
+#: app/templates/doctor_dashboard.html:45
+msgid "You have no upcoming appointments."
+msgstr "Vous n'avez aucun rendez-vous prévu."
+
+#: app/templates/faq.html:5
+msgid "Frequently Asked Questions"
+msgstr "Questions fréquemment posées"
+
+#: app/templates/faq.html:11
+msgid "Is my data secure?"
+msgstr "Mes données sont-elles sécurisées ?"
+
+#: app/templates/faq.html:15
+msgid ""
+"Yes, absolutely. We use industry-standard encryption and security "
+"protocols to ensure all your personal and health information is kept "
+"confidential and secure."
+msgstr ""
+"Oui, absolument. Nous utilisons un chiffrement de niveau industriel et "
+"des protocoles de sécurité pour garantir la confidentialité et la "
+"sécurité de toutes vos informations personnelles et médicales."
+
+#: app/templates/faq.html:21
+msgid "What equipment do I need?"
+msgstr "De quel équipement ai-je besoin ?"
+
+#: app/templates/faq.html:25
+msgid ""
+"All you need is a device with an internet connection, a web browser, and "
+"a working camera and microphone (like a smartphone, laptop, or tablet). "
+"No special software is required."
+msgstr ""
+"Tout ce dont vous avez besoin est d'un appareil avec une connexion "
+"Internet, un navigateur web, et une caméra et un microphone fonctionnels "
+"(comme un smartphone, un ordinateur portable ou une tablette). Aucun "
+"logiciel spécial n'est requis."
+
+#: app/templates/faq.html:31
+msgid "Can I get a prescription?"
+msgstr "Puis-je obtenir une ordonnance ?"
+
+#: app/templates/faq.html:35
+msgid ""
+"Yes. If the doctor determines a prescription is medically necessary, they"
+" can upload a secure digital copy for you to download from your dashboard"
+" after the consultation."
+msgstr ""
+"Oui. Si le médecin juge qu'une ordonnance est médicalement nécessaire, il"
+" peut téléverser une copie numérique sécurisée que vous pourrez "
+"télécharger depuis votre tableau de bord après la consultation."
+
+#: app/templates/health_library.html:4
+msgid "Health Library"
+msgstr "Bibliothèque de Santé"
+
+#: app/templates/health_library.html:12
+msgid "No articles found in the library."
+msgstr "Aucun article trouvé dans la bibliothèque."
+
+#: app/templates/how_it_works.html:5 app/templates/landing.html:25
+msgid "How It Works"
+msgstr "Comment ça marche"
+
+#: app/templates/how_it_works.html:12
+msgid "Register an Account"
+msgstr "Créer un compte"
+
+#: app/templates/how_it_works.html:13
+msgid "Create your secure account as a patient in a few simple steps."
+msgstr ""
+"Créez votre compte sécurisé en tant que patient en quelques étapes "
+"simples."
+
+#: app/templates/how_it_works.html:18
+msgid "Book an Appointment"
+msgstr "Prendre un rendez-vous"
+
+#: app/templates/how_it_works.html:19
+msgid "Browse available doctors and book a consultation at a time that suits you."
+msgstr ""
+"Consultez les médecins disponibles et prenez rendez-vous à un moment qui "
+"vous convient."
+
+#: app/templates/how_it_works.html:24
+msgid "Join the Consultation"
+msgstr "Rejoindre la consultation"
+
+#: app/templates/how_it_works.html:25
+msgid ""
+"Join the secure video call directly from your dashboard at the scheduled "
+"time."
+msgstr ""
+"Rejoignez l'appel vidéo sécurisé directement depuis votre tableau de bord"
+" à l'heure prévue."
+
+#: app/templates/how_it_works.html:30
+msgid "Receive Follow-Up"
+msgstr "Recevoir un suivi"
+
+#: app/templates/how_it_works.html:31
+msgid ""
+"Get your care plan, notes, and educational materials from your doctor "
+"after the session."
+msgstr ""
+"Recevez votre plan de soins, les notes et les documents éducatifs de "
+"votre médecin après la séance."
+
+#: app/templates/landing.html:6
+msgid "Welcome to Doc2Patient"
+msgstr "Bienvenue sur Doc2Patient"
+
+#: app/templates/landing.html:26
+msgid "FAQ"
+msgstr "FAQ"
+
+#: app/templates/landing.html:27
+msgid "Contact"
+msgstr "Contact"
+
+#: app/templates/landing.html:34
+msgid "Language"
+msgstr "Langue"
+
+#: app/templates/landing.html:47
+msgid "Login"
+msgstr "Connexion"
+
+#: app/templates/landing.html:48
+msgid "Register"
+msgstr "Inscription"
+
+#: app/templates/landing.html:55
+msgid "Better Healthcare, Just a Click Away"
+msgstr "Des soins de santé de qualité à portée de clic"
+
+#: app/templates/landing.html:56
+msgid ""
+"Connecting patients across Ghana with qualified doctors through secure, "
+"real-time video consultations."
+msgstr ""
+"Mettre en relation des patients à travers le Ghana avec des médecins "
+"qualifiés via des consultations vidéo sécurisées en temps réel."
+
+#: app/templates/landing.html:57
+msgid "Get Started Now"
+msgstr "Commencer maintenant"
+
+#: app/templates/landing.html:63
+msgid "Why Choose Doc2Patient?"
+msgstr "Pourquoi choisir Doc2Patient ?"
+
+#: app/templates/landing.html:67
+msgid "Easy Appointments"
+msgstr "Prendre un rendez-vous"
+
+#: app/templates/landing.html:68
+msgid ""
+"Book appointments with your preferred doctors in just a few clicks, "
+"anytime, anywhere."
+msgstr "Prenez rendez-vous avec les médecins de votre choix en quelques clics, à tout moment et en tout lieu."
+
+#: app/templates/landing.html:72
+msgid "Qualified Professionals"
+msgstr "Professionnels Qualifiés"
+
+#: app/templates/landing.html:73
+msgid ""
+"Access a network of highly qualified and experienced medical "
+"professionals."
+msgstr "Accédez à un réseau de professionnels médicaux hautement qualifiés et expérimentés."
+
+#: app/templates/landing.html:77
+msgid "Secure & Private"
+msgstr "Sécurisé et Privé"
+
+#: app/templates/landing.html:78
+msgid ""
+"Your health data is protected with top-notch security and privacy "
+"measures."
+msgstr "Vos données de santé sont protégées par des mesures de sécurité et de confidentialité de premier ordre."
+
+#: app/templates/landing.html:86
+msgid "Ready to get started?"
+msgstr "Prêt à commencer ?"
+
+#: app/templates/landing.html:87
+msgid "Join Doc2Patient today and take control of your health journey."
+msgstr ""
+"Rejoignez Doc2Patient aujourd'hui et prenez le contrôle de votre parcours"
+" de santé."
+
+#: app/templates/landing.html:88
+msgid "Sign Up Now"
+msgstr "Inscrivez-vous maintenant"
+
+#: app/templates/landing.html:94
+msgid "All rights reserved."
+msgstr "Tous droits réservés."
+
+#: app/templates/landing.html:96
+msgid "Privacy Policy"
+msgstr "Politique de confidentialité"
+
+#: app/templates/landing.html:97
+msgid "Terms of Service"
+msgstr "Conditions d'utilisation"
+
+#: app/templates/landing.html:98
+msgid "Contact Us"
+msgstr "Contactez-nous"
+
+#: app/templates/my_vitals.html:4
+msgid "My Vitals Log"
+msgstr "Mon journal de constantes vitales"
+
+#: app/templates/my_vitals.html:10
+msgid "Add New Vitals Reading"
+msgstr "Ajouter une nouvelle lecture de constantes vitales"
+
+#: app/templates/my_vitals.html:27
+msgid "Your Vitals History"
+msgstr "Historique de vos constantes vitales"
+
+#: app/templates/my_vitals.html:55
+msgid "You have not recorded any vitals yet."
+msgstr "Vous n'avez encore enregistré aucune constante vitale."
+
+#: app/templates/patient_dashboard.html:4
+msgid "Patient Dashboard"
+msgstr "Tableau de bord du patient"
+
+#: app/templates/patient_dashboard.html:10
+msgid "Request a New Appointment"
+msgstr "Demander un nouveau rendez-vous"
+
+#: app/templates/patient_dashboard.html:64
+msgid "Your Scheduled Appointments"
+msgstr "Vos rendez-vous programmés"
+
+#: app/templates/patient_dashboard.html:69
+msgid "Doctor"
+msgstr "Médecin"
+
+#: app/templates/patient_dashboard.html:88
+msgid "This appointment was declined. Please book another."
+msgstr "Ce rendez-vous a été refusé. Veuillez en réserver un autre."
+
+#: app/templates/patient_dashboard.html:94
+msgid "You have no scheduled appointments."
+msgstr "Vous n'avez aucun rendez-vous prévu."
+
+#: app/templates/patient_dashboard.html:101
+msgid "Care Plans & Follow-Ups"
+msgstr "Plans de soins et suivis"
+
+#: app/templates/patient_dashboard.html:105
+msgid "Follow-up from your appointment on"
+msgstr "Suivi de votre rendez-vous du"
+
+#: app/templates/patient_dashboard.html:105
+msgid "with"
+msgstr "avec"
+
+#: app/templates/patient_dashboard.html:111
+msgid "Doctor's Notes:"
+msgstr "Notes du médecin :"
+
+#: app/templates/patient_dashboard.html:119
+msgid "Recommended Reading:"
+msgstr "Lecture recommandée :"
+
+#: app/templates/patient_dashboard.html:131
+msgid "Attached Document:"
+msgstr "Document joint :"
+
+#: app/templates/patient_dashboard.html:141
+msgid "Recommended Video:"
+msgstr "Vidéo recommandée :"
+
+#: app/templates/patient_dashboard.html:151
+msgid "No specific follow-up instructions were provided for this appointment."
+msgstr ""
+"Aucune instruction de suivi spécifique n'a été fournie pour ce rendez-"
+"vous."
+
+#: app/templates/patient_dashboard.html:158
+msgid "You have no completed care plans yet."
+msgstr "Vous n'avez encore aucun plan de soins terminé."
+
+#: app/templates/post_consultation.html:4
+msgid "Follow-Up Recommendations"
+msgstr "Recommandations de suivi"
+
+#: app/templates/post_consultation.html:5
+msgid "For appointment with"
+msgstr "Pour le rendez-vous avec"
+
+#: app/templates/post_consultation.html:12
+msgid "Custom Follow-Up Notes"
+msgstr "Notes de suivi personnalisées"
+
+#: app/templates/post_consultation.html:18
+msgid "Recommend Health Library Articles"
+msgstr "Recommander des articles de la bibliothèque de santé"
+
+#: app/templates/post_consultation.html:31
+msgid "Upload a Document (e.g., Prescription)"
+msgstr "Télécharger un document (ex. : ordonnance)"
+
+#: app/templates/post_consultation.html:37
+msgid "Recommend a YouTube Video"
+msgstr "Recommander une vidéo YouTube"
+
+#: app/templates/post_consultation.html:43
+msgid "Save & Complete Appointment"
+msgstr "Enregistrer et terminer le rendez-vous"
+
+#: app/templates/profile.html:4
+msgid "Edit Profile"
+msgstr "Modifier le profil"
+
+#: venv/Lib/site-packages/click/_termui_impl.py:600
+#, python-brace-format
+msgid "{editor}: Editing failed"
+msgstr "{editor} : Échec de l'édition"
+
+#: venv/Lib/site-packages/click/_termui_impl.py:604
+#, python-brace-format
+msgid "{editor}: Editing failed: {e}"
+msgstr "{editor} : Échec de l'édition : {e}"
+
+#: venv/Lib/site-packages/click/core.py:1084
+#: venv/Lib/site-packages/click/core.py:1121
+#, python-brace-format
+msgid "{text} {deprecated_message}"
+msgstr "{text} {deprecated_message}"
+
+#: venv/Lib/site-packages/click/core.py:1140
+msgid "Options"
+msgstr "Options"
+
+#: venv/Lib/site-packages/click/core.py:1202
+#, python-brace-format
+msgid "Got unexpected extra argument ({args})"
+msgid_plural "Got unexpected extra arguments ({args})"
+msgstr[0] "Argument supplémentaire inattendu : ({args})"
+msgstr[1] "Arguments supplémentaires inattendus : ({args})"
+
+#: venv/Lib/site-packages/click/core.py:1221
+#, python-brace-format
+msgid "DeprecationWarning: The command {name!r} is deprecated.{extra_message}"
+msgstr ""
+"Avertissement de dépréciation : La commande {name!r} est "
+"obsolète.{extra_message}"
+
+#: venv/Lib/site-packages/click/core.py:1405
+msgid "Aborted!"
+msgstr "Annulé !"
+
+#: venv/Lib/site-packages/click/core.py:1779
+msgid "Commands"
+msgstr "Commandes"
+
+#: venv/Lib/site-packages/click/core.py:1810
+msgid "Missing command."
+msgstr "Commande manquante."
+
+#: venv/Lib/site-packages/click/core.py:1888
+#, python-brace-format
+msgid "No such command {name!r}."
+msgstr "Commande inexistante : {name!r}."
+
+#: venv/Lib/site-packages/click/core.py:2303
+msgid "Value must be an iterable."
+msgstr "La valeur doit être itérable."
+
+#: venv/Lib/site-packages/click/core.py:2324
+#, python-brace-format
+msgid "Takes {nargs} values but 1 was given."
+msgid_plural "Takes {nargs} values but {len} were given."
+msgstr[0] "Attend {nargs} valeurs mais 1 a été fournie."
+msgstr[1] "Attend {nargs} valeurs mais {len} ont été fournies."
+
+#: venv/Lib/site-packages/click/core.py:2404
+#, python-brace-format
+msgid ""
+"DeprecationWarning: The {param_type} {name!r} is "
+"deprecated.{extra_message}"
+msgstr ""
+"Avertissement de dépréciation : Le paramètre {param_type} {name!r} est "
+"obsolète.{extra_message}"
+
+#: venv/Lib/site-packages/click/core.py:2807
+#, python-brace-format
+msgid "env var: {var}"
+msgstr "variable d'environnement : {var}"
+
+#: venv/Lib/site-packages/click/core.py:2810
+#, python-brace-format
+msgid "default: {default}"
+msgstr "par défaut : {default}"
+
+#: venv/Lib/site-packages/click/core.py:2814
+msgid "required"
+msgstr "obligatoire"
+
+#: venv/Lib/site-packages/click/core.py:2870
+msgid "(dynamic)"
+msgstr "(dynamique)"
+
+#: venv/Lib/site-packages/click/decorators.py:465
+#, python-format
+msgid "%(prog)s, version %(version)s"
+msgstr "%(prog)s, version %(version)s"
+
+#: venv/Lib/site-packages/click/decorators.py:522
+msgid "Show the version and exit."
+msgstr "Afficher la version et quitter."
+
+#: venv/Lib/site-packages/click/decorators.py:548
+msgid "Show this message and exit."
+msgstr "Afficher ce message et quitter."
+
+#: venv/Lib/site-packages/click/exceptions.py:50
+#: venv/Lib/site-packages/click/exceptions.py:89
+#, python-brace-format
+msgid "Error: {message}"
+msgstr "Erreur : {message}"
+
+#: venv/Lib/site-packages/click/exceptions.py:81
+#, python-brace-format
+msgid "Try '{command} {option}' for help."
+msgstr "Essayez '{command} {option}' pour obtenir de l'aide."
+
+#: venv/Lib/site-packages/click/exceptions.py:130
+#, python-brace-format
+msgid "Invalid value: {message}"
+msgstr "Valeur invalide : {message}"
+
+#: venv/Lib/site-packages/click/exceptions.py:132
+#, python-brace-format
+msgid "Invalid value for {param_hint}: {message}"
+msgstr "Valeur invalide pour {param_hint} : {message}"
+
+#: venv/Lib/site-packages/click/exceptions.py:190
+msgid "Missing argument"
+msgstr "Argument manquant"
+
+#: venv/Lib/site-packages/click/exceptions.py:192
+msgid "Missing option"
+msgstr "Option manquante"
+
+#: venv/Lib/site-packages/click/exceptions.py:194
+msgid "Missing parameter"
+msgstr "Paramètre manquant"
+
+#: venv/Lib/site-packages/click/exceptions.py:196
+#, python-brace-format
+msgid "Missing {param_type}"
+msgstr "Paramètre {param_type} manquant"
+
+#: venv/Lib/site-packages/click/exceptions.py:203
+#, python-brace-format
+msgid "Missing parameter: {param_name}"
+msgstr "Paramètre manquant : {param_name}"
+
+#: venv/Lib/site-packages/click/exceptions.py:223
+#, python-brace-format
+msgid "No such option: {name}"
+msgstr "Option inexistante : {name}"
+
+#: venv/Lib/site-packages/click/exceptions.py:235
+#, python-brace-format
+msgid "Did you mean {possibility}?"
+msgid_plural "(Possible options: {possibilities})"
+msgstr[0] "Vouliez-vous dire {possibility} ?"
+msgstr[1] "(Options possibles : {possibilities})"
+
+#: venv/Lib/site-packages/click/exceptions.py:282
+msgid "unknown error"
+msgstr "erreur inconnue"
+
+#: venv/Lib/site-packages/click/exceptions.py:289
+#, python-brace-format
+msgid "Could not open file {filename!r}: {message}"
+msgstr "Impossible d'ouvrir le fichier {filename!r} : {message}"
+
+#: venv/Lib/site-packages/click/formatting.py:156
+msgid "Usage:"
+msgstr "Utilisation :"
+
+#: venv/Lib/site-packages/click/parser.py:200
+#, python-brace-format
+msgid "Argument {name!r} takes {nargs} values."
+msgstr "L'argument {name!r} attend {nargs} valeurs."
+
+#: venv/Lib/site-packages/click/parser.py:383
+#, python-brace-format
+msgid "Option {name!r} does not take a value."
+msgstr "L'option {name!r} n'accepte pas de valeur."
+
+#: venv/Lib/site-packages/click/parser.py:444
+#, python-brace-format
+msgid "Option {name!r} requires an argument."
+msgid_plural "Option {name!r} requires {nargs} arguments."
+msgstr[0] "L'option {name!r} nécessite un argument."
+msgstr[1] "L'option {name!r} nécessite {nargs} arguments."
+
+#: venv/Lib/site-packages/click/shell_completion.py:326
+msgid "Shell completion is not supported for Bash versions older than 4.4."
+msgstr ""
+"L'auto-complétion n'est pas prise en charge pour les versions de Bash "
+"antérieures à 4.4."
+
+#: venv/Lib/site-packages/click/shell_completion.py:333
+msgid "Couldn't detect Bash version, shell completion is not supported."
+msgstr ""
+"Impossible de détecter la version de Bash, l'auto-complétion n'est pas "
+"prise en charge."
+
+#: venv/Lib/site-packages/click/termui.py:162
+msgid "Repeat for confirmation"
+msgstr "Répétez pour confirmer"
+
+#: venv/Lib/site-packages/click/termui.py:178
+msgid "Error: The value you entered was invalid."
+msgstr "Erreur : La valeur saisie est invalide."
+
+#: venv/Lib/site-packages/click/termui.py:180
+#, python-brace-format
+msgid "Error: {e.message}"
+msgstr "Erreur : {e.message}"
+
+#: venv/Lib/site-packages/click/termui.py:191
+msgid "Error: The two entered values do not match."
+msgstr "Erreur : Les deux valeurs saisies ne correspondent pas."
+
+#: venv/Lib/site-packages/click/termui.py:247
+msgid "Error: invalid input"
+msgstr "Erreur : entrée invalide"
+
+#: venv/Lib/site-packages/click/termui.py:866
+msgid "Press any key to continue..."
+msgstr "Appuyez sur une touche pour continuer..."
+
+#: venv/Lib/site-packages/click/types.py:332
+#, python-brace-format
+msgid ""
+"Choose from:\n"
+"\t{choices}"
+msgstr ""
+"Choisissez parmi :\n"
+"\t{choices}"
+
+#: venv/Lib/site-packages/click/types.py:369
+#, python-brace-format
+msgid "{value!r} is not {choice}."
+msgid_plural "{value!r} is not one of {choices}."
+msgstr[0] "{value!r} n'est pas {choice}."
+msgstr[1] "{value!r} ne fait pas partie de {choices}."
+
+#: venv/Lib/site-packages/click/types.py:460
+#, python-brace-format
+msgid "{value!r} does not match the format {format}."
+msgid_plural "{value!r} does not match the formats {formats}."
+msgstr[0] "{value!r} ne correspond pas au format {format}."
+msgstr[1] "{value!r} ne correspond pas aux formats {formats}."
+
+#: venv/Lib/site-packages/click/types.py:482
+#, python-brace-format
+msgid "{value!r} is not a valid {number_type}."
+msgstr "{value!r} n'est pas un(e) {number_type} valide."
+
+#: venv/Lib/site-packages/click/types.py:538
+#, python-brace-format
+msgid "{value} is not in the range {range}."
+msgstr "{value} n'est pas dans l'intervalle {range}."
+
+#: venv/Lib/site-packages/click/types.py:679
+#, python-brace-format
+msgid "{value!r} is not a valid boolean."
+msgstr "{value!r} n'est pas un booléen valide."
+
+#: venv/Lib/site-packages/click/types.py:703
+#, python-brace-format
+msgid "{value!r} is not a valid UUID."
+msgstr "{value!r} n'est pas un UUID valide."
+
+#: venv/Lib/site-packages/click/types.py:893
+msgid "file"
+msgstr "fichier"
+
+#: venv/Lib/site-packages/click/types.py:895
+msgid "directory"
+msgstr "répertoire"
+
+#: venv/Lib/site-packages/click/types.py:897
+msgid "path"
+msgstr "chemin"
+
+#: venv/Lib/site-packages/click/types.py:944
+#, python-brace-format
+msgid "{name} {filename!r} does not exist."
+msgstr "{name} {filename!r} n'existe pas."
+
+#: venv/Lib/site-packages/click/types.py:953
+#, python-brace-format
+msgid "{name} {filename!r} is a file."
+msgstr "{name} {filename!r} est un fichier."
+
+#: venv/Lib/site-packages/click/types.py:961
+#, python-brace-format
+msgid "{name} {filename!r} is a directory."
+msgstr "{name} {filename!r} est un répertoire."
+
+#: venv/Lib/site-packages/click/types.py:970
+#, python-brace-format
+msgid "{name} {filename!r} is not readable."
+msgstr "{name} {filename!r} n'est pas lisible."
+
+#: venv/Lib/site-packages/click/types.py:979
+#, python-brace-format
+msgid "{name} {filename!r} is not writable."
+msgstr "{name} {filename!r} n'est pas modifiable."
+
+#: venv/Lib/site-packages/click/types.py:988
+#, python-brace-format
+msgid "{name} {filename!r} is not executable."
+msgstr "{name} {filename!r} n'est pas exécutable."
+
+#: venv/Lib/site-packages/click/types.py:1055
+#, python-brace-format
+msgid "{len_type} values are required, but {len_value} was given."
+msgid_plural "{len_type} values are required, but {len_value} were given."
+msgstr[0] "{len_type} valeur est requise, mais {len_value} a été fournie."
+msgstr[1] "{len_type} valeurs sont requises, mais {len_value} ont été fournies."
+
+#: venv/Lib/site-packages/flask_wtf/file.py:55
+#: venv/Lib/site-packages/wtforms/validators.py:293
+#: venv/Lib/site-packages/wtforms/validators.py:323
+msgid "This field is required."
+msgstr "Ce champ est obligatoire."
+
+#: venv/Lib/site-packages/flask_wtf/file.py:94
+#, python-brace-format
+msgid "File does not have an approved extension: {extensions}"
+msgstr "Le fichier n'a pas une extension approuvée : {extensions}"
+
+#: venv/Lib/site-packages/flask_wtf/file.py:101
+msgid "File does not have an approved extension."
+msgstr "Le fichier n'a pas une extension approuvée."
+
+#: venv/Lib/site-packages/wtforms/validators.py:86
+#, python-format
+msgid "Invalid field name '%s'."
+msgstr "Nom de champ invalide '%s'."
+
+#: venv/Lib/site-packages/wtforms/validators.py:99
+#, python-format
+msgid "Field must be equal to %(other_name)s."
+msgstr "Le champ doit être égal à %(other_name)s."
+
+#: venv/Lib/site-packages/wtforms/validators.py:146
+#, python-format
+msgid "Field must be at least %(min)d character long."
+msgid_plural "Field must be at least %(min)d characters long."
+msgstr[0] "Le champ doit contenir au moins %(min)d caractère."
+msgstr[1] "Le champ doit contenir au moins %(min)d caractères."
+
+#: venv/Lib/site-packages/wtforms/validators.py:152
+#, python-format
+msgid "Field cannot be longer than %(max)d character."
+msgid_plural "Field cannot be longer than %(max)d characters."
+msgstr[0] "Le champ ne peut pas dépasser %(max)d caractère."
+msgstr[1] "Le champ ne peut pas dépasser %(max)d caractères."
+
+#: venv/Lib/site-packages/wtforms/validators.py:158
+#, python-format
+msgid "Field must be exactly %(max)d character long."
+msgid_plural "Field must be exactly %(max)d characters long."
+msgstr[0] "Le champ doit contenir exactement %(max)d caractère."
+msgstr[1] "Le champ doit contenir exactement %(max)d caractères."
+
+#: venv/Lib/site-packages/wtforms/validators.py:164
+#, python-format
+msgid "Field must be between %(min)d and %(max)d characters long."
+msgstr "Le champ doit contenir entre %(min)d et %(max)d caractères."
+
+#: venv/Lib/site-packages/wtforms/validators.py:216
+#, python-format
+msgid "Number must be at least %(min)s."
+msgstr "Le nombre doit être au moins %(min)s."
+
+#: venv/Lib/site-packages/wtforms/validators.py:219
+#, python-format
+msgid "Number must be at most %(max)s."
+msgstr "Le nombre doit être au plus %(max)s."
+
+#: venv/Lib/site-packages/wtforms/validators.py:222
+#, python-format
+msgid "Number must be between %(min)s and %(max)s."
+msgstr "Le nombre doit être entre %(min)s et %(max)s."
+
+#: venv/Lib/site-packages/wtforms/validators.py:358
+msgid "Invalid input."
+msgstr "Entrée invalide."
+
+#: venv/Lib/site-packages/wtforms/validators.py:422
+msgid "Invalid email address."
+msgstr "Adresse email invalide."
+
+#: venv/Lib/site-packages/wtforms/validators.py:460
+msgid "Invalid IP address."
+msgstr "Adresse IP invalide."
+
+#: venv/Lib/site-packages/wtforms/validators.py:503
+msgid "Invalid Mac address."
+msgstr "Adresse Mac invalide."
+
+#: venv/Lib/site-packages/wtforms/validators.py:540
+msgid "Invalid URL."
+msgstr "URL invalide."
+
+#: venv/Lib/site-packages/wtforms/validators.py:561
+msgid "Invalid UUID."
+msgstr "UUID invalide."
+
+#: venv/Lib/site-packages/wtforms/validators.py:595
+#, python-format
+msgid "Invalid value, must be one of: %(values)s."
+msgstr "Valeur invalide, doit être l'une des suivantes : %(values)s."
+
+#: venv/Lib/site-packages/wtforms/validators.py:631
+#, python-format
+msgid "Invalid value, can't be any of: %(values)s."
+msgstr "Valeur invalide, ne peut être aucune des suivantes : %(values)s."
+
+#: venv/Lib/site-packages/wtforms/validators.py:700
+msgid "This field cannot be edited."
+msgstr "Ce champ ne peut pas être modifié."
+
+#: venv/Lib/site-packages/wtforms/validators.py:716
+msgid "This field is disabled and cannot have a value."
+msgstr "Ce champ est désactivé et ne peut pas avoir de valeur."
+
+#: venv/Lib/site-packages/wtforms/csrf/core.py:96
+msgid "Invalid CSRF Token."
+msgstr "Jeton CSRF invalide."
+
+#: venv/Lib/site-packages/wtforms/csrf/session.py:64
+msgid "CSRF token missing."
+msgstr "Jeton CSRF manquant."
+
+#: venv/Lib/site-packages/wtforms/csrf/session.py:72
+msgid "CSRF failed."
+msgstr "Échec du CSRF."
+
+#: venv/Lib/site-packages/wtforms/csrf/session.py:77
+msgid "CSRF token expired."
+msgstr "Jeton CSRF expiré."
+
+#: venv/Lib/site-packages/wtforms/fields/choices.py:142
+msgid "Invalid Choice: could not coerce."
+msgstr "Choix invalide : impossible de contraindre."
+
+#: venv/Lib/site-packages/wtforms/fields/choices.py:149
+#: venv/Lib/site-packages/wtforms/fields/choices.py:203
+msgid "Choices cannot be None."
+msgstr "Les choix ne peuvent pas être Nuls."
+
+#: venv/Lib/site-packages/wtforms/fields/choices.py:155
+msgid "Not a valid choice."
+msgstr "Pas un choix valide."
+
+#: venv/Lib/site-packages/wtforms/fields/choices.py:194
+msgid "Invalid choice(s): one or more data inputs could not be coerced."
+msgstr ""
+"Choix invalide(s) : une ou plusieurs entrées de données n'ont pas pu être"
+" contraintes."
+
+#: venv/Lib/site-packages/wtforms/fields/choices.py:212
+#, python-format
+msgid "'%(value)s' is not a valid choice for this field."
+msgid_plural "'%(value)s' are not valid choices for this field."
+msgstr[0] "'%(value)s' n'est pas un choix valide pour ce champ."
+msgstr[1] "'%(value)s' ne sont pas des choix valides pour ce champ."
+
+#: venv/Lib/site-packages/wtforms/fields/datetime.py:52
+msgid "Not a valid datetime value."
+msgstr "Pas une valeur de date/heure valide."
+
+#: venv/Lib/site-packages/wtforms/fields/datetime.py:78
+msgid "Not a valid date value."
+msgstr "Pas une valeur de date valide."
+
+#: venv/Lib/site-packages/wtforms/fields/datetime.py:104
+msgid "Not a valid time value."
+msgstr "Pas une valeur de temps valide."
+
+#: venv/Lib/site-packages/wtforms/fields/datetime.py:149
+msgid "Not a valid week value."
+msgstr "Pas une valeur de semaine valide."
+
+#: venv/Lib/site-packages/wtforms/fields/numeric.py:82
+#: venv/Lib/site-packages/wtforms/fields/numeric.py:92
+msgid "Not a valid integer value."
+msgstr "Pas une valeur entière valide."
+
+#: venv/Lib/site-packages/wtforms/fields/numeric.py:168
+msgid "Not a valid decimal value."
+msgstr "Pas une valeur décimale valide."
+
+#: venv/Lib/site-packages/wtforms/fields/numeric.py:197
+msgid "Not a valid float value."
+msgstr "Pas une valeur flottante valide."
+
+#~ msgid "All Rights Reserved."
+#~ msgstr "Tous droits réservés."
+
+#~ msgid "Easy Appointments"
+#~ msgstr "Rendez-vous Faciles"
+
+#~ msgid ""
+#~ "Book appointments with your preferred "
+#~ "doctors in just a few clicks, "
+#~ "anytime, anywhere."
+#~ msgstr ""
+#~ "Prenez rendez-vous avec vos médecins "
+#~ "préférés en quelques clics, n'importe "
+#~ "quand, n'importe où."
+
+#~ msgid "Qualified Professionals"
+#~ msgstr "Professionnels Qualifiés"
+
+#~ msgid ""
+#~ "Access a network of highly qualified "
+#~ "and experienced medical professionals."
+#~ msgstr ""
+#~ "Accédez à un réseau de professionnels"
+#~ " de la santé hautement qualifiés et"
+#~ " expérimentés."
+
+#~ msgid "Secure & Private"
+#~ msgstr "Sécurisé et Privé"
+
+#~ msgid ""
+#~ "Your health data is protected with "
+#~ "top-notch security and privacy measures."
+#~ msgstr ""
+#~ "Vos données de santé sont protégées "
+#~ "par des mesures de sécurité et de"
+#~ " confidentialité de pointe."
+

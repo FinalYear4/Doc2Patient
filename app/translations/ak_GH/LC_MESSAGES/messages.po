@@ -1,0 +1,923 @@
+# Akan (Ghana) translations for PROJECT.
+# Copyright (C) 2025 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2025-07-21 17:38+0000\n"
+"PO-Revision-Date: 2025-07-21 16:20+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ak_GH\n"
+"Language-Team: ak_GH <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: app/templates/consultation_room.html:4
+msgid "Consultation Room"
+msgstr "Nkwasrafoɔ Adwumadan"
+
+#: app/templates/consultation_room.html:37
+msgid "Live Chat"
+msgstr "Nkɔmmɔ Tententen"
+
+#: app/templates/consultation_room.html:44
+msgid "Type your message..."
+msgstr "Kyerɛ wo asɛmpa ha..."
+
+#: app/templates/consultation_room.html:46
+msgid "Send"
+msgstr "Twerɛ"
+
+#: app/templates/consultation_room.html:52
+msgid "Latest Vitals"
+msgstr "Nsɛm Foforɔ a ɛfa Nipadua ho"
+
+#: app/templates/consultation_room.html:55
+msgid "Blood Pressure"
+msgstr "Mogya Ho Bɔden"
+
+#: app/templates/consultation_room.html:56
+msgid "Heart Rate"
+msgstr "Akoma Ho Ntɛm"
+
+#: app/templates/consultation_room.html:57
+msgid "Temperature"
+msgstr "Nipadua Hohorow"
+
+#: app/templates/consultation_room.html:58
+msgid "Oxygen (SpO2)"
+msgstr "Ogyen (SpO2)"
+
+#: app/templates/consultation_room.html:59
+msgid "Resp. Rate"
+msgstr "Nhome Ntɛm"
+
+#: app/templates/consultation_room.html:60
+msgid "Blood Sugar"
+msgstr "Mogya Nkyɛnsɛnkye"
+
+#: app/templates/consultation_room.html:61
+msgid "Weight"
+msgstr "Dodoɔ"
+
+#: app/templates/consultation_room.html:62
+msgid "Height"
+msgstr "Tenten"
+
+#: app/templates/consultation_room.html:66
+msgid "Send My Latest Vitals"
+msgstr "Twerɛ Me Nipadua Nsɛm Foforɔ"
+
+#: app/templates/contact.html:5
+msgid "Research & Devlopment Team"
+msgstr "Nhwehwɛmu ne Nsiesie Kurom"
+
+#: app/templates/contact.html:12
+msgid "Principal Investigator"
+msgstr "Titiriw Nhwehwɛmufoɔ"
+
+#: app/templates/contact.html:19 app/templates/contact.html:26
+#: app/templates/contact.html:33 app/templates/contact.html:40
+msgid "Co-developer"
+msgstr "Boafoɔ a ɔyɛɛ Adwuma No"
+
+#: app/templates/doctor_dashboard.html:4
+msgid "Doctor Dashboard"
+msgstr "Dɔkita Fiehyia"
+
+#: app/templates/doctor_dashboard.html:6
+msgid "Your Upcoming Appointments"
+msgstr "Wo Nhyiam a ɛreba"
+
+#: app/templates/doctor_dashboard.html:11
+msgid "Patient"
+msgstr "Yarefoɔ"
+
+#: app/templates/doctor_dashboard.html:12
+#: app/templates/patient_dashboard.html:70
+msgid "Time"
+msgstr "Berɛ"
+
+#: app/templates/doctor_dashboard.html:13
+#: app/templates/patient_dashboard.html:71
+msgid "Status"
+msgstr "Nkabom Ntɛmntɛm"
+
+#: app/templates/doctor_dashboard.html:17
+msgid "Reason"
+msgstr "Asɛm a ɛde Yarefoɔ Ba"
+
+#: app/templates/doctor_dashboard.html:25
+msgid "Confirm"
+msgstr "Paw no"
+
+#: app/templates/doctor_dashboard.html:31
+msgid "Decline"
+msgstr "Popa no"
+
+#: app/templates/doctor_dashboard.html:36
+#: app/templates/patient_dashboard.html:84
+msgid "Join Consultation"
+msgstr "Ka ho wɔ Nkyerɛkyerɛmu no mu"
+
+#: app/templates/doctor_dashboard.html:45
+msgid "You have no upcoming appointments."
+msgstr "W’ankɔ Nhyiam biara a ɛreba."
+
+#: app/templates/faq.html:5
+msgid "Frequently Asked Questions"
+msgstr "Nsɛmmisa a wɔbisa paa"
+
+#: app/templates/faq.html:11
+msgid "Is my data secure?"
+msgstr "Me nsɛm ho yɛ den anaa?"
+
+#: app/templates/faq.html:15
+msgid ""
+"Yes, absolutely. We use industry-standard encryption and security "
+"protocols to ensure all your personal and health information is kept "
+"confidential and secure."
+msgstr ""
+"Aane, ampa ara. Yɛde nsisi ne ahotoso nhyehyɛe a yɛde boa wɔn a wɔde nsɛm"
+" to hɔ no si ho ban pa ara na yɛyɛ adwuma no."
+
+#: app/templates/faq.html:21
+msgid "What equipment do I need?"
+msgstr "Dɛn na mehia de bɛyɛ adwuma no?"
+
+#: app/templates/faq.html:25
+msgid ""
+"All you need is a device with an internet connection, a web browser, and "
+"a working camera and microphone (like a smartphone, laptop, or tablet). "
+"No special software is required."
+msgstr ""
+"Nneɛma a wopɛ nyinaa ne sɛ wo wɔ intanɛt, browser, kamera ne mikrofon a "
+"ɛyɛ adwuma (te sɛ fon, laptop anaa tablet). Nsiesie foforɔ biara mmom nni"
+" hia."
+
+#: app/templates/faq.html:31
+msgid "Can I get a prescription?"
+msgstr "Mɛnya aduru atenka anaa?"
+
+#: app/templates/faq.html:35
+msgid ""
+"Yes. If the doctor determines a prescription is medically necessary, they"
+" can upload a secure digital copy for you to download from your dashboard"
+" after the consultation."
+msgstr ""
+"Aane. Sɛ dɔkita no huu sɛ ɛsɛ sɛ ɔkyerɛw aduru bi ma wo a, ɔbɛtumi de yɛ "
+"ama w’abɛtwe no fi w’ankasa krataa nkɔfa fiehyia no mu."
+
+#: app/templates/health_library.html:4
+msgid "Health Library"
+msgstr "Apɔwmuden Nwoma Dɔkotow"
+
+#: app/templates/health_library.html:12
+msgid "No articles found in the library."
+msgstr "Nwoma biara nni hɔ wɔ nwoma dɔkotow no mu."
+
+#: app/templates/how_it_works.html:5 app/templates/landing.html:25
+msgid "How It Works"
+msgstr "Sɛnea Ɛyɛ Adwuma"
+
+#: app/templates/how_it_works.html:12
+msgid "Register an Account"
+msgstr "Kyerɛw Din wɔ Platform no so"
+
+#: app/templates/how_it_works.html:13
+msgid "Create your secure account as a patient in a few simple steps."
+msgstr "Bɔ akontaabu a ɛho yɛ den wɔ mmerɛ kakra mu sɛ yarefoɔ."
+
+#: app/templates/how_it_works.html:18
+msgid "Book an Appointment"
+msgstr "Paw Bere ma Nhyiam"
+
+#: app/templates/how_it_works.html:19
+msgid "Browse available doctors and book a consultation at a time that suits you."
+msgstr "Hwɛ dɔkita a wɔwɔ hɔ na paw bere a ɛbɛyɛ wo dɛ ma nkwasrafoɔ nkyerɛmu."
+
+#: app/templates/how_it_works.html:24
+msgid "Join the Consultation"
+msgstr "Ka ho wɔ Nkyerɛkyerɛmu no mu"
+
+#: app/templates/how_it_works.html:25
+msgid ""
+"Join the secure video call directly from your dashboard at the scheduled "
+"time."
+msgstr ""
+"Ka ho wɔ video nkɔmmɔ a ɛho yɛ den no mu fi fiehyia no so bere a wɔahyɛ "
+"ho."
+
+#: app/templates/how_it_works.html:30
+msgid "Receive Follow-Up"
+msgstr "Gye Nkyerɛkyerɛ Ne Nsɛm Bio"
+
+#: app/templates/how_it_works.html:31
+msgid ""
+"Get your care plan, notes, and educational materials from your doctor "
+"after the session."
+msgstr ""
+"Gye wo yareɛ ho nhyehyɛe, nsɛm a wɔkyerɛwee, ne sukuu nsɛm fi wo dɔkita "
+"hɔ sesia no akyi."
+
+#: app/templates/landing.html:6
+msgid "Welcome to Doc2Patient"
+msgstr "Akwaaba ba Doc2Patient"
+
+#: app/templates/landing.html:26
+msgid "FAQ"
+msgstr "Nsɛmmisa A Wɔbisa Pii"
+
+#: app/templates/landing.html:27
+msgid "Contact"
+msgstr "Frɛ Yɛn"
+
+#: app/templates/landing.html:34
+msgid "Language"
+msgstr "Kasa"
+
+#: app/templates/landing.html:47
+msgid "Login"
+msgstr "Kɔ Mu"
+
+#: app/templates/landing.html:48
+msgid "Register"
+msgstr "Kyerɛw Wo Din"
+
+#: app/templates/landing.html:55
+msgid "Better Healthcare, Just a Click Away"
+msgstr "Apɔwmuden pa, Nkyɛmu Biako Nko"
+
+#: app/templates/landing.html:56
+msgid ""
+"Connecting patients across Ghana with qualified doctors through secure, "
+"real-time video consultations."
+msgstr ""
+"Rebɔ yarefoɔ a wɔwɔ Ghana nyinaa ne dɔkita a wɔwɔ nimdeɛ ho nkɔmmɔ wɔ "
+"video nkɔmmɔ a ɛho yɛ den mu."
+
+#: app/templates/landing.html:57
+msgid "Get Started Now"
+msgstr "Hyɛ Ase Seesei"
+
+#: app/templates/landing.html:63
+msgid "Why Choose Doc2Patient?"
+msgstr "Adɛn Na Wopɛ Doc2Patient?"
+
+#: app/templates/landing.html:67
+msgid "Easy Appointments"
+msgstr "Paw Bere ma Nhyiam"
+
+#: app/templates/landing.html:68
+msgid ""
+"Book appointments with your preferred doctors in just a few clicks, "
+"anytime, anywhere."
+msgstr "Paw bere ma nhyiam ne dɔkita a wopɛ no wɔ nkɔsoɔ kakra so — bere biara, baabiara."
+
+#: app/templates/landing.html:72
+msgid "Qualified Professionals"
+msgstr "Adwumayɛfoɔ a Wɔwɔ Nimdeɛ"
+
+#: app/templates/landing.html:73
+msgid ""
+"Access a network of highly qualified and experienced medical "
+"professionals."
+msgstr "Fa wo ho ka dɔkita a wɔwɔ nimdeɛ ne nkyerɛaseɛ pii ho."
+
+#: app/templates/landing.html:77
+msgid "Secure & Private"
+msgstr "Ɛho Yɛ Den na Ɛyɛ Fie Mu Nsɛm"
+
+#: app/templates/landing.html:78
+msgid ""
+"Your health data is protected with top-notch security and privacy "
+"measures."
+msgstr "W’apɔwmuden nsɛm yɛ banbɔ kɛseɛ mu na ɛwɔ ahintasɛm mu yie."
+
+#: app/templates/landing.html:86
+msgid "Ready to get started?"
+msgstr "Wopɛ sɛ wohyɛ ase?"
+
+#: app/templates/landing.html:87
+msgid "Join Doc2Patient today and take control of your health journey."
+msgstr "Ka ho wɔ Doc2Patient nnɛ na fa wo ho so wɔ wo apɔwmuden akwan mu."
+
+#: app/templates/landing.html:88
+msgid "Sign Up Now"
+msgstr "Kyerɛw Wo Din Seesei"
+
+#: app/templates/landing.html:94
+msgid "All rights reserved."
+msgstr "Ahyɛnsodeɛ nyinaa wɔ hɔ."
+
+#: app/templates/landing.html:96
+msgid "Privacy Policy"
+msgstr "Ahintasɛm Ahyehyɛe"
+
+#: app/templates/landing.html:97
+msgid "Terms of Service"
+msgstr "Ahyehyɛe a wɔde Di Adwuma"
+
+#: app/templates/landing.html:98
+msgid "Contact Us"
+msgstr "Frɛ Yɛn"
+
+#: app/templates/my_vitals.html:4
+msgid "My Vitals Log"
+msgstr "Me Nipadua Nsɛm Akontaa"
+
+#: app/templates/my_vitals.html:10
+msgid "Add New Vitals Reading"
+msgstr "Fa Nipadua Nsɛm Foforɔ Ka Ho"
+
+#: app/templates/my_vitals.html:27
+msgid "Your Vitals History"
+msgstr "Wo Nipadua Nsɛm Abakɔsɛm"
+
+#: app/templates/my_vitals.html:55
+msgid "You have not recorded any vitals yet."
+msgstr "Woankyerɛw nipadua nsɛm biara mpo."
+
+#: app/templates/patient_dashboard.html:4
+msgid "Patient Dashboard"
+msgstr "Yarefoɔ Fiehyia"
+
+#: app/templates/patient_dashboard.html:10
+msgid "Request a New Appointment"
+msgstr "Bisa Nhyiam Foforɔ"
+
+#: app/templates/patient_dashboard.html:64
+msgid "Your Scheduled Appointments"
+msgstr "Wo Nhyiam a Wɔahyɛ Ho Bere"
+
+#: app/templates/patient_dashboard.html:69
+msgid "Doctor"
+msgstr "Dɔkita"
+
+#: app/templates/patient_dashboard.html:88
+msgid "This appointment was declined. Please book another."
+msgstr "Wɔpopaa nhyiam no. Mesrɛ wo, paw foforɔ."
+
+#: app/templates/patient_dashboard.html:94
+msgid "You have no scheduled appointments."
+msgstr "Wonnim nhyiam biara a wɔahyɛ ho bere."
+
+#: app/templates/patient_dashboard.html:101
+msgid "Care Plans & Follow-Ups"
+msgstr "Yareɛ Nhyehyɛe ne Nkyerɛkyerɛmu"
+
+#: app/templates/patient_dashboard.html:105
+msgid "Follow-up from your appointment on"
+msgstr "Nkyerɛkyerɛmu fi nhyiam a ɛyɛe no da..."
+
+#: app/templates/patient_dashboard.html:105
+msgid "with"
+msgstr "ne"
+
+#: app/templates/patient_dashboard.html:111
+msgid "Doctor's Notes:"
+msgstr "Dɔkita Nsɛm a Ɔkyerɛwee:"
+
+#: app/templates/patient_dashboard.html:119
+msgid "Recommended Reading:"
+msgstr "Nwoma a Wɔkyerɛwee ma Wo:"
+
+#: app/templates/patient_dashboard.html:131
+msgid "Attached Document:"
+msgstr "Nkrataa a Wɔde Ka Ho:"
+
+#: app/templates/patient_dashboard.html:141
+msgid "Recommended Video:"
+msgstr "Video a Wɔkyerɛwee Ma Wo:"
+
+#: app/templates/patient_dashboard.html:151
+msgid "No specific follow-up instructions were provided for this appointment."
+msgstr "Wɔamfa nkyerɛkyerɛ biara a ɛda ho adi amma nhyiam yi ho."
+
+#: app/templates/patient_dashboard.html:158
+msgid "You have no completed care plans yet."
+msgstr "W’ankɔ yareɛ nhyehyɛe biara nni hɔ a woyɛe wiee no."
+
+#: app/templates/post_consultation.html:4
+msgid "Follow-Up Recommendations"
+msgstr "Nkyerɛkyerɛ ne Afotu"
+
+#: app/templates/post_consultation.html:5
+msgid "For appointment with"
+msgstr "Ma nhyiam a ɛwɔ ho ne"
+
+#: app/templates/post_consultation.html:12
+msgid "Custom Follow-Up Notes"
+msgstr "Nsɛm a wɔde kyekyɛ ho kɔ a ɛyɛ wo de"
+
+#: app/templates/post_consultation.html:18
+msgid "Recommend Health Library Articles"
+msgstr "Kyerɛw Apɔwmuden Nwoma a Wɔbɛkenkan"
+
+#: app/templates/post_consultation.html:31
+msgid "Upload a Document (e.g., Prescription)"
+msgstr "Fa Nkrataa Sɔ (te sɛ Aduru Atenka)"
+
+#: app/templates/post_consultation.html:37
+msgid "Recommend a YouTube Video"
+msgstr "Kyerɛ Video wɔ YouTube"
+
+#: app/templates/post_consultation.html:43
+msgid "Save & Complete Appointment"
+msgstr "Sie na Wie Nhyiam no"
+
+#: app/templates/profile.html:4
+msgid "Edit Profile"
+msgstr "Sesaa Wo Ho Nsɛm"
+
+#: venv/Lib/site-packages/click/_termui_impl.py:600
+#, python-brace-format
+msgid "{editor}: Editing failed"
+msgstr "{editor}: Nsesa no antumi anyɛ"
+
+#: venv/Lib/site-packages/click/_termui_impl.py:604
+#, python-brace-format
+msgid "{editor}: Editing failed: {e}"
+msgstr "{editor}: Nsesa no antumi anyɛ: {e}"
+
+#: venv/Lib/site-packages/click/core.py:1084
+#: venv/Lib/site-packages/click/core.py:1121
+#, python-brace-format
+msgid "{text} {deprecated_message}"
+msgstr "{text} {deprecated_message}"
+
+#: venv/Lib/site-packages/click/core.py:1140
+msgid "Options"
+msgstr "Nkwagyeɛ"
+
+#: venv/Lib/site-packages/click/core.py:1202
+#, python-brace-format
+msgid "Got unexpected extra argument ({args})"
+msgid_plural "Got unexpected extra arguments ({args})"
+msgstr[0] "Wopɛɛ nsɛm foforɔ a yɛnhwɛɛ so ({args})"
+msgstr[1] "Wopɛɛ nsɛm foforɔ a yɛnhwɛɛ so ({args})"
+
+#: venv/Lib/site-packages/click/core.py:1221
+#, python-brace-format
+msgid "DeprecationWarning: The command {name!r} is deprecated.{extra_message}"
+msgstr "Ka kyerɛ: Ahyɛdeɛ {name!r} no yɛ dadwenfoɔ. {extra_message}"
+
+#: venv/Lib/site-packages/click/core.py:1405
+msgid "Aborted!"
+msgstr "Wagyaw mu!"
+
+#: venv/Lib/site-packages/click/core.py:1779
+msgid "Commands"
+msgstr "Ahyɛdeɛ"
+
+#: venv/Lib/site-packages/click/core.py:1810
+msgid "Missing command."
+msgstr "Ahyɛdeɛ bi da hɔ."
+
+#: venv/Lib/site-packages/click/core.py:1888
+#, python-brace-format
+msgid "No such command {name!r}."
+msgstr "Ahyɛdeɛ a wɔfrɛ no {name!r} no nni hɔ."
+
+#: venv/Lib/site-packages/click/core.py:2303
+msgid "Value must be an iterable."
+msgstr "Ɛsɛ sɛ ɔsom bo no betumi abɔ akɔ akɔ."
+
+#: venv/Lib/site-packages/click/core.py:2324
+#, python-brace-format
+msgid "Takes {nargs} values but 1 was given."
+msgid_plural "Takes {nargs} values but {len} were given."
+msgstr[0] "Ɛsɛ sɛ ɛfa {nargs} bo, na ɛde baako pɛ na wɔde maa no."
+msgstr[1] "Ɛsɛ sɛ ɛfa {nargs} bo, na ɛde {len} na wɔde maa no."
+
+#: venv/Lib/site-packages/click/core.py:2404
+#, python-brace-format
+msgid ""
+"DeprecationWarning: The {param_type} {name!r} is "
+"deprecated.{extra_message}"
+msgstr "Ka kyerɛ: {param_type} {name!r} no yɛ dada. {extra_message}"
+
+#: venv/Lib/site-packages/click/core.py:2807
+#, python-brace-format
+msgid "env var: {var}"
+msgstr "Ɛda so wɔ ho: {var}"
+
+#: venv/Lib/site-packages/click/core.py:2810
+#, python-brace-format
+msgid "default: {default}"
+msgstr "mfitiaseɛ: {default}"
+
+#: venv/Lib/site-packages/click/core.py:2814
+msgid "required"
+msgstr "ehia"
+
+#: venv/Lib/site-packages/click/core.py:2870
+msgid "(dynamic)"
+msgstr "(ɛkyerɛ nsakrae)"
+
+#: venv/Lib/site-packages/click/decorators.py:465
+#, python-format
+msgid "%(prog)s, version %(version)s"
+msgstr "%(prog)s, nwoma no ho %(version)s"
+
+#: venv/Lib/site-packages/click/decorators.py:522
+msgid "Show the version and exit."
+msgstr "Kyerɛ nwoma no mu nsɛm na pue."
+
+#: venv/Lib/site-packages/click/decorators.py:548
+msgid "Show this message and exit."
+msgstr "Kyerɛ saa nsɛm no na pue."
+
+#: venv/Lib/site-packages/click/exceptions.py:50
+#: venv/Lib/site-packages/click/exceptions.py:89
+#, python-brace-format
+msgid "Error: {message}"
+msgstr "Mfomso: {message}"
+
+#: venv/Lib/site-packages/click/exceptions.py:81
+#, python-brace-format
+msgid "Try '{command} {option}' for help."
+msgstr "Sɔ '{command} {option}' hwɛ mmoa ho."
+
+#: venv/Lib/site-packages/click/exceptions.py:130
+#, python-brace-format
+msgid "Invalid value: {message}"
+msgstr "Bo a ɛmfata: {message}"
+
+#: venv/Lib/site-packages/click/exceptions.py:132
+#, python-brace-format
+msgid "Invalid value for {param_hint}: {message}"
+msgstr "Bo a ɛmfata ma {param_hint}: {message}"
+
+#: venv/Lib/site-packages/click/exceptions.py:190
+msgid "Missing argument"
+msgstr "Asɛm bi da hɔ"
+
+#: venv/Lib/site-packages/click/exceptions.py:192
+msgid "Missing option"
+msgstr "Nkwagyeɛ bi da hɔ"
+
+#: venv/Lib/site-packages/click/exceptions.py:194
+msgid "Missing parameter"
+msgstr "Nsɛm kɛseɛ bi da hɔ"
+
+#: venv/Lib/site-packages/click/exceptions.py:196
+#, python-brace-format
+msgid "Missing {param_type}"
+msgstr "{param_type} no da hɔ"
+
+#: venv/Lib/site-packages/click/exceptions.py:203
+#, python-brace-format
+msgid "Missing parameter: {param_name}"
+msgstr "Nsɛm no da hɔ: {param_name}"
+
+#: venv/Lib/site-packages/click/exceptions.py:223
+#, python-brace-format
+msgid "No such option: {name}"
+msgstr "Nkwagyeɛ a wɔfrɛ no {name} no nni hɔ"
+
+#: venv/Lib/site-packages/click/exceptions.py:235
+#, python-brace-format
+msgid "Did you mean {possibility}?"
+msgid_plural "(Possible options: {possibilities})"
+msgstr[0] "Wopɛ sɛ woka {possibility}?"
+msgstr[1] "(Nkwagyeɛ a ɛbɛtumi aba: {possibilities})"
+
+#: venv/Lib/site-packages/click/exceptions.py:282
+msgid "unknown error"
+msgstr "mfomso a yɛnnim"
+
+#: venv/Lib/site-packages/click/exceptions.py:289
+#, python-brace-format
+msgid "Could not open file {filename!r}: {message}"
+msgstr "Entumi mmue krataa no {filename!r}: {message}"
+
+#: venv/Lib/site-packages/click/formatting.py:156
+msgid "Usage:"
+msgstr "Sɛnea wɔde di dwuma:"
+
+#: venv/Lib/site-packages/click/parser.py:200
+#, python-brace-format
+msgid "Argument {name!r} takes {nargs} values."
+msgstr "Asɛm {name!r} no gye {nargs} bo."
+
+#: venv/Lib/site-packages/click/parser.py:383
+#, python-brace-format
+msgid "Option {name!r} does not take a value."
+msgstr "Nkwagyeɛ {name!r} no nnye bo."
+
+#: venv/Lib/site-packages/click/parser.py:444
+#, python-brace-format
+msgid "Option {name!r} requires an argument."
+msgid_plural "Option {name!r} requires {nargs} arguments."
+msgstr[0] "Nkwagyeɛ {name!r} no hia asɛm baako."
+msgstr[1] "Nkwagyeɛ {name!r} no hia nsɛm {nargs}."
+
+#: venv/Lib/site-packages/click/shell_completion.py:326
+msgid "Shell completion is not supported for Bash versions older than 4.4."
+msgstr "Shell mmere mmu wɔ Bash a ɛyɛ dɛnkɛseɛ sen 4.4."
+
+#: venv/Lib/site-packages/click/shell_completion.py:333
+msgid "Couldn't detect Bash version, shell completion is not supported."
+msgstr "Entumi nhu Bash version no, shell mmere mmu nni ho mmoa."
+
+#: venv/Lib/site-packages/click/termui.py:162
+msgid "Repeat for confirmation"
+msgstr "San kɔ bio de si gyidi ho"
+
+#: venv/Lib/site-packages/click/termui.py:178
+msgid "Error: The value you entered was invalid."
+msgstr "Mfomso: Bo a wode too hɔ no yɛ mfomso."
+
+#: venv/Lib/site-packages/click/termui.py:180
+#, python-brace-format
+msgid "Error: {e.message}"
+msgstr "Mfomso: {e.message}"
+
+#: venv/Lib/site-packages/click/termui.py:191
+msgid "Error: The two entered values do not match."
+msgstr "Mfomso: Nsɛm baanu a wode too hɔ no nnye ho."
+
+#: venv/Lib/site-packages/click/termui.py:247
+msgid "Error: invalid input"
+msgstr "Mfomso: Nsɛm a wode too hɔ no nyɛ pɛ"
+
+#: venv/Lib/site-packages/click/termui.py:866
+msgid "Press any key to continue..."
+msgstr "Pɛ so kɔ so..."
+
+#: venv/Lib/site-packages/click/types.py:332
+#, python-brace-format
+msgid ""
+"Choose from:\n"
+"\t{choices}"
+msgstr ""
+"Paw fi mu:\n"
+"\t{choices}"
+
+#: venv/Lib/site-packages/click/types.py:369
+#, python-brace-format
+msgid "{value!r} is not {choice}."
+msgid_plural "{value!r} is not one of {choices}."
+msgstr[0] "{value!r} nyɛ {choice}."
+msgstr[1] "{value!r} nni mu wɔ {choices} no mu."
+
+#: venv/Lib/site-packages/click/types.py:460
+#, python-brace-format
+msgid "{value!r} does not match the format {format}."
+msgid_plural "{value!r} does not match the formats {formats}."
+msgstr[0] "{value!r} ntena sɛnea ɛda ho adi {format} no."
+msgstr[1] "{value!r} ntena sɛ biako mpo wɔ {formats} mu."
+
+#: venv/Lib/site-packages/click/types.py:482
+#, python-brace-format
+msgid "{value!r} is not a valid {number_type}."
+msgstr "{value!r} nyɛ {number_type} a ɛwɔ mu."
+
+#: venv/Lib/site-packages/click/types.py:538
+#, python-brace-format
+msgid "{value} is not in the range {range}."
+msgstr "{value} nni {range} no mu."
+
+#: venv/Lib/site-packages/click/types.py:679
+#, python-brace-format
+msgid "{value!r} is not a valid boolean."
+msgstr "{value!r} nyɛ boolean a ɛwɔ mu."
+
+#: venv/Lib/site-packages/click/types.py:703
+#, python-brace-format
+msgid "{value!r} is not a valid UUID."
+msgstr "{value!r} nyɛ UUID a ɛfata."
+
+#: venv/Lib/site-packages/click/types.py:893
+msgid "file"
+msgstr "krataa"
+
+#: venv/Lib/site-packages/click/types.py:895
+msgid "directory"
+msgstr "folda"
+
+#: venv/Lib/site-packages/click/types.py:897
+msgid "path"
+msgstr "kwan"
+
+#: venv/Lib/site-packages/click/types.py:944
+#, python-brace-format
+msgid "{name} {filename!r} does not exist."
+msgstr "{name} {filename!r} nni hɔ."
+
+#: venv/Lib/site-packages/click/types.py:953
+#, python-brace-format
+msgid "{name} {filename!r} is a file."
+msgstr "{name} {filename!r} yɛ krataa."
+
+#: venv/Lib/site-packages/click/types.py:961
+#, python-brace-format
+msgid "{name} {filename!r} is a directory."
+msgstr "{name} {filename!r} yɛ folda."
+
+#: venv/Lib/site-packages/click/types.py:970
+#, python-brace-format
+msgid "{name} {filename!r} is not readable."
+msgstr "{name} {filename!r} ntumi nkenkan."
+
+#: venv/Lib/site-packages/click/types.py:979
+#, python-brace-format
+msgid "{name} {filename!r} is not writable."
+msgstr "{name} {filename!r} ntumi nkyerɛw."
+
+#: venv/Lib/site-packages/click/types.py:988
+#, python-brace-format
+msgid "{name} {filename!r} is not executable."
+msgstr "{name} {filename!r} ntumi nnyina so."
+
+#: venv/Lib/site-packages/click/types.py:1055
+#, python-brace-format
+msgid "{len_type} values are required, but {len_value} was given."
+msgid_plural "{len_type} values are required, but {len_value} were given."
+msgstr[0] "Ɛhia bo {len_type}, na wɔde {len_value} baako pɛ maa no."
+msgstr[1] "Ɛhia bo {len_type}, na wɔde {len_value} bebree maa no."
+
+#: venv/Lib/site-packages/flask_wtf/file.py:55
+#: venv/Lib/site-packages/wtforms/validators.py:293
+#: venv/Lib/site-packages/wtforms/validators.py:323
+msgid "This field is required."
+msgstr "Ɛsɛ sɛ wode nsɛm bɔ saa fael no mu."
+
+#: venv/Lib/site-packages/flask_wtf/file.py:94
+#, python-brace-format
+msgid "File does not have an approved extension: {extensions}"
+msgstr "Krataa no nni ka a wɔagye ato mu: {extensions}"
+
+#: venv/Lib/site-packages/flask_wtf/file.py:101
+msgid "File does not have an approved extension."
+msgstr "Krataa no nni ka a wɔagye ato mu."
+
+#: venv/Lib/site-packages/wtforms/validators.py:86
+#, python-format
+msgid "Invalid field name '%s'."
+msgstr "Fɛld din '%s' no mfata."
+
+#: venv/Lib/site-packages/wtforms/validators.py:99
+#, python-format
+msgid "Field must be equal to %(other_name)s."
+msgstr "Fɛld no ɛsɛ sɛ ɛyɛ pɛ sɛ %(other_name)s."
+
+#: venv/Lib/site-packages/wtforms/validators.py:146
+#, python-format
+msgid "Field must be at least %(min)d character long."
+msgid_plural "Field must be at least %(min)d characters long."
+msgstr[0] "Fɛld no ɛsɛ sɛ ɛwɔ %(min)d krataa mu kɛseɛ."
+msgstr[1] "Fɛld no ɛsɛ sɛ ɛwɔ %(min)d krataa mu kɛseɛ."
+
+#: venv/Lib/site-packages/wtforms/validators.py:152
+#, python-format
+msgid "Field cannot be longer than %(max)d character."
+msgid_plural "Field cannot be longer than %(max)d characters."
+msgstr[0] "Fɛld no ntumi nkyɛ sen %(max)d krataa."
+msgstr[1] "Fɛld no ntumi nkyɛ sen %(max)d krataa."
+
+#: venv/Lib/site-packages/wtforms/validators.py:158
+#, python-format
+msgid "Field must be exactly %(max)d character long."
+msgid_plural "Field must be exactly %(max)d characters long."
+msgstr[0] "Fɛld no ɛsɛ sɛ ɛyɛ %(max)d krataa pɛ."
+msgstr[1] "Fɛld no ɛsɛ sɛ ɛyɛ %(max)d krataa pɛ."
+
+#: venv/Lib/site-packages/wtforms/validators.py:164
+#, python-format
+msgid "Field must be between %(min)d and %(max)d characters long."
+msgstr "Fɛld no ɛsɛ sɛ ɛwɔ %(min)d ne %(max)d krataa mu."
+
+#: venv/Lib/site-packages/wtforms/validators.py:216
+#, python-format
+msgid "Number must be at least %(min)s."
+msgstr "Nɔma no ɛsɛ sɛ ɛyɛ kakra sen %(min)s."
+
+#: venv/Lib/site-packages/wtforms/validators.py:219
+#, python-format
+msgid "Number must be at most %(max)s."
+msgstr "Nɔma no ɛsɛ sɛ ɛnyɛ sen %(max)s."
+
+#: venv/Lib/site-packages/wtforms/validators.py:222
+#, python-format
+msgid "Number must be between %(min)s and %(max)s."
+msgstr "Nɔma no ɛsɛ sɛ ɛwɔ %(min)s ne %(max)s ntam."
+
+#: venv/Lib/site-packages/wtforms/validators.py:358
+msgid "Invalid input."
+msgstr "Nsɛm a wode too hɔ no mfata."
+
+#: venv/Lib/site-packages/wtforms/validators.py:422
+msgid "Invalid email address."
+msgstr "Email a wode too hɔ no mfata."
+
+#: venv/Lib/site-packages/wtforms/validators.py:460
+msgid "Invalid IP address."
+msgstr "IP a wode too hɔ no mfata."
+
+#: venv/Lib/site-packages/wtforms/validators.py:503
+msgid "Invalid Mac address."
+msgstr "Mac a wode too hɔ no mfata."
+
+#: venv/Lib/site-packages/wtforms/validators.py:540
+msgid "Invalid URL."
+msgstr "URL a wode too hɔ no mfata."
+
+#: venv/Lib/site-packages/wtforms/validators.py:561
+msgid "Invalid UUID."
+msgstr "UUID a wode too hɔ no mfata."
+
+#: venv/Lib/site-packages/wtforms/validators.py:595
+#, python-format
+msgid "Invalid value, must be one of: %(values)s."
+msgstr "Bo a wode too hɔ no mfata. Ɛsɛ sɛ ɛwɔ mu wɔ: %(values)s."
+
+#: venv/Lib/site-packages/wtforms/validators.py:631
+#, python-format
+msgid "Invalid value, can't be any of: %(values)s."
+msgstr "Bo a wode too hɔ no mfata. Ɛntumi ntena mu wɔ: %(values)s."
+
+#: venv/Lib/site-packages/wtforms/validators.py:700
+msgid "This field cannot be edited."
+msgstr "Fɛld yi ntumi nnsesa."
+
+#: venv/Lib/site-packages/wtforms/validators.py:716
+msgid "This field is disabled and cannot have a value."
+msgstr "Wɔato fɛld yi mu, na ɛntumi nni bo biara."
+
+#: venv/Lib/site-packages/wtforms/csrf/core.py:96
+msgid "Invalid CSRF Token."
+msgstr "CSRF tokɛn no mfata."
+
+#: venv/Lib/site-packages/wtforms/csrf/session.py:64
+msgid "CSRF token missing."
+msgstr "CSRF tokɛn no nni hɔ."
+
+#: venv/Lib/site-packages/wtforms/csrf/session.py:72
+msgid "CSRF failed."
+msgstr "CSRF no antumi anyɛ adwuma."
+
+#: venv/Lib/site-packages/wtforms/csrf/session.py:77
+msgid "CSRF token expired."
+msgstr "CSRF tokɛn no awie."
+
+#: venv/Lib/site-packages/wtforms/fields/choices.py:142
+msgid "Invalid Choice: could not coerce."
+msgstr "Paw a ɛmfata: ɛntumi nnyina ho."
+
+#: venv/Lib/site-packages/wtforms/fields/choices.py:149
+#: venv/Lib/site-packages/wtforms/fields/choices.py:203
+msgid "Choices cannot be None."
+msgstr "Paw biara ntumi nyɛ adeɛ biara nni hɔ."
+
+#: venv/Lib/site-packages/wtforms/fields/choices.py:155
+msgid "Not a valid choice."
+msgstr "Paw a ɛmfata."
+
+#: venv/Lib/site-packages/wtforms/fields/choices.py:194
+msgid "Invalid choice(s): one or more data inputs could not be coerced."
+msgstr "Paw a ɛmfata: nsɛm biako anaa bebree ntumi nnyina ho."
+
+#: venv/Lib/site-packages/wtforms/fields/choices.py:212
+#, python-format
+msgid "'%(value)s' is not a valid choice for this field."
+msgid_plural "'%(value)s' are not valid choices for this field."
+msgstr[0] "'%(value)s' nyɛ paw a ɛfata wɔ fɛld yi mu."
+msgstr[1] "'%(value)s' nyɛ mpaw a ɛfata wɔ fɛld yi mu."
+
+#: venv/Lib/site-packages/wtforms/fields/datetime.py:52
+msgid "Not a valid datetime value."
+msgstr "Ɛnyɛ bere ne da a ɛfata."
+
+#: venv/Lib/site-packages/wtforms/fields/datetime.py:78
+msgid "Not a valid date value."
+msgstr "Ɛnyɛ da a ɛfata."
+
+#: venv/Lib/site-packages/wtforms/fields/datetime.py:104
+msgid "Not a valid time value."
+msgstr "Ɛnyɛ bere a ɛfata."
+
+#: venv/Lib/site-packages/wtforms/fields/datetime.py:149
+msgid "Not a valid week value."
+msgstr "Ɛnyɛ nnafua a ɛfata."
+
+#: venv/Lib/site-packages/wtforms/fields/numeric.py:82
+#: venv/Lib/site-packages/wtforms/fields/numeric.py:92
+msgid "Not a valid integer value."
+msgstr "Ɛnyɛ nɔma a ɛyɛ mmerɛ."
+
+#: venv/Lib/site-packages/wtforms/fields/numeric.py:168
+msgid "Not a valid decimal value."
+msgstr "Ɛnyɛ decimal nɔma a ɛfata."
+
+#: venv/Lib/site-packages/wtforms/fields/numeric.py:197
+msgid "Not a valid float value."
+msgstr "Ɛnyɛ float nɔma a ɛfata."
+

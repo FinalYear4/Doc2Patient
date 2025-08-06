@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="text-3xl font-bold text-gray-900 mb-6">{{ _('Health Library') }}</h1>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for article in articles %}
+    <a href="{{ url_for('view_article', article_id=article.id) }}" class="block p-6 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100">
+        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">{{ article.title | trans }}</h5>
+        <p class="font-normal text-gray-700">Category: {{ article.category }}</p>
+    </a>
+    {% else %}
+    <p>{{ _('No articles found in the library.') }}</p>
+    {% endfor %}
+</div>
+{% endblock %}

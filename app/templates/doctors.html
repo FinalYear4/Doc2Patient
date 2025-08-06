@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-4xl font-extrabold text-gray-900 mb-8 text-center">{{ _('Meet Our Doctors') }}</h1>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {% for doctor in doctors %}
+        <div class="bg-white rounded-lg shadow-lg p-6 flex flex-col items-center text-center hover:shadow-2xl transition-shadow duration-300">
+            <img class="rounded-full h-32 w-32 object-cover mb-4 border-4 border-blue-200" src="{{ url_for('static', filename='profile_pics/' + doctor.image_file) }}">
+            
+            <h2 class="text-2xl font-bold text-gray-800">Dr. {{ doctor.username }}</h2>
+            <h3 class="text-md font-semibold text-blue-600 mb-2">{{ doctor.speciality or 'General Practitioner' }}</h3>
+            <p class="text-sm text-gray-500 mb-4">{{ doctor.experience_years or 'N/A' }} years of experience</p>
+
+            <!-- NEW RATING DISPLAY -->
+	    <div class="flex items-center justify-center mb-4 text-yellow-500">
+    		{% set rating = doctor.average_rating() | round(1) %}
+    		{% for i in range(rating | int) %}
+        	    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+    		{% endfor %}
+    	        <span class="text-gray-600 text-sm ml-2">{{ rating }} ({{ doctor.reviews_received.count() }} reviews)</span>
+	    </div>
+            
+            <p class="text-gray-600 flex-grow mb-4">"{{ doctor.bio or 'Dedicated to providing the best care for my patients.' }}"</p>
+
+            <div class="w-full border-t pt-4">
+                <p class="text-sm text-gray-700"><strong class="text-xl text-blue-700">{{ doctor.appointments_as_doctor.count() }}</strong> appointments completed on Doc2Patient</p>
+            </div>
+        </div>
+        {% else %}
+        <p class="text-center col-span-full">{{ _('No doctors are available at this time.') }}</p>
+        {% endfor %}
+    </div>
+    <div class="text-center mt-8">
+         <a href="{{ url_for('patient_dashboard') }}" class="text-blue-600 hover:underline">← Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

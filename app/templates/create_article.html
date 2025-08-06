@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="text-3xl font-bold text-gray-900 mb-6">{{ _('Create a New Health Article') }}</h1>
+
+<div class="bg-white p-8 rounded-lg shadow-md">
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <div class="space-y-6">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">{{ form.title.label }}</label>
+                {{ form.title(class="w-full mt-1 p-2 border border-gray-300 rounded-md shadow-sm") }}
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">{{ form.category.label }}</label>
+                {{ form.category(class="w-full mt-1 p-2 border border-gray-300 rounded-md shadow-sm") }}
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">{{ form.content.label }}</label>
+                <p class="text-xs text-gray-500 mb-1">You can use Markdown for formatting (e.g., `## Header`, `* item`).</p>
+                {{ form.content(rows=10, class="w-full mt-1 p-2 border border-gray-300 rounded-md shadow-sm") }}
+            </div>
+            <div>
+                {{ form.submit(class="w-full flex justify-center py-2 px-4 border rounded-md text-white bg-blue-600 hover:bg-blue-700") }}
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

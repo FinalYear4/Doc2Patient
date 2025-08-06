@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto px-6 py-12">
+    <h1 class="text-4xl font-extrabold text-center mb-12 text-gray-800">{{ _('Research & Devlopment Team') }}</h1>
+    
+    <div class="bg-white p-8 rounded-lg shadow-xl">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 text-center">
+            
+            <!-- Principal Investigator -->
+            <div class="p-4">
+                <h2 class="text-xl font-bold text-blue-800">{{ _('Principal Investigator') }}</h2>
+                <p class="mt-2 text-lg font-semibold text-gray-700">Dr. Srinivasan Shankar Balapangu</p>
+                <a href="mailto:ssbalapangu@ug.edu.gh" class="text-blue-600 hover:underline">ssbalapangu@ug.edu.gh</a>
+            </div>
+
+            <!-- Co-developer -->
+            <div class="p-4">
+                <h2 class="text-xl font-bold text-blue-800">{{ _('Co-developer') }}</h2>
+                <p class="mt-2 text-lg font-semibold text-gray-700">Emmanuel Kofi Dugbatey</p>
+                <a href="mailto:dugbateykofiemmanuel@gmail.com" class="text-blue-600 hover:underline">dugbateykofiemmanuel@gmail.com</a>
+            </div>
+
+            <!-- Co-developer -->
+            <div class="p-4">
+                <h2 class="text-xl font-bold text-blue-800">{{ _('Co-developer') }}</h2>
+                <p class="mt-2 text-lg font-semibold text-gray-700">Efua Kusiwa Aboagye</p>
+                <a href="mailto:efuakusiwa@gmail.com" class="text-blue-600 hover:underline">efuakusiwa@gmail.com</a>
+            </div>
+
+            <!-- Co-developer -->
+            <div class="p-4">
+                <h2 class="text-xl font-bold text-blue-800">{{ _('Co-developer') }}</h2>
+                <p class="mt-2 text-lg font-semibold text-gray-700">Wisdom Abuyah Osborn</p>
+                <a href="mailto:abuyahwisdom@gmail.com" class="text-blue-600 hover:underline">abuyahwisdom@gmail.com</a>
+            </div>
+            
+            <!-- Co-developer -->
+            <div class="p-4 md:col-start-2">
+                <h2 class="text-xl font-bold text-blue-800">{{ _('Co-developer') }}</h2>
+                <p class="mt-2 text-lg font-semibold text-gray-700">Delores Nkrumah</p>
+                <a href="mailto:dnkrumah016@st.ug.edu.gh" class="text-blue-600 hover:underline">dnkrumah016@st.ug.edu.gh</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
