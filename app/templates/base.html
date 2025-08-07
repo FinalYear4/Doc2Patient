@@ -6,7 +6,7 @@
     <title>{{ title }} - Doc2Patient</title>
     
     <!-- Favicon Links -->
-    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='logo.svg') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='logo.png') }}">
     <link rel="alternate icon" href="{{ url_for('static', filename='logo.png') }}">
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -45,7 +45,7 @@
                     <!-- Logo -->
                     <div class="flex-shrink-0">
                         <a href="{{ url_for('index') if current_user.is_authenticated else url_for('landing') }}" class="flex items-center space-x-3">
-                            <img src="{{ url_for('static', filename='logo.svg') }}" alt="Doc2Patient Logo" class="h-8">
+                            <img src="{{ url_for('static', filename='logo.png') }}" alt="Doc2Patient Logo" class="h-8">
                             <span class="text-xl font-bold text-blue-600">Doc2Patient</span>
                         </a>
                     </div>
