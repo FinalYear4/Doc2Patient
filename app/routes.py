@@ -35,17 +35,17 @@ def landing():
             
     return render_template('landing.html', testimonials=testimonials)
 
-@app.route('/contact')
-def contact():
-    return render_template('contact.html', title='Contact Us')
-
-@app.route('/how_it_works')
+@app.route('/how-it-works')
 def how_it_works():
     return render_template('how_it_works.html', title='How It Works')
 
 @app.route('/faq')
 def faq():
-    return render_template('faq.html', title='FAQ')
+    return render_template('faq.html', title='Frequently Asked Questions')
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html', title='Contact Us')
 
 @app.route('/set_language/<language>')
 def set_language(language):
