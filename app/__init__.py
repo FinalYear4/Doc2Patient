@@ -25,7 +25,7 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 login = LoginManager(app)
 login.login_view = 'login'
-socketio = SocketIO(app)
+socketio = SocketIO(app, async_mode='eventlet', cors_allowed_origins="*")
 mail = Mail(app)
 babel = Babel(app, locale_selector=get_locale)
 # The line 'Markdown(app)' has been removed because we use a custom filter below.
