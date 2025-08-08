@@ -21,6 +21,9 @@ from app.email import send_password_reset_email
 from app.sms import send_sms
 from sqlalchemy import or_
 
+from app.email import send_new_appointment_email
+from app.sms import send_new_appointment_sms
+
 # =============================================================================
 # TOP-LEVEL & LANGUAGE ROUTES
 # =============================================================================
@@ -124,7 +127,6 @@ def create_article():
         
     return render_template('create_article.html', title='Create New Article', form=form)
 
-# Replace the existing patient_dashboard function
 @app.route('/patient_dashboard', methods=['GET', 'POST'])
 @login_required
 def patient_dashboard():
@@ -134,7 +136,7 @@ def patient_dashboard():
     
     form = AppointmentForm()
     
-    # --- SEARCH LOGIC (Unchanged) ---
+    # --- SEARCH AND FILTER LOGIC ---
     search_query = request.args.get('search', '').strip()
     doctors_query = User.query.filter_by(role='doctor')
     if search_query:
@@ -144,22 +146,47 @@ def patient_dashboard():
         )
     doctors = doctors_query.order_by(User.username).all()
     
-    # --- THIS IS THE SIMPLIFIED PART ---
-    # We now only pass the ID for the form's internal validation.
-    # The template will handle displaying the doctor's details.
+    # Set the choices for the form field for both GET and POST requests
     form.doctor_id.choices = [(d.id, d.username) for d in doctors]
-    # ------------------------------------
 
+    # --- HANDLE FORM SUBMISSION ---
     if form.validate_on_submit():
-        appointment = Appointment(doctor_id=form.doctor_id.data, patient_id=current_user.id, appointment_time=form.appointment_time.data, notes=form.notes.data, status='pending')
+        # Create and save the new appointment
+        appointment = Appointment(
+            doctor_id=form.doctor_id.data,
+            patient_id=current_user.id,
+            appointment_time=form.appointment_time.data,
+            notes=form.notes.data,
+            status='pending'
+        )
         db.session.add(appointment)
         db.session.commit()
-        flash('Your appointment request has been sent!', 'success')
+
+        # --- NEW DOCTOR NOTIFICATION LOGIC ---
+        doctor = User.query.get(appointment.doctor_id)
+        if doctor:
+            # Send Email Notification to the doctor
+            send_new_appointment_email(doctor=doctor, patient=current_user, appointment=appointment)
+            
+            # Send SMS Notification to the doctor (if they have a phone number)
+            send_new_appointment_sms(doctor=doctor, patient=current_user, appointment=appointment)
+        # ------------------------------------
+        
+        flash('Your appointment request has been sent! The doctor has been notified.', 'success')
         return redirect(url_for('patient_dashboard'))
 
-    # ... (the rest of the function remains the same) ...
-    active_appointments = Appointment.query.filter(Appointment.patient_id == current_user.id, Appointment.status.in_(['pending', 'confirmed', 'declined'])).order_by(Appointment.appointment_time.asc()).all()
-    completed_appointments = Appointment.query.filter_by(patient_id=current_user.id, status='completed').order_by(Appointment.appointment_time.desc()).all()
+    # --- FETCH DATA FOR DISPLAY ---
+    # Get active appointments (pending, confirmed, or declined)
+    active_appointments = Appointment.query.filter(
+        Appointment.patient_id == current_user.id,
+        Appointment.status.in_(['pending', 'confirmed', 'declined'])
+    ).order_by(Appointment.appointment_time.asc()).all()
+    
+    # Get completed appointments for the follow-up section
+    completed_appointments = Appointment.query.filter_by(
+        patient_id=current_user.id, 
+        status='completed'
+    ).order_by(Appointment.appointment_time.desc()).all()
 
     return render_template(
         'patient_dashboard.html', 
@@ -167,7 +194,7 @@ def patient_dashboard():
         form=form, 
         appointments=active_appointments,
         completed_appointments=completed_appointments,
-        doctors=doctors, # Pass the full doctor objects to the template
+        doctors=doctors,
         search_query=search_query
     )
 

@@ -23,3 +23,15 @@ def send_password_reset_email(user):
         text_body=render_template('email/reset_password.txt', user=user, token=token),
         html_body=render_template('email/reset_password.html', user=user, token=token)
     )
+
+# --- ADD THIS NEW FUNCTION AT THE END ---
+def send_new_appointment_email(doctor, patient, appointment):
+    send_email(
+        '[Doc2Patient] New Appointment Request',
+        sender=app.config['ADMINS'][0],
+        recipients=[doctor.email],
+        text_body=render_template('email/new_appointment_alert.txt',
+                                  doctor=doctor, patient=patient, appointment=appointment),
+        html_body=render_template('email/new_appointment_alert.html',
+                                  doctor=doctor, patient=patient, appointment=appointment)
+    )

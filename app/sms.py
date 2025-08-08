@@ -30,3 +30,14 @@ def send_sms(to, message):
     
     # Send in a background thread to not slow down the application
     Thread(target=send_async_sms, args=(app, url)).start()
+
+# --- ADD THIS NEW FUNCTION ---
+def send_new_appointment_sms(doctor, patient, appointment):
+    if doctor.phone_number:
+        message = (
+            f"New Doc2Patient Appointment Request from {patient.username} "
+            f"for {appointment.appointment_time.strftime('%b %d @ %H:%M')}. "
+            f"Please log in to your dashboard to respond."
+        )
+        send_sms(to=doctor.phone_number, message=message)
+# ---------------------------

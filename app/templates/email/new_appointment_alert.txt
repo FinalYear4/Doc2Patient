@@ -1,0 +1,14 @@
+Dear Dr. {{ doctor.username }},
+
+You have received a new appointment request from a patient on Doc2Patient.
+
+Patient Name: {{ patient.username }}
+Requested Time: {{ appointment.appointment_time.strftime('%Y-%m-%d at %H:%M') }}
+Reason for Consultation: {{ appointment.notes }}
+
+Please log in to your dashboard to review, confirm, or decline this request.
+
+{{ url_for('doctor_dashboard', _external=True) }}
+
+Thank you,
+The Doc2Patient Team
