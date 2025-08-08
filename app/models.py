@@ -7,6 +7,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from time import time
 from flask import current_app # Import current_app
+import jwt  # <-- IMPORT IS NOW AT THE TOP
 
 class User(UserMixin, db.Model):
     __tablename__ = 'user'
