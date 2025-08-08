@@ -1,6 +1,6 @@
 # run.py
+from main import app
 
-from app import app, socketio # import socketio
-
-if __name__ == '__main__':
-    socketio.run(app, debug=True) # use socketio.run
+if __name__ == "__main__":
+    app.run(debug=True)
+```    *Now, when you run `python run.py` locally, it will correctly start through `main.py`, ensuring the monkey patch is applied even during development.*
