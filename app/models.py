@@ -20,7 +20,7 @@ class User(UserMixin, db.Model):
     region = db.Column(db.String(50), nullable=True)
 
     # --- ADD THESE TWO LINES FOR 2FA ---
-    otp_secret = db.Column(db.String(16), nullable=True)
+    otp_secret = db.Column(db.String(32), nullable=True)
     otp_enabled = db.Column(db.Boolean, nullable=False, default=False, server_default='0')
     # -----------------------------------
     
