@@ -1,4 +1,9 @@
 # app/routes.py
+import pyotp
+import qrcode
+import io
+import base64
+from flask import session
 
 # --- Core Imports ---
 import secrets
@@ -16,7 +21,7 @@ from app import app, db, socketio
 from app.models import (User, Appointment, ChatMessage, HealthArticle, 
                         ArticleRecommendation, VitalsRecord, Review)
 from app.forms import (LoginForm, RegistrationForm, AppointmentForm, UpdateProfileForm, 
-                       VitalsForm, RequestPasswordResetForm, ResetPasswordForm, ArticleForm, ReviewForm)
+                       VitalsForm, RequestPasswordResetForm, ResetPasswordForm, ArticleForm, ReviewForm, TwoFactorForm)
 from app.email import send_password_reset_email
 from app.sms import send_sms
 from sqlalchemy import or_
@@ -312,18 +317,53 @@ def doctors():
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
+    
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password', 'danger')
             return redirect(url_for('login'))
+
+        # --- NEW 2FA LOGIC ---
+        if user.otp_enabled:
+            # Store user_id and 'next' URL in session to use after 2FA
+            session['user_id_for_2fa'] = user.id
+            session['next_url_for_2fa'] = request.args.get('next')
+            return redirect(url_for('login_2fa'))
+        # --- END 2FA LOGIC ---
+
         login_user(user, remember=form.remember_me.data)
         next_page = request.args.get('next')
         if not next_page or urlparse(next_page).netloc != '':
             next_page = url_for('index')
         return redirect(next_page)
+        
     return render_template('login.html', title='Sign In', form=form)
+
+@app.route('/login/2fa', methods=['GET', 'POST'])
+def login_2fa():
+    if 'user_id_for_2fa' not in session:
+        return redirect(url_for('login'))
+    
+    form = TwoFactorForm()
+    if form.validate_on_submit():
+        user_id = session['user_id_for_2fa']
+        user = User.query.get(user_id)
+        if user and pyotp.TOTP(user.otp_secret).verify(form.code.data):
+            # Clean up session
+            session.pop('user_id_for_2fa')
+            next_url = session.pop('next_url_for_2fa', None)
+            
+            login_user(user, remember=True) # Log the user in
+            
+            if not next_url or urlparse(next_url).netloc != '':
+                next_url = url_for('index')
+            return redirect(next_url)
+        else:
+            flash('Invalid 2FA code.', 'danger')
+    
+    return render_template('login_2fa.html', title='Verify 2FA', form=form)
 
 @app.route('/logout')
 def logout():
@@ -385,6 +425,57 @@ def profile():
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
     return render_template('profile.html', title='Edit Profile',
                            form=form, image_file=image_file)
+
+@app.route('/2fa/enable', methods=['GET', 'POST'])
+@login_required
+def enable_2fa():
+    # Generate a new secret key for the user
+    if 'otp_secret' not in session:
+        session['otp_secret'] = pyotp.random_base32()
+    
+    # Create the provisioning URI for the authenticator app
+    totp_uri = pyotp.totp.TOTP(session['otp_secret']).provisioning_uri(
+        name=current_user.email,
+        issuer_name='Doc2Patient'
+    )
+    
+    # Generate the QR code
+    qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L, box_size=10, border=4)
+    qr.add_data(totp_uri)
+    qr.make(fit=True)
+    img = qr.make_image(fill_color="black", back_color="white")
+
+    # Convert image to a data URI to display in the template
+    buffered = io.BytesIO()
+    img.save(buffered, format="PNG")
+    img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
+    qr_code_data_uri = f"data:image/png;base64,{img_str}"
+
+    # If the user submits the verification code
+    if request.method == 'POST':
+        code = request.form.get('code')
+        totp = pyotp.TOTP(session['otp_secret'])
+        if totp.verify(code):
+            # Code is valid, enable 2FA for the user
+            current_user.otp_secret = session['otp_secret']
+            current_user.otp_enabled = True
+            db.session.commit()
+            session.pop('otp_secret') # Clean up session
+            flash('2FA has been successfully enabled!', 'success')
+            return redirect(url_for('profile'))
+        else:
+            flash('Invalid verification code. Please try again.', 'danger')
+
+    return render_template('enable_2fa.html', title='Enable 2FA', qr_code=qr_code_data_uri, secret=session['otp_secret'])
+
+@app.route('/2fa/disable', methods=['POST'])
+@login_required
+def disable_2fa():
+    current_user.otp_enabled = False
+    current_user.otp_secret = None
+    db.session.commit()
+    flash('2FA has been disabled.', 'success')
+    return redirect(url_for('profile'))
 
 @app.route('/leave_review/<int:appointment_id>', methods=['GET', 'POST'])
 @login_required

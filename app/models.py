@@ -18,6 +18,11 @@ class User(UserMixin, db.Model):
     # --- THIS LINE IS MODIFIED (unique=True is removed) ---
     phone_number = db.Column(db.String(20), nullable=True)
     region = db.Column(db.String(50), nullable=True)
+
+    # --- ADD THESE TWO LINES FOR 2FA ---
+    otp_secret = db.Column(db.String(16), nullable=True)
+    otp_enabled = db.Column(db.Boolean, nullable=False, default=False, server_default='0')
+    # -----------------------------------
     
     password_hash = db.Column(db.String(256))
     role = db.Column(db.String(20), index=True, default='patient')

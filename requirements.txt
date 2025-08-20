@@ -31,10 +31,12 @@ packaging==25.0
 pillow==11.3.0
 psycopg2-binary==2.9.10
 PyJWT==2.10.1
+pyotp==2.9.0
 python-dotenv==1.1.1
 python-engineio==4.12.2
 python-socketio==5.13.0
 pytz==2025.2
+qrcode==8.2
 requests==2.32.4
 simple-websocket==1.1.0
 SQLAlchemy==2.0.41
