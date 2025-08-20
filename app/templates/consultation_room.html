@@ -1,48 +1,43 @@
 {% extends "base.html" %}
 
 {% block content %}
-<!-- Main container for the new layout -->
-<div class="flex flex-col md:flex-row h-[calc(100vh-120px)] gap-6">
+<!-- Main container with a fixed height to prevent the whole page from scrolling -->
+<div class="h-[calc(100vh-120px)] flex flex-col md:flex-row gap-6 overflow-hidden">
 
-    <!-- Main Content Area (Video) -->
-    <div class="flex-grow flex flex-col">
-        <h1 class="text-3xl font-bold text-gray-900 mb-4">{{ _('Consultation Room') }}</h1>
+    <!-- Main Content Area (Video) - This will remain fixed -->
+    <div class="flex-grow flex flex-col p-4 bg-gray-100 rounded-lg">
+        <h1 class="text-2xl font-bold text-gray-800 mb-4 flex-shrink-0">{{ _('Consultation Room') }}</h1>
         
-        <!-- Video Container with Control Bar -->
+        <!-- Video Container - This will now fill the available space -->
         <div class="relative bg-black rounded-lg shadow-2xl flex-grow flex flex-col">
             <!-- Video Streams Wrapper -->
             <div class="flex-grow grid grid-cols-1 md:grid-cols-2 gap-2 p-2">
                 <!-- Local Video -->
-                <div class="relative aspect-video">
+                <div class="relative w-full h-full">
                     <video id="localVideo" autoplay playsinline muted class="w-full h-full object-cover rounded-md"></video>
                     <h3 class="absolute bottom-2 left-2 text-white text-sm bg-black bg-opacity-50 px-2 py-1 rounded">{{ current_user.username }} (You)</h3>
                 </div>
                 <!-- Remote Video -->
-                <div class="relative aspect-video">
+                <div class="relative w-full h-full">
                     <video id="remoteVideo" autoplay playsinline class="w-full h-full object-cover rounded-md"></video>
                     <h3 class="absolute bottom-2 left-2 text-white text-sm bg-black bg-opacity-50 px-2 py-1 rounded">{% if current_user.role == 'patient' %} Dr. {{ appointment.doctor.username }} {% else %} {{ appointment.patient.username }} {% endif %}</h3>
                 </div>
             </div>
             
             <!-- Control Bar -->
-            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center justify-center space-x-2 md:space-x-4 bg-gray-800 bg-opacity-70 p-3 rounded-full">
-                <button id="muteBtn" class="bg-gray-600 hover:bg-gray-500 p-3 rounded-full text-white focus:outline-none" title="Mute/Unmute Microphone">
-                    <svg id="micIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
-                </button>
-                <button id="cameraBtn" class="bg-gray-600 hover:bg-gray-500 p-3 rounded-full text-white focus:outline-none" title="Start/Stop Camera">
-                    <svg id="cameraIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                </button>
-                <button id="endCallBtn" class="bg-red-600 hover:bg-red-700 p-3 rounded-full text-white focus:outline-none" title="End Call">
-                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7.707 7.707a1 1 0 011.414 0L10 8.586l.879-.879a1 1 0 111.414 1.414L11.414 10l.879.879a1 1 0 11-1.414 1.414L10 11.414l-.879.879a1 1 0 01-1.414-1.414L8.586 10 7.707 9.121a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                </button>
+            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center justify-center space-x-2 md:space-x-4 bg-gray-800 bg-opacity-70 p-3 rounded-full z-20">
+                <!-- ... (Buttons are unchanged) ... -->
+                 <button id="muteBtn" class="bg-gray-600 hover:bg-gray-500 p-3 rounded-full text-white focus:outline-none" title="Mute/Unmute Microphone"><svg id="micIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg></button>
+                <button id="cameraBtn" class="bg-gray-600 hover:bg-gray-500 p-3 rounded-full text-white focus:outline-none" title="Start/Stop Camera"><svg id="cameraIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg></button>
+                <button id="endCallBtn" class="bg-red-600 hover:bg-red-700 p-3 rounded-full text-white focus:outline-none" title="End Call"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7.707 7.707a1 1 0 011.414 0L10 8.586l.879-.879a1 1 0 111.414 1.414L11.414 10l.879.879a1 1 0 11-1.414 1.414L10 11.414l-.879.879a1 1 0 01-1.414-1.414L8.586 10 7.707 9.121a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg></button>
             </div>
         </div>
     </div>
 
-    <!-- Right Sidebar (Vitals and Chat) -->
-    <div class="w-full md:w-96 flex-shrink-0 flex flex-col gap-6">
+    <!-- Right Sidebar - This will now scroll independently -->
+    <div class="w-full md:w-96 flex-shrink-0 flex flex-col gap-6 overflow-y-auto p-4 bg-gray-100 rounded-lg">
         <!-- Vitals Panel -->
-        <div class="bg-white shadow-md rounded-lg p-6">
+        <div class="bg-white shadow-md rounded-lg p-6 flex-shrink-0">
             <h2 class="text-xl font-semibold mb-4">{{ _('Latest Vitals') }}</h2>
             <div class="space-y-3 text-md">
                 <div class="flex justify-between"><strong>{{ _('Blood Pressure') }}:</strong> <span id="bp-data">--/--</span> mmHg</div>
@@ -63,14 +58,14 @@
         </div>
         
         <!-- Chat Panel -->
-        <div class="bg-white shadow-md rounded-lg p-6 flex-grow flex flex-col">
-            <h2 class="text-xl font-semibold mb-4">{{ _('Live Chat') }}</h2>
+        <div class="bg-white shadow-md rounded-lg p-6 flex-grow flex flex-col min-h-[300px]">
+            <h2 class="text-xl font-semibold mb-4 flex-shrink-0">{{ _('Live Chat') }}</h2>
             <div id="messages" class="flex-grow overflow-y-auto p-4 border rounded-md mb-4 bg-gray-50">
                 {% for msg in previous_messages %}
                     <div class="mb-2"><strong>{{ msg.username }}:</strong> {{ msg.message }}</div>
                 {% endfor %}
             </div>
-            <form id="message-form" class="flex items-center">
+            <form id="message-form" class="flex items-center flex-shrink-0">
                 <input id="message-input" type="text" placeholder="{{ _('Type your message...') }}" class="flex-grow px-3 py-2 border border-gray-300 rounded-l-md">
                 <button type="button" id="voice-btn" title="Voice-to-Text" class="bg-gray-200 text-gray-700 px-4 py-2 border-t border-b border-gray-300 hover:bg-gray-300">🎤</button>
                 <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-r-md hover:bg-blue-700">{{ _('Send') }}</button>
