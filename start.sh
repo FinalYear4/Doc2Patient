@@ -1,3 +1,4 @@
 #!/bin/bash
+# Run database migrations
 flask db upgrade
-gunicorn 'app:app'
+gunicorn 'main:app'
