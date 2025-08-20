@@ -468,7 +468,7 @@ def enable_2fa():
 
     return render_template('enable_2fa.html', title='Enable 2FA', qr_code=qr_code_data_uri, secret=session['otp_secret'])
 
-@app.route('/2fa/disable', methods=['POST'])
+@app.route('/2fa/disable') # Changed to a GET route for simplicity
 @login_required
 def disable_2fa():
     current_user.otp_enabled = False
