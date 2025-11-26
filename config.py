@@ -37,3 +37,8 @@ class Config:
     HUBTEL_CLIENT_ID = os.environ.get('HUBTEL_CLIENT_ID')
     HUBTEL_CLIENT_SECRET = os.environ.get('HUBTEL_CLIENT_SECRET')
     HUBTEL_SENDER_ID = os.environ.get('HUBTEL_SENDER_ID')
+
+    # --- DEVELOPER ADMIN CONFIG ---
+    ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME')
+    ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL')
+    ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD')

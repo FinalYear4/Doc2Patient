@@ -1,5 +1,5 @@
 # app/models.py
-
+from app import app
 from sqlalchemy import UniqueConstraint # <-- Add this import at the top
 from app import db, login
 from flask_login import UserMixin
@@ -23,12 +23,14 @@ class User(UserMixin, db.Model):
     otp_secret = db.Column(db.String(32), nullable=True)
     otp_enabled = db.Column(db.Boolean, nullable=False, default=False, server_default='0')
     # -----------------------------------
-    
+    is_admin = db.Column(db.Boolean, nullable=False, default=False, server_default='0')
+    is_active = db.Column(db.Boolean, nullable=False, default=True, server_default='1')
+
     password_hash = db.Column(db.String(256))
     role = db.Column(db.String(20), index=True, default='patient')
     speciality = db.Column(db.String(100), nullable=True)
     experience_years = db.Column(db.Integer, nullable=True)
-    image_file = db.Column(db.String(20), nullable=False, server_default='default.jpg', default='default.jpg')
+    image_file = db.Column(db.String(40), nullable=False, server_default='default.jpg', default='default.jpg')
     bio = db.Column(db.Text, nullable=True)
 
     appointments_as_doctor = db.relationship('Appointment', foreign_keys='Appointment.doctor_id', backref='doctor', lazy='dynamic')
@@ -163,6 +165,49 @@ class VitalsRecord(db.Model):
     def __repr__(self):
         return f'<VitalsRecord {self.id} for patient {self.patient_id}>'
 
+# --- NEW ADMIN USER OBJECT (NOT a database model) ---
+class AdminUser(UserMixin):
+    def __init__(self):
+        # We assign the necessary attributes
+        self.id = 0 # Special ID for Admin
+        self.username = app.config['ADMIN_USERNAME']
+        self.email = app.config['ADMIN_EMAIL']
+        self.role = 'admin'
+        self.is_admin = True
+
+        # --- ADD THESE MISSING ATTRIBUTES ---
+        self.image_file = 'default.jpg'  # Give the admin a default picture
+        self.phone_number = 'N/A'
+        self.region = 'N/A'
+        # ------------------------------------
+
+        # Note: is_active is inherited from UserMixin and defaults to True, 
+        # so we do not need to set it here.
+
+    def check_password(self, password):
+        return password == app.config['ADMIN_PASSWORD']
+
+# --- ADD THIS NEW MODEL ---
+class UserReport(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    subject = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    status = db.Column(db.String(20), default='Open', index=True) # Open, In Progress, Closed
+    admin_response = db.Column(db.Text, nullable=True)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+
+    author = db.relationship('User', backref=db.backref('reports', lazy='dynamic'))
+
+    def __repr__(self):
+        return f'<UserReport {self.subject}>'
+# ---------------------------
+
 @login.user_loader
-def load_user(id):
-    return User.query.get(int(id))
+def load_user(user_id):
+    user_id = int(user_id)
+    # If the user_id is our special admin ID, return the AdminUser object
+    if user_id == 0:
+        return AdminUser()
+    # Otherwise, load the user from the database as normal
+    return User.query.get(user_id)

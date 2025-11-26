@@ -7,10 +7,10 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField, IntegerField, TextAreaField, RadioField
 from wtforms.validators import DataRequired, ValidationError, Email, EqualTo
 from wtforms import DecimalField, IntegerField
-from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, Optional, NumberRange
+from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, Optional, NumberRange, Length
 from app.models import User, Appointment
 from wtforms import TextAreaField
-from wtforms.fields import DateTimeLocalField
+from wtforms.fields import DateTimeLocalField, DateField
 from flask_login import current_user
 from datetime import timedelta
 
@@ -19,6 +19,14 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
+
+# --- ADD THIS NEW FORM CLASS ---
+class DoctorReportForm(FlaskForm):
+    doctor_name = StringField('Search by Doctor Name', validators=[Optional()])
+    start_date = DateField('Start Date', validators=[Optional()])
+    end_date = DateField('End Date', validators=[Optional()])
+    submit = SubmitField('Generate Report')
+# -----------------------------
 
 class TwoFactorForm(FlaskForm):
     code = StringField('6-Digit Code', validators=[DataRequired()])
@@ -168,3 +176,16 @@ class ReviewForm(FlaskForm):
     is_featured = BooleanField('Allow this testimonial to be featured on the homepage?')
     submit = SubmitField('Submit Review')
 # -----------------------------------------------------
+
+# Add this new form class to app/forms.py
+class ReportIssueForm(FlaskForm):
+    subject = StringField('Subject', validators=[DataRequired(), Length(min=5, max=100)])
+    description = TextAreaField('Please describe the issue in detail', validators=[DataRequired(), Length(min=20)])
+    submit = SubmitField('Submit Report')
+
+class AdminResponseForm(FlaskForm):
+    response = TextAreaField('Your Response', validators=[DataRequired()])
+    status = SelectField('Update Status', choices=[
+        ('Open', 'Open'), ('In Progress', 'In Progress'), ('Closed', 'Closed')
+    ], validators=[DataRequired()])
+    submit = SubmitField('Submit Response')

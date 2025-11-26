@@ -19,12 +19,15 @@ from urllib.parse import urlparse
 # --- Application-Specific Imports ---
 from app import app, db, socketio
 from app.models import (User, Appointment, ChatMessage, HealthArticle, 
-                        ArticleRecommendation, VitalsRecord, Review)
+                        ArticleRecommendation, VitalsRecord, Review, AdminUser, UserReport)
 from app.forms import (LoginForm, RegistrationForm, AppointmentForm, UpdateProfileForm, 
-                       VitalsForm, RequestPasswordResetForm, ResetPasswordForm, ArticleForm, ReviewForm, TwoFactorForm)
+                       VitalsForm, RequestPasswordResetForm, ResetPasswordForm, ArticleForm, ReviewForm, TwoFactorForm, ReportIssueForm, AdminResponseForm, DoctorReportForm)
 from app.email import send_password_reset_email
 from app.sms import send_sms
 from sqlalchemy import or_
+from sqlalchemy import func
+from functools import wraps # <-- IMPORT FOR DECORATOR
+from datetime import datetime, time # Add this import at the top
 
 from app.email import send_new_appointment_email
 from app.sms import send_new_appointment_sms
@@ -32,6 +35,17 @@ from app.sms import send_new_appointment_sms
 # =============================================================================
 # TOP-LEVEL & LANGUAGE ROUTES
 # =============================================================================
+# --- THIS IS THE MISSING DECORATOR DEFINITION ---
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not current_user.is_authenticated or not hasattr(current_user, 'is_admin') or not current_user.is_admin:
+            flash('You do not have permission to access this page.', 'danger')
+            return redirect(url_for('index'))
+        return f(*args, **kwargs)
+    return decorated_function
+# -----------------------------------------------
+
 
 @app.route('/')
 def landing():
@@ -65,11 +79,17 @@ def set_language(language):
 @app.route('/index')
 @login_required
 def index():
-    if current_user.role == 'doctor':
+    # This route is the internal "home" that directs to the correct dashboard
+    if hasattr(current_user, 'is_admin') and current_user.is_admin:
+        return redirect(url_for('admin_dashboard'))
+    elif current_user.role == 'doctor':
         return redirect(url_for('doctor_dashboard'))
     elif current_user.role == 'patient':
         return redirect(url_for('patient_dashboard'))
+    
+    # A fallback just in case
     return redirect(url_for('landing'))
+
 
 def save_picture(form_picture):
     random_hex = secrets.token_hex(8)
@@ -227,6 +247,115 @@ def view_patient_vitals(patient_id):
                            patient=patient, 
                            records=records)
 
+# Add this new route for users
+@app.route('/report-issue', methods=['GET', 'POST'])
+@login_required
+def report_issue():
+    form = ReportIssueForm()
+    if form.validate_on_submit():
+        report = UserReport(
+            subject=form.subject.data,
+            description=form.description.data,
+            author=current_user
+        )
+        db.session.add(report)
+        db.session.commit()
+        flash('Your issue has been reported successfully. We will get back to you shortly.', 'success')
+        return redirect(url_for('my_reports'))
+    return render_template('report_issue.html', title='Report an Issue', form=form)
+
+@app.route('/my-reports')
+@login_required
+def my_reports():
+    reports = current_user.reports.order_by(UserReport.timestamp.desc()).all()
+    return render_template('my_reports.html', title='My Reported Issues', reports=reports)
+
+# --- ADMIN ROUTES ---
+@app.route('/admin/dashboard')
+@login_required
+@admin_required # This will now work correctly
+def admin_dashboard():
+    users = User.query.filter(User.is_admin == False).order_by(User.id).all()
+    reports = UserReport.query.order_by(UserReport.timestamp.desc()).all()
+    return render_template('admin/dashboard.html', title='Admin Dashboard', users=users, reports=reports)
+
+@app.route('/admin/user/<int:user_id>/toggle_active', methods=['POST'])
+@login_required
+@admin_required # This will now work correctly
+def toggle_user_active(user_id):
+    user = User.query.get_or_404(user_id)
+    user.is_active = not user.is_active
+    db.session.commit()
+    flash(f"User {user.username}'s account has been {'activated' if user.is_active else 'deactivated'}.", 'success')
+    return redirect(url_for('admin_dashboard'))
+
+@app.route('/admin/user/<int:user_id>/delete', methods=['POST'])
+@login_required
+@admin_required # This will now work correctly
+def delete_user(user_id):
+    user = User.query.get_or_404(user_id)
+    if user.is_admin:
+        flash('Admin accounts cannot be deleted.', 'danger')
+        return redirect(url_for('admin_dashboard'))
+    db.session.delete(user)
+    db.session.commit()
+    flash(f"User {user.username}'s account has been permanently deleted.", 'success')
+    return redirect(url_for('admin_dashboard'))
+
+@app.route('/admin/report/<int:report_id>', methods=['GET', 'POST'])
+@login_required
+@admin_required # This will now work correctly
+def view_report(report_id):
+    report = UserReport.query.get_or_404(report_id)
+    form = AdminResponseForm()
+    if form.validate_on_submit():
+        report.admin_response = form.response.data
+        report.status = form.status.data
+        db.session.commit()
+        flash('Your response has been sent to the user.', 'success')
+        return redirect(url_for('admin_dashboard'))
+    elif request.method == 'GET':
+        form.response.data = report.admin_response
+        form.status.data = report.status
+    return render_template('admin/view_report.html', title='View Report', report=report, form=form)
+
+# In app/routes.py
+
+@app.route('/admin/reports', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def admin_reports():
+    form = DoctorReportForm() # We still pass the form to the template
+    
+    # --- STEP 1: Get all doctors ---
+    doctors = User.query.filter_by(role='doctor').order_by(User.username).all()
+
+    # --- STEP 2: Explicitly build the report data with guaranteed integers ---
+    # This simple loop is easy to verify and cannot produce the wrong data type.
+    report_data = []
+    for doctor in doctors:
+        # For each doctor, get the count of their appointments. count() returns an integer.
+        consultation_count = doctor.appointments_as_doctor.count()
+        report_data.append({'doctor': doctor, 'count': consultation_count})
+
+    # --- STEP 3: Explicitly build the chart data from the clean report data ---
+    chart_data = None
+    if report_data:
+        # Sort for a visually appealing chart (highest bar first)
+        sorted_report_data = sorted(report_data, key=lambda x: x['count'], reverse=True)
+        
+        # Create simple lists of strings and integers, which are guaranteed to be JSON serializable.
+        chart_labels = [f"Dr. {data['doctor'].username}" for data in sorted_report_data]
+        chart_values = [data['count'] for data in sorted_report_data]
+        
+        chart_data = {
+            'labels': chart_labels,
+            'values': chart_values
+        }
+
+    return render_template('admin/reports.html', title='Doctor Reports', 
+                           form=form, report_data=report_data, chart_data=chart_data)
+
 # =============================================================================
 # APPOINTMENT & FOLLOW-UP ROUTES
 # =============================================================================
@@ -320,18 +449,33 @@ def login():
     
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
-        if user is None or not user.check_password(form.password.data):
+        # --- Admin Check (Unchanged) ---
+        submitted_username = form.username.data
+        submitted_password = form.password.data
+        if (submitted_username == app.config['ADMIN_USERNAME'] or submitted_username == app.config['ADMIN_EMAIL']) and submitted_password == app.config['ADMIN_PASSWORD']:
+            admin_user = AdminUser()
+            login_user(admin_user, remember=form.remember_me.data)
+            return redirect(url_for('admin_dashboard'))
+
+        # --- Normal User Login with NEW Active Check ---
+        user = User.query.filter_by(username=submitted_username).first()
+        if user is None or not user.check_password(submitted_password):
             flash('Invalid username or password', 'danger')
             return redirect(url_for('login'))
 
-        # --- NEW 2FA LOGIC ---
+        # --- THIS IS THE NEW CHECK ---
+        if not user.is_active:
+            if user.role == 'doctor':
+                flash('Your account has not been approved by an administrator yet. Please check back later.', 'warning')
+            else:
+                flash('Your account has been deactivated. Please contact support.', 'danger')
+            return redirect(url_for('login'))
+        # ---------------------------
+
         if user.otp_enabled:
-            # Store user_id and 'next' URL in session to use after 2FA
             session['user_id_for_2fa'] = user.id
             session['next_url_for_2fa'] = request.args.get('next')
             return redirect(url_for('login_2fa'))
-        # --- END 2FA LOGIC ---
 
         login_user(user, remember=form.remember_me.data)
         next_page = request.args.get('next')
@@ -374,19 +518,41 @@ def logout():
 def register():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
+    
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(username=form.username.data, email=form.email.data, phone_number=form.phone_number.data, role=form.role.data)
+        user = User(
+            username=form.username.data, 
+            email=form.email.data, 
+            role=form.role.data
+        )
         user.set_password(form.password.data)
+
+        # --- NEW DOCTOR APPROVAL LOGIC ---
+        if user.role == 'doctor':
+            user.is_active = False  # Deactivate doctor accounts by default
+            db.session.add(user)
+            db.session.commit()
+            flash('Your registration is complete. Your doctor account is now pending administrative approval. You will be notified once it is activated.', 'info')
+            return redirect(url_for('login'))
+        # ---------------------------------
+        
+        # Patients are activated immediately
         db.session.add(user)
         db.session.commit()
         flash('Congratulations, you are now a registered user!', 'success')
         return redirect(url_for('login'))
+        
     return render_template('register.html', title='Register', form=form)
 
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
+    # --- NEW: PREVENT ADMINS FROM EDITING A PROFILE ---
+    if current_user.is_admin:
+        flash('Admin profile is not editable.', 'info')
+        return redirect(url_for('admin_dashboard'))
+    # ----------------------------------------------------
     form = UpdateProfileForm()
     if form.validate_on_submit():
         if form.picture.data:
