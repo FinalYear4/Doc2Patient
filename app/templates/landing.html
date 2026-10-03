@@ -5,28 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ _('Welcome to Doc2Patient') }}</title>
     
-    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='logo.png') }}">
-    <link rel="alternate icon" href="{{ url_for('static', filename='logo.png') }}">
-
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" href="{{ url_for('static', filename='logo.webp') }}" type="image/webp">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.min.css', v=1) }}">
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        #background-slider { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; background-size: cover; background-position: center; transition: background-image 1.2s ease-in-out; }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: -1; }
+        .landing-overlay { background-color: rgba(0, 0, 0, 0.5); }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800">
 
     <div id="background-slider"></div>
-    <div class="overlay"></div>
+    <div class="overlay landing-overlay"></div>
 
     <!-- Responsive Header with corrected links -->
     <header class="p-6 bg-transparent text-white relative z-20">
         <nav class="container mx-auto flex justify-between items-center">
             <!-- Logo -->
             <a href="{{ url_for('landing') }}" class="flex items-center space-x-3">
-                <img src="{{ url_for('static', filename='logo.png') }}" alt="Doc2Patient Logo" class="h-8">
+                <img src="{{ url_for('static', filename='logo.webp') }}" alt="Doc2Patient Logo" width="32" height="32" class="h-8 w-8">
                 <span class="text-3xl font-bold">Doc2Patient</span>
             </a>
 
@@ -50,7 +45,7 @@
             
             <!-- Hamburger Button (Visible on Mobile) -->
             <div class="md:hidden">
-                <button id="mobile-menu-button" class="text-white focus:outline-none">
+                        <button id="mobile-menu-button" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobile-menu" class="text-white focus:outline-none">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
                 </button>
             </div>
@@ -101,7 +96,7 @@
 
     <!-- Testimonials Section -->
     <section class="relative py-20 overflow-hidden">
-        <div class="absolute top-0 left-0 w-full h-full" style="background-image: url({{ url_for('static', filename='logo.png') }}); background-repeat: repeat; background-size: 200px; opacity: 0.1;"></div>
+        <div class="absolute top-0 left-0 w-full h-full" style="background-image: url({{ url_for('static', filename='logo.webp') }}); background-repeat: repeat; background-size: 200px; opacity: 0.1;"></div>
         <div class="relative z-10 container mx-auto px-6 text-center">
             <h2 class="text-4xl font-bold mb-12 text-white inline-block px-6 py-2" style="background-color: rgba(0, 0, 0, 0.5); border-radius: 8px;">{{ _('What Our Patients Are Saying') }}</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
@@ -158,8 +153,9 @@
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');
             if (mobileMenuButton && mobileMenu) {
-                mobileMenuButton.addEventListener('click', () => {
-                    mobileMenu.classList.toggle('hidden');
+                    mobileMenuButton.addEventListener('click', () => {
+                    const isHidden = mobileMenu.classList.toggle('hidden');
+                    mobileMenuButton.setAttribute('aria-expanded', String(!isHidden));
                 });
             }
             

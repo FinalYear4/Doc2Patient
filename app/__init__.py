@@ -28,6 +28,25 @@ login.login_view = 'login'
 socketio = SocketIO(app, async_mode='eventlet', cors_allowed_origins="*")
 mail = Mail(app)
 babel = Babel(app, locale_selector=get_locale)
+
+@app.after_request
+def add_security_headers(response):
+    response.headers.setdefault(
+        'Content-Security-Policy',
+        "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.socket.io; "
+        "style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; "
+        "connect-src 'self' wss: ws:; frame-src https://www.youtube.com; "
+        "frame-ancestors 'self'; base-uri 'self'; form-action 'self'"
+    )
+    response.headers.setdefault('X-Frame-Options', 'SAMEORIGIN')
+    response.headers.setdefault('X-Content-Type-Options', 'nosniff')
+    response.headers.setdefault('Referrer-Policy', 'strict-origin-when-cross-origin')
+    response.headers.setdefault(
+        'Permissions-Policy',
+        'camera=(self), microphone=(self), geolocation=()'
+    )
+    return response
+
 # The line 'Markdown(app)' has been removed because we use a custom filter below.
 
 @app.template_filter()

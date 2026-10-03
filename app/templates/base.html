@@ -6,30 +6,8 @@
     <title>{{ title }} - Doc2Patient</title>
     
     <!-- Favicon Links -->
-    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='logo.png') }}">
-    <link rel="alternate icon" href="{{ url_for('static', filename='logo.png') }}">
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- CSS For Background -->
-    <style>
-        body { 
-            font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6;
-        }
-        #background-slider { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; 
-            background-size: cover; background-position: center; transition: background-image 1.2s ease-in-out; 
-        }
-        .overlay { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background-color: rgba(243, 244, 246, 0.8);
-            backdrop-filter: blur(5px);
-            z-index: -1; 
-        }
-    </style>
+    <link rel="icon" href="{{ url_for('static', filename='logo.webp') }}" type="image/webp">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.min.css', v=1) }}">
 </head>
 <body class="min-h-screen">
 
@@ -45,7 +23,7 @@
                     <!-- Logo -->
                     <div class="flex-shrink-0">
                         <a href="{{ url_for('index') if current_user.is_authenticated else url_for('landing') }}" class="flex items-center space-x-3">
-                            <img src="{{ url_for('static', filename='logo.png') }}" alt="Doc2Patient Logo" class="h-8">
+                            <img src="{{ url_for('static', filename='logo.webp') }}" alt="Doc2Patient Logo" width="32" height="32" class="h-8 w-8">
                             <span class="text-xl font-bold text-blue-600">Doc2Patient</span>
                         </a>
                     </div>
@@ -72,7 +50,7 @@
 
                     <!-- Hamburger Button -->
                     <div class="md:hidden">
-                        <button id="base-mobile-menu-button" class="text-gray-600 focus:outline-none">
+                        <button id="base-mobile-menu-button" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="base-mobile-menu" class="text-gray-600 focus:outline-none">
                             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
                         </button>
                     </div>
@@ -158,8 +136,9 @@
             const baseMobileMenuButton = document.getElementById('base-mobile-menu-button');
             const baseMobileMenu = document.getElementById('base-mobile-menu');
             if (baseMobileMenuButton && baseMobileMenu) {
-                baseMobileMenuButton.addEventListener('click', () => {
-                    baseMobileMenu.classList.toggle('hidden');
+                    baseMobileMenuButton.addEventListener('click', () => {
+                    const isHidden = baseMobileMenu.classList.toggle('hidden');
+                    baseMobileMenuButton.setAttribute('aria-expanded', String(!isHidden));
                 });
             }
         });
