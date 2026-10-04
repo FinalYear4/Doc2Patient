@@ -78,7 +78,7 @@
         crossorigin="anonymous"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    const socket = io({transports: ['websocket']});
+    const socket = io({transports: ['websocket', 'polling']});
     const room = "{{ appointment.id }}";
     const localVideo = document.getElementById('localVideo');
     const remoteVideo = document.getElementById('remoteVideo');
@@ -86,7 +86,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const cameraBtn = document.getElementById('cameraBtn');
     const endCallBtn = document.getElementById('endCallBtn');
     let localStream, peerConnection, isMuted = false, isCameraOff = false;
-    const iceServers = { iceServers: [ { urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:stun1.l.google.com:19302' } ] };
+    let remoteDescriptionSet = false;
+    const pendingCandidates = [];
+    const iceServers = {
+        iceServers: [
+            { urls: ['stun:stun.l.google.com:19302', 'stun:stun1.l.google.com:19302'] }
+            {% if config.WEBRTC_TURN_URL %},
+            { urls: {{ config.WEBRTC_TURN_URL|tojson }}, username: {{ config.WEBRTC_TURN_USERNAME|tojson }}, credential: {{ config.WEBRTC_TURN_CREDENTIAL|tojson }} }
+            {% endif %}
+        ]
+    };
+
+    async function flushCandidates() {
+        while (pendingCandidates.length && peerConnection && remoteDescriptionSet) {
+            await peerConnection.addIceCandidate(pendingCandidates.shift());
+        }
+    }
 
     muteBtn.addEventListener('click', () => { if (!localStream) return; isMuted = !isMuted; localStream.getAudioTracks()[0].enabled = !isMuted; muteBtn.classList.toggle('bg-red-600', isMuted); muteBtn.classList.toggle('bg-gray-600', !isMuted); });
     cameraBtn.addEventListener('click', () => { if (!localStream) return; isCameraOff = !isCameraOff; localStream.getVideoTracks()[0].enabled = !isCameraOff; cameraBtn.classList.toggle('bg-red-600', isCameraOff); cameraBtn.classList.toggle('bg-gray-600', !isCameraOff); });
@@ -140,9 +155,9 @@ document.addEventListener('DOMContentLoaded', () => {
         peerConnection.onicecandidate = (event) => { if (event.candidate) { socket.emit('candidate', { room: room, candidate: event.candidate }); } };
     }
     socket.on('peer_is_ready', () => { createPeerConnection(); peerConnection.createOffer().then(offer => peerConnection.setLocalDescription(offer)).then(() => { socket.emit('offer', { room: room, offer: peerConnection.localDescription }); }).catch(e => console.error(e)); });
-    socket.on('offer', (offer) => { createPeerConnection(); peerConnection.setRemoteDescription(new RTCSessionDescription(offer)).then(() => peerConnection.createAnswer()).then(answer => peerConnection.setLocalDescription(answer)).then(() => { socket.emit('answer', { room: room, answer: peerConnection.localDescription }); }).catch(e => console.error(e)); });
+    socket.on('offer', (offer) => { createPeerConnection(); peerConnection.setRemoteDescription(new RTCSessionDescription(offer)).then(() => { remoteDescriptionSet = true; return flushCandidates(); }).then(() => peerConnection.createAnswer()).then(answer => peerConnection.setLocalDescription(answer)).then(() => { socket.emit('answer', { room: room, answer: peerConnection.localDescription }); }).catch(e => console.error('WebRTC offer failed', e)); });
     socket.on('answer', (answer) => { peerConnection.setRemoteDescription(new RTCSessionDescription(answer)).catch(e => console.error(e)); });
-    socket.on('candidate', (candidate) => { peerConnection.addIceCandidate(new RTCIceCandidate(candidate)).catch(e => console.error(e)); });
+    socket.on('candidate', (candidate) => { const iceCandidate = new RTCIceCandidate(candidate); if (!peerConnection || !remoteDescriptionSet) { pendingCandidates.push(iceCandidate); } else { peerConnection.addIceCandidate(iceCandidate).catch(e => console.error('ICE candidate failed', e)); } });
 
     const voiceBtn = document.getElementById('voice-btn');
     if (voiceBtn) {
@@ -161,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
             localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
             localVideo.srcObject = localStream;
             socket.emit('i_am_ready', { room: room });
-        } catch (err) { console.error('Error accessing media devices.', err); alert('Could not access your camera and microphone. Please check permissions and try again.'); }
+        } catch (err) { console.error('Error accessing media devices.', err); alert('Could not access your camera and microphone. Use HTTPS, allow browser permissions, and try again.'); }
     }
     initializeMedia();
 });

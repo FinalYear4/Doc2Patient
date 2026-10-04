@@ -32,6 +32,10 @@ class TwoFactorForm(FlaskForm):
     code = StringField('6-Digit Code', validators=[DataRequired()])
     submit = SubmitField('Verify')
 
+class AppointmentOTPForm(FlaskForm):
+    code = StringField('Appointment verification code', validators=[DataRequired(), Length(min=6, max=6)])
+    submit = SubmitField('Verify appointment')
+
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])

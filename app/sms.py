@@ -5,7 +5,7 @@ from threading import Thread
 def send_async_sms(app, url):
     with app.app_context():
         try:
-            response = requests.get(url)
+            response = requests.get(url, timeout=15)
             response.raise_for_status()  # Raise an exception for bad status codes
             print(f"SMS sent successfully! Response: {response.json()}")
         except requests.exceptions.RequestException as e:
@@ -26,7 +26,7 @@ def send_sms(to, message):
     }
     
     # Build the URL with parameters
-    url = f"{base_url}?{'&'.join([f'{k}={v}' for k, v in params.items()])}"
+    url = f"{base_url}?{requests.compat.urlencode(params)}"
     
     # Send in a background thread to not slow down the application
     Thread(target=send_async_sms, args=(app, url)).start()

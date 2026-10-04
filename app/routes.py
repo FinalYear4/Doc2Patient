@@ -21,13 +21,13 @@ from app import app, db, socketio
 from app.models import (User, Appointment, ChatMessage, HealthArticle, 
                         ArticleRecommendation, VitalsRecord, Review, AdminUser, UserReport)
 from app.forms import (LoginForm, RegistrationForm, AppointmentForm, UpdateProfileForm, 
-                       VitalsForm, RequestPasswordResetForm, ResetPasswordForm, ArticleForm, ReviewForm, TwoFactorForm, ReportIssueForm, AdminResponseForm, DoctorReportForm)
-from app.email import send_password_reset_email
+                       VitalsForm, RequestPasswordResetForm, ResetPasswordForm, ArticleForm, ReviewForm, TwoFactorForm, AppointmentOTPForm, ReportIssueForm, AdminResponseForm, DoctorReportForm)
+from app.email import send_password_reset_email, send_appointment_confirmation_email
 from app.sms import send_sms
 from sqlalchemy import or_
 from sqlalchemy import func
 from functools import wraps # <-- IMPORT FOR DECORATOR
-from datetime import datetime, time # Add this import at the top
+from datetime import datetime, time, timedelta
 
 from app.email import send_new_appointment_email
 from app.sms import send_new_appointment_sms
@@ -368,13 +368,41 @@ def confirm_appointment(appointment_id):
         flash('You are not authorized to perform this action.', 'danger')
         return redirect(url_for('index'))
     appointment.status = 'confirmed'
-    db.session.commit()
     patient = User.query.get(appointment.patient_id)
+    code = f"{secrets.randbelow(1_000_000):06d}"
+    appointment.set_confirmation_otp(code, datetime.utcnow() + timedelta(minutes=10))
+    db.session.commit()
     if patient and patient.phone_number:
-        message = f"Hi {patient.username}, your appointment with Dr. {current_user.username} for {appointment.appointment_time.strftime('%b %d at %H:%M')} has been confirmed."
+        message = f"Hi {patient.username}, your appointment with Dr. {current_user.username} for {appointment.appointment_time.strftime('%b %d at %H:%M')} is confirmed. Your verification code is {code}. It expires in 10 minutes."
         send_sms(to=patient.phone_number, message=message)
+    if patient and patient.email:
+        send_appointment_confirmation_email(patient, current_user, appointment, code)
     flash('Appointment confirmed.', 'success')
     return redirect(url_for('doctor_dashboard'))
+
+@app.route('/appointment/<int:appointment_id>/verify', methods=['GET', 'POST'])
+@login_required
+def verify_appointment(appointment_id):
+    appointment = Appointment.query.get_or_404(appointment_id)
+    if current_user.id != appointment.patient_id:
+        flash('You are not authorized to verify this appointment.', 'danger')
+        return redirect(url_for('index'))
+    if appointment.status != 'confirmed':
+        flash('This appointment has not been confirmed yet.', 'warning')
+        return redirect(url_for('index'))
+    if appointment.confirmation_otp_verified_at:
+        return redirect(url_for('consultation', appointment_id=appointment.id))
+
+    form = AppointmentOTPForm()
+    if form.validate_on_submit():
+        if appointment.verify_confirmation_otp(form.code.data, datetime.utcnow()):
+            appointment.confirmation_otp_verified_at = datetime.utcnow()
+            db.session.commit()
+            flash('Appointment verified.', 'success')
+            return redirect(url_for('consultation', appointment_id=appointment.id))
+        db.session.commit()
+        flash('Invalid or expired appointment code.', 'danger')
+    return render_template('verify_appointment.html', title='Verify Appointment', form=form, appointment=appointment)
 
 @app.route('/decline_appointment/<int:appointment_id>', methods=['POST'])
 @login_required
@@ -820,6 +848,8 @@ def consultation(appointment_id):
     if appointment.status != 'confirmed':
         flash('This appointment has not been confirmed yet.', 'warning')
         return redirect(url_for('index'))
+    if current_user.id == appointment.patient_id and appointment.confirmation_otp_hash and not appointment.confirmation_otp_verified_at:
+        return redirect(url_for('verify_appointment', appointment_id=appointment.id))
     previous_messages = appointment.chat_messages.order_by(ChatMessage.timestamp.asc()).all()
     return render_template('consultation_room.html', appointment=appointment, previous_messages=previous_messages)
 

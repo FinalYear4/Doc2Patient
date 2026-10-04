@@ -1,0 +1,7 @@
+Hello {{ patient.username }},
+
+Your appointment with Dr. {{ doctor.username }} on {{ appointment.appointment_time.strftime('%b %d at %H:%M') }} has been confirmed.
+
+Your appointment verification code is: {{ code }}
+
+This code expires in 10 minutes. Do not share it with anyone.

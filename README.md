@@ -80,6 +80,17 @@ MAIL_PORT=587
 MAIL_USE_TLS=1
 MAIL_USERNAME=your-email@example.com
 MAIL_PASSWORD=your-email-password
+MAIL_DEFAULT_SENDER=your-email@example.com
+HUBTEL_CLIENT_ID=your-hubtel-client-id
+HUBTEL_CLIENT_SECRET=your-hubtel-client-secret
+HUBTEL_SENDER_ID=your-hubtel-sender-id
+ADMIN_USERNAME=admin
+ADMIN_EMAIL=<PII type="EMAIL" id="112"/>
+ADMIN_PASSWORD=your-admin-password
+# Optional TURN server for WebRTC connectivity outside simple NATs
+WEBRTC_TURN_URL=turn:your-turn-host:3478
+WEBRTC_TURN_USERNAME=your-turn-username
+WEBRTC_TURN_CREDENTIAL=your-turn-credential
 DATABASE_URL=sqlite:///app.db
 ```
 
@@ -110,7 +121,7 @@ python run.py
 For production-style serving:
 
 ```bash
-gunicorn 'main:app'
+gunicorn --worker-class eventlet --workers 1 'main:app'
 ```
 
 ## Seeding Sample Articles
@@ -127,5 +138,3 @@ python seed_articles.py
 - 2FA support is built in for user accounts.
 - The app includes multilingual templates and translation support.
 - Static assets such as profile pictures and uploaded documents are stored under the `uploads` and `app/static` directories.
-
-

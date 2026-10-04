@@ -94,6 +94,10 @@ class Appointment(db.Model):
     custom_follow_up_notes = db.Column(db.Text, nullable=True)
     uploaded_document_filename = db.Column(db.String(200), nullable=True)
     youtube_video_url = db.Column(db.String(200), nullable=True)
+    confirmation_otp_hash = db.Column(db.String(256), nullable=True)
+    confirmation_otp_expires_at = db.Column(db.DateTime, nullable=True)
+    confirmation_otp_attempts = db.Column(db.Integer, nullable=False, default=0, server_default='0')
+    confirmation_otp_verified_at = db.Column(db.DateTime, nullable=True)
     chat_messages = db.relationship('ChatMessage', backref='appointment', lazy='dynamic', cascade="all, delete-orphan")
     recommended_articles = db.relationship('ArticleRecommendation', backref='appointment', lazy='dynamic', cascade="all, delete-orphan")
     # --- NEW RELATIONSHIP FOR REVIEWS (One-to-one) ---
@@ -101,6 +105,22 @@ class Appointment(db.Model):
     # ------------------------------------------------
     def __repr__(self):
         return f'<Appointment {self.id}>'
+
+    def set_confirmation_otp(self, code, expires_at):
+        self.confirmation_otp_hash = generate_password_hash(code)
+        self.confirmation_otp_expires_at = expires_at
+        self.confirmation_otp_attempts = 0
+        self.confirmation_otp_verified_at = None
+
+    def verify_confirmation_otp(self, code, now):
+        if not self.confirmation_otp_hash or self.confirmation_otp_verified_at:
+            return False
+        if self.confirmation_otp_expires_at and now > self.confirmation_otp_expires_at:
+            return False
+        if self.confirmation_otp_attempts >= 5:
+            return False
+        self.confirmation_otp_attempts += 1
+        return check_password_hash(self.confirmation_otp_hash, code)
 # --- NEW MODEL FOR REVIEWS ---
 class Review(db.Model):
     id = db.Column(db.Integer, primary_key=True)

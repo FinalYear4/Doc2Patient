@@ -1,4 +1,4 @@
 #!/bin/bash
 # Run database migrations
 flask db upgrade
-gunicorn 'main:app'
+gunicorn --worker-class eventlet --workers 1 'main:app'

@@ -35,6 +35,7 @@ class Config:
     MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS') is not None
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+    MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER') or MAIL_USERNAME
     # This now correctly uses the MAIL_USERNAME as the admin email.
     ADMINS = [os.environ.get('MAIL_USERNAME')]
 
@@ -43,6 +44,10 @@ class Config:
     HUBTEL_CLIENT_ID = os.environ.get('HUBTEL_CLIENT_ID')
     HUBTEL_CLIENT_SECRET = os.environ.get('HUBTEL_CLIENT_SECRET')
     HUBTEL_SENDER_ID = os.environ.get('HUBTEL_SENDER_ID')
+
+    WEBRTC_TURN_URL = os.environ.get('WEBRTC_TURN_URL')
+    WEBRTC_TURN_USERNAME = os.environ.get('WEBRTC_TURN_USERNAME')
+    WEBRTC_TURN_CREDENTIAL = os.environ.get('WEBRTC_TURN_CREDENTIAL')
 
     # --- DEVELOPER ADMIN CONFIG ---
     ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME')
