@@ -5,7 +5,7 @@
 <p class="text-gray-600 mb-6">{{ _('For appointment with') }} {{ appointment.patient.username }}</p>
 
 <!-- The enctype attribute is ESSENTIAL for file uploads -->
-<form method="POST" enctype="multipart/form-data" class="bg-white p-8 rounded-lg shadow-md space-y-8">
+<form method="POST" enctype="multipart/form-data" class="bg-white p-5 sm:p-8 rounded-lg shadow-md space-y-8">
     
     <!-- Section 1: Custom Notes -->
     <div>
@@ -18,9 +18,9 @@
         <h2 class="text-xl font-semibold mb-2">{{ _('Recommend Health Library Articles') }}</h2>
         <div class="space-y-2">
             {% for article in articles %}
-            <div class="flex items-center">
-                <input id="article-{{ article.id }}" name="articles" type="checkbox" value="{{ article.id }}" class="h-4 w-4 text-blue-600 border-gray-300 rounded">
-                <label for="article-{{ article.id }}" class="ml-3 block text-sm font-medium text-gray-700">{{ article.title }} ({{ article.category }})</label>
+            <div class="flex items-start gap-3 py-1">
+                <input id="article-{{ article.id }}" name="articles" type="checkbox" value="{{ article.id }}" class="mt-1 h-5 w-5 flex-shrink-0 text-blue-600 border-gray-300 rounded">
+                <label for="article-{{ article.id }}" class="block text-sm font-medium text-gray-700 break-words">{{ article.title }} ({{ article.category }})</label>
             </div>
             {% endfor %}
         </div>

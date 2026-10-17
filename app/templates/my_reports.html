@@ -4,8 +4,8 @@
 <div class="space-y-4">
 {% for report in reports %}
     <div class="bg-white p-6 rounded-lg shadow-md">
-        <div class="flex justify-between items-center">
-            <h2 class="text-xl font-semibold">{{ report.subject }}</h2>
+        <div class="flex flex-wrap justify-between items-center gap-2">
+            <h2 class="text-xl font-semibold break-words">{{ report.subject }}</h2>
             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
                 {% if report.status == 'Open' %} bg-yellow-100 text-yellow-800 
                 {% elif report.status == 'Closed' %} bg-green-100 text-green-800 

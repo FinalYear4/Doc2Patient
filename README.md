@@ -106,9 +106,21 @@ flask db upgrade
 
 ## Running the App
 
-For local development:
+The easiest way to run the project locally on Windows:
 
-```bash
+```powershell
+.\run-local.ps1
+```
+
+This script forces a local SQLite database, applies migrations, and starts the
+development server at http://127.0.0.1:5000.
+
+If you prefer to run the commands manually, set the database first:
+
+```powershell
+$env:DATABASE_URL = "sqlite:///$PWD\app.db"
+$env:SESSION_COOKIE_SECURE = "0"
+flask db upgrade
 python main.py
 ```
 
@@ -124,6 +136,20 @@ For production-style serving:
 gunicorn --worker-class eventlet --workers 1 'main:app'
 ```
 
+### Why `DATABASE_URL` matters locally
+
+Render exposes PostgreSQL at an internal host name (for example `dpg-xxxx`) that
+only resolves inside Render's network. If `DATABASE_URL` in `.env` points at that
+host, the app works when deployed but fails locally with:
+
+```
+could not translate host name "dpg-..." to address: Name or service not known
+```
+
+For local development, keep `DATABASE_URL` commented out in `.env` (or override it
+as shown above) so the app uses SQLite. Render injects its own `DATABASE_URL`, so
+deployment is unaffected.
+
 ## Seeding Sample Articles
 
 To add sample health articles to the database:
@@ -136,5 +162,10 @@ python seed_articles.py
 
 - The project uses Eventlet for Socket.IO compatibility.
 - 2FA support is built in for user accounts.
+- Password fields include a show/hide (eye) toggle that is added automatically to
+  every `input[type="password"]` and works with keyboard and screen readers.
 - The app includes multilingual templates and translation support.
 - Static assets such as profile pictures and uploaded documents are stored under the `uploads` and `app/static` directories.
+- Camera and microphone access works on `http://127.0.0.1:5000` because localhost
+  is treated as a secure context. Testing WebRTC between two devices on a LAN
+  requires HTTPS and TURN credentials.

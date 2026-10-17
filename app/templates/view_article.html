@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="bg-white p-8 rounded-lg shadow-md max-w-4xl mx-auto">
+<div class="bg-white p-5 sm:p-8 rounded-lg shadow-md max-w-4xl mx-auto">
     <!-- Article Header -->
     <div class="mb-8 text-center">
         <p class="text-blue-600 font-semibold">{{ article.category | trans }}</p>
-        <h1 class="text-4xl font-extrabold text-gray-900 mt-2">{{ article.title | trans }}</h1>
+        <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 mt-2 break-words">{{ article.title | trans }}</h1>
     </div>
     
     <!-- Author Bio Box -->

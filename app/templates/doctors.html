@@ -2,12 +2,12 @@
 
 {% block content %}
 <div class="container mx-auto px-4 py-8">
-    <h1 class="text-4xl font-extrabold text-gray-900 mb-8 text-center">{{ _('Meet Our Doctors') }}</h1>
+    <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 mb-8 text-center">{{ _('Meet Our Doctors') }}</h1>
     
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
         {% for doctor in doctors %}
         <div class="bg-white rounded-lg shadow-lg p-6 flex flex-col items-center text-center hover:shadow-2xl transition-shadow duration-300">
-            <img class="rounded-full h-32 w-32 object-cover mb-4 border-4 border-blue-200" src="{{ url_for('static', filename='profile_pics/' + doctor.image_file) }}">
+            <img class="rounded-full h-32 w-32 object-cover mb-4 border-4 border-blue-200" width="128" height="128" loading="lazy" alt="Dr. {{ doctor.username }}" src="{{ url_for('static', filename='profile_pics/' + doctor.image_file) }}">
             
             <h2 class="text-2xl font-bold text-gray-800">Dr. {{ doctor.username }}</h2>
             <h3 class="text-md font-semibold text-blue-600 mb-2">{{ doctor.speciality or 'General Practitioner' }}</h3>

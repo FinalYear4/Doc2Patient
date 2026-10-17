@@ -20,7 +20,7 @@
                     {{ appt.status }}
                 </span></p>
                 <p><strong>{{ _('Reason') }}:</strong> {{ appt.notes }}</p>
-                <div class="flex items-center space-x-4 pt-2">
+                <div class="flex flex-wrap items-center gap-3 pt-2">
                     {% if appt.status == 'pending' %}
                         <form action="{{ url_for('confirm_appointment', appointment_id=appt.id) }}" method="post"><button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">{{ _('Confirm') }}</button></form>
                         <form action="{{ url_for('decline_appointment', appointment_id=appt.id) }}" method="post"><button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">{{ _('Decline') }}</button></form>

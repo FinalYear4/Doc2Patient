@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>{{ title }} - Doc2Patient</title>
     
     <!-- Favicon Links -->
     <link rel="icon" href="{{ url_for('static', filename='logo.webp') }}" type="image/webp">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.min.css', v=1) }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.min.css', v=3) }}">
 </head>
 <body class="min-h-screen">
 
@@ -50,8 +50,8 @@
 
                     <!-- Hamburger Button -->
                     <div class="md:hidden">
-                        <button id="base-mobile-menu-button" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="base-mobile-menu" class="text-gray-600 focus:outline-none">
-                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                        <button id="base-mobile-menu-button" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="base-mobile-menu" class="inline-flex items-center justify-center min-h-[44px] min-w-[44px] p-2 -mr-2 text-gray-600">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
                         </button>
                     </div>
                 </div>
@@ -79,9 +79,9 @@
         </nav>
 
         <main class="flex-grow">
-            <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                 <!-- Flash messages -->
-                <div class="px-4 sm:px-0">
+                <div>
                     {% with messages = get_flashed_messages(with_categories=true) %}
                     {% if messages %}
                         {% for category, message in messages %}
@@ -104,8 +104,8 @@
         <footer class="text-center py-6 mt-auto">
             <div class="text-sm text-gray-600">
                 {% if current_user.is_authenticated and not current_user.is_admin %}
-                <a href="{{ url_for('my_reports') }}" class="hover:text-blue-600 hover:underline mx-2">My Reported Issues</a> |
-                <a href="{{ url_for('report_issue') }}" class="hover:text-blue-600 hover:underline mx-2">Report an Issue</a>
+                <a href="{{ url_for('my_reports') }}" class="inline-block py-2 px-2 hover:text-blue-600 hover:underline">My Reported Issues</a>
+                <a href="{{ url_for('report_issue') }}" class="inline-block py-2 px-2 hover:text-blue-600 hover:underline">Report an Issue</a>
                 {% endif %}
             </div>
         </footer>
@@ -123,24 +123,80 @@
                     "{{ url_for('static', filename='images/bg2.jpg') }}",
                     "{{ url_for('static', filename='images/bg3.jpg') }}"
                 ];
+                const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
                 let currentImageIndex = 0;
+                let sliderTimer = null;
                 function changeBackgroundImage() {
                     slider.style.backgroundImage = `url('${images[currentImageIndex]}')`;
                     currentImageIndex = (currentImageIndex + 1) % images.length;
                 }
+                function startSlider() {
+                    if (reduceMotion || images.length < 2 || sliderTimer) { return; }
+                    sliderTimer = setInterval(changeBackgroundImage, 5000);
+                }
+                function stopSlider() {
+                    if (sliderTimer) { clearInterval(sliderTimer); sliderTimer = null; }
+                }
                 changeBackgroundImage();
-                setInterval(changeBackgroundImage, 5000);
+                startSlider();
+                document.addEventListener('visibilitychange', function () {
+                    if (document.hidden) { stopSlider(); } else { startSlider(); }
+                });
             }
 
             // Hamburger Toggle for Base Template
             const baseMobileMenuButton = document.getElementById('base-mobile-menu-button');
             const baseMobileMenu = document.getElementById('base-mobile-menu');
             if (baseMobileMenuButton && baseMobileMenu) {
-                    baseMobileMenuButton.addEventListener('click', () => {
+                function closeMenu() {
+                    baseMobileMenu.classList.add('hidden');
+                    baseMobileMenuButton.setAttribute('aria-expanded', 'false');
+                }
+                baseMobileMenuButton.addEventListener('click', (event) => {
+                    event.stopPropagation();
                     const isHidden = baseMobileMenu.classList.toggle('hidden');
                     baseMobileMenuButton.setAttribute('aria-expanded', String(!isHidden));
                 });
+                document.addEventListener('keydown', (event) => {
+                    if (event.key === 'Escape') { closeMenu(); }
+                });
+                document.addEventListener('click', (event) => {
+                    if (!baseMobileMenu.classList.contains('hidden') && !baseMobileMenu.contains(event.target)) {
+                        closeMenu();
+                    }
+                });
             }
+
+            // Password visibility toggles
+            const eyeShow = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>';
+            const eyeHide = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88L6.59 6.59m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/></svg>';
+
+            document.querySelectorAll('input[type="password"]').forEach((input) => {
+                if (input.dataset.passwordToggle === 'ready') { return; }
+                input.dataset.passwordToggle = 'ready';
+
+                const wrapper = document.createElement('div');
+                wrapper.className = 'password-field';
+                input.parentNode.insertBefore(wrapper, input);
+                wrapper.appendChild(input);
+
+                const toggle = document.createElement('button');
+                toggle.type = 'button';
+                toggle.className = 'password-toggle';
+                toggle.setAttribute('aria-label', 'Show password');
+                toggle.setAttribute('aria-pressed', 'false');
+                toggle.innerHTML = '<span class="password-toggle-show">' + eyeShow + '</span><span class="password-toggle-hide">' + eyeHide + '</span>';
+
+                toggle.addEventListener('click', () => {
+                    const isHidden = input.type === 'password';
+                    input.type = isHidden ? 'text' : 'password';
+                    toggle.setAttribute('aria-pressed', String(isHidden));
+                    toggle.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+                    input.focus();
+                });
+
+                wrapper.appendChild(toggle);
+            });
         });
     </script>
 </body>

@@ -53,7 +53,7 @@ def add_security_headers(response):
 def trans(text):
     """A filter to translate dynamic content using our service."""
     target_language = get_locale()
-    if target_language == 'en' or not text:
+    if not target_language or target_language == 'en' or not text:
         return text
     return translate_text(text, target_language)
 

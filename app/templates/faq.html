@@ -1,37 +1,37 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mx-auto px-6 py-12">
-    <h1 class="text-4xl font-extrabold text-center mb-12 text-gray-800">{{ _('Frequently Asked Questions') }}</h1>
+<div class="container mx-auto px-4 sm:px-6 py-8 sm:py-12">
+    <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-center mb-8 sm:mb-12 text-gray-800">{{ _('Frequently Asked Questions') }}</h1>
     
     <div class="max-w-3xl mx-auto space-y-4">
         <!-- FAQ Item 1 -->
         <div class="border rounded-lg bg-white shadow-sm">
-            <button class="faq-question w-full text-left p-4 font-semibold text-lg flex justify-between items-center focus:outline-none">
+            <button class="faq-question w-full text-left p-4 font-semibold text-base sm:text-lg flex justify-between items-center gap-3" aria-expanded="false">
                 <span>{{ _('Is my data secure?') }}</span>
-                <span class="transform transition-transform duration-300 text-blue-600">+</span>
+                <span class="transform transition-transform duration-300 text-blue-600" aria-hidden="true">+</span>
             </button>
-            <div class="faq-answer px-4 pb-4 text-gray-600">
+            <div class="faq-answer px-4 pb-4 text-gray-600" aria-hidden="true">
                 <p>{{ _('Yes, absolutely. We use industry-standard encryption and security protocols to ensure all your personal and health information is kept confidential and secure.') }}</p>
             </div>
         </div>
         <!-- FAQ Item 2 -->
         <div class="border rounded-lg bg-white shadow-sm">
-            <button class="faq-question w-full text-left p-4 font-semibold text-lg flex justify-between items-center focus:outline-none">
+            <button class="faq-question w-full text-left p-4 font-semibold text-base sm:text-lg flex justify-between items-center gap-3" aria-expanded="false">
                 <span>{{ _('What equipment do I need?') }}</span>
-                <span class="transform transition-transform duration-300 text-blue-600">+</span>
+                <span class="transform transition-transform duration-300 text-blue-600" aria-hidden="true">+</span>
             </button>
-            <div class="faq-answer px-4 pb-4 text-gray-600">
+            <div class="faq-answer px-4 pb-4 text-gray-600" aria-hidden="true">
                 <p>{{ _('All you need is a device with an internet connection, a web browser, and a working camera and microphone (like a smartphone, laptop, or tablet). No special software is required.') }}</p>
             </div>
         </div>
         <!-- FAQ Item 3 -->
         <div class="border rounded-lg bg-white shadow-sm">
-            <button class="faq-question w-full text-left p-4 font-semibold text-lg flex justify-between items-center focus:outline-none">
+            <button class="faq-question w-full text-left p-4 font-semibold text-base sm:text-lg flex justify-between items-center gap-3" aria-expanded="false">
                 <span>{{ _('Can I get a prescription?') }}</span>
-                <span class="transform transition-transform duration-300 text-blue-600">+</span>
+                <span class="transform transition-transform duration-300 text-blue-600" aria-hidden="true">+</span>
             </button>
-            <div class="faq-answer px-4 pb-4 text-gray-600">
+            <div class="faq-answer px-4 pb-4 text-gray-600" aria-hidden="true">
                 <p>{{ _('Yes. If the doctor determines a prescription is medically necessary, they can upload a secure digital copy for you to download from your dashboard after the consultation.') }}</p>
             </div>
         </div>
@@ -58,18 +58,24 @@
                 faqQuestions.forEach(otherButton => {
                     if (otherButton !== button) {
                         otherButton.nextElementSibling.style.maxHeight = null;
+                        otherButton.nextElementSibling.setAttribute('aria-hidden', 'true');
                         otherButton.querySelector('span:last-child').style.transform = 'rotate(0deg)';
+                        otherButton.setAttribute('aria-expanded', 'false');
                     }
                 });
 
                 // Toggle the clicked FAQ
                 if (answer.style.maxHeight) {
                     answer.style.maxHeight = null;
+                    answer.setAttribute('aria-hidden', 'true');
                     icon.style.transform = 'rotate(0deg)';
+                    button.setAttribute('aria-expanded', 'false');
                 } else {
                     answer.style.maxHeight = answer.scrollHeight + "px";
+                    answer.setAttribute('aria-hidden', 'false');
                     icon.style.transform = 'rotate(45deg)';
-                } 
+                    button.setAttribute('aria-expanded', 'true');
+                }
             });
         });
     });

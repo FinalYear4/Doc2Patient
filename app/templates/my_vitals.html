@@ -11,7 +11,7 @@
     .gauge__category { position: absolute; top: 65%; left: 50%; transform: translateX(-50%); font-size: 1rem; font-weight: 500; }
 </style>
 
-<h1 class="text-3xl font-bold text-gray-900 mb-6">{{ _('My Vitals Health Dashboard') }}</h1>
+<h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">{{ _('My Vitals Health Dashboard') }}</h1>
 
 <!-- Health Overview Section -->
 {% if analysis %}
@@ -46,7 +46,7 @@
             <h3 class="font-semibold text-lg text-gray-700">Vitals Alerts</h3>
             <div class="mt-4 space-y-3">
                 {% for vital in analysis.vitals %}
-                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-md">
+                <div class="flex flex-wrap items-center justify-between gap-2 p-3 bg-gray-50 rounded-md">
                     <span class="font-medium text-gray-600">{{ vital.name }}</span>
                     <div class="flex items-center">
                         <span class="font-bold text-gray-800 text-lg">{{ vital.value }}</span>
@@ -121,27 +121,27 @@
         <h2 class="text-xl font-semibold mb-4">{{ _('Your Vitals History') }}</h2>
         <div class="bg-white p-6 rounded-lg shadow-md">
             {% if vitals_history %}
-            <div class="overflow-x-auto">
+            <div class="table-wrap">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Height</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Weight</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">BP</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">HR</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">SpO2</th>
+                            <th class="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                            <th class="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Height</th>
+                            <th class="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Weight</th>
+                            <th class="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">BP</th>
+                            <th class="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">HR</th>
+                            <th class="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">SpO2</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         {% for record in vitals_history %}
                         <tr>
-                            <td class="px-4 py-4 whitespace-nowrap text-sm">{{ record.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
-                            <td class="px-4 py-4 whitespace-nowrap text-sm">{{ record.height or '--' }}</td>
-                            <td class="px-4 py-4 whitespace-nowrap text-sm">{{ record.weight or '--' }}</td>
-                            <td class="px-4 py-4 whitespace-nowrap text-sm">{{ record.blood_pressure_systolic or '--' }}/{{ record.blood_pressure_diastolic or '--' }}</td>
-                            <td class="px-4 py-4 whitespace-nowrap text-sm">{{ record.heart_rate or '--' }}</td>
-                            <td class="px-4 py-4 whitespace-nowrap text-sm">{{ record.oxygen_saturation or '--' }}</td>
+                            <td class="px-3 sm:px-4 py-4 whitespace-nowrap text-sm">{{ record.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+                            <td class="px-3 sm:px-4 py-4 whitespace-nowrap text-sm">{{ record.height or '--' }}</td>
+                            <td class="px-3 sm:px-4 py-4 whitespace-nowrap text-sm">{{ record.weight or '--' }}</td>
+                            <td class="px-3 sm:px-4 py-4 whitespace-nowrap text-sm">{{ record.blood_pressure_systolic or '--' }}/{{ record.blood_pressure_diastolic or '--' }}</td>
+                            <td class="px-3 sm:px-4 py-4 whitespace-nowrap text-sm">{{ record.heart_rate or '--' }}</td>
+                            <td class="px-3 sm:px-4 py-4 whitespace-nowrap text-sm">{{ record.oxygen_saturation or '--' }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
