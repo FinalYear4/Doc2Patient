@@ -225,20 +225,60 @@ configuration, and `playsinline`/`muted` attributes are untouched.
     disable the corresponding media track.
   - End-call sheet opens with `End this consultation?` and focuses "Keep the call".
 
-### Still outstanding (phase D)
+### Phase D — Connection status, call timer and keyboard handling
 
-- Connection quality badge and call timer on the stage.
-- `visualViewport` handling so the stage compacts when the on-screen keyboard opens.
+- A connection badge on the mobile stage header shows Connecting, Connected,
+  Reconnecting, Connection failed, or Disconnected, driven by the peer connection
+  `connectionstatechange` event and the Socket.IO connect/disconnect events.
+- A call timer starts when the peer connection reaches `connected` and counts up in
+  `mm:ss`, resetting on failure, close, or when the call is ended.
+- The status text is exposed through `role="status"` and `aria-live="polite"` so screen
+  readers are told when the connection changes.
+- `window.visualViewport` is used to detect the on-screen keyboard. When the keyboard
+  opens the stage gains a `keyboard-open` class and compacts to `26dvh` so the chat input
+  and the newest messages stay reachable. Focusing the message input also scrolls it
+  into view.
+
+### End-to-end WebRTC test (two real browsers)
+
+Two headless Chrome instances were driven through the DevTools Protocol, logged in as the
+seeded patient and doctor, and both opened the same confirmed appointment. Chrome's fake
+media device flags supplied a camera and microphone on each side.
+
+Result, on both participants:
+
+| Check | Patient | Doctor |
+|---|---|---|
+| Local media tracks | 2 (audio + video) | 2 (audio + video) |
+| Remote media tracks received | 2 | 2 |
+| Remote video dimensions | 640x480 | 640x480 |
+| Connection badge | Connected | Connected |
+| Call timer advancing | 00:04 then 00:08 | 00:04 then 00:08 |
+| Role-specific UI | "Send My Latest Vitals" present | absent |
+| Chat join broadcast | received | "System: ama has entered the room." |
+
+This confirms the full path end to end: Socket.IO signalling (`join`, `i_am_ready`,
+`peer_is_ready`, `offer`/`answer`/`candidate`), peer connection establishment, and
+bidirectional audio/video delivery, plus the new connection badge and timer.
+
+Limitations of this test: both peers were on the same host over `127.0.0.1`, so no NAT
+traversal, TURN relay, or real network conditions were exercised. Those still require the
+deployed environment.
+
+### Still outstanding
+
 - Optional follow-ups: camera flip (front/back) and a pre-call device check.
+- NAT traversal across real networks (needs the deployed HTTPS instance and TURN).
 
 ## 6. Known remaining work
 
-- **Consultation room** mobile layout (phases A–C) is implemented and browser-verified.
-  Remaining work is phase D: connection badge, call timer, and on-screen keyboard
-  handling, plus optional camera flip and a pre-call device check.
-- **WebRTC connectivity** still requires HTTPS, working TURN credentials, and testing
-  across networks (see the notification/WebRTC work). The local browser checks used fake
-  media devices and a single participant, so peer-to-peer media was not exercised.
+- **Consultation room** phases A–D are implemented and browser-verified, including a
+  two-browser end-to-end call on the same host. Real-network NAT traversal still needs
+  the deployed instance and TURN credentials.
+- **WebRTC over the internet** is unverified: the local test used fake devices on the same
+  host. A cross-network test on the deployed site is still required.
+- **Notifications** (doctor appointment email/SMS and the patient confirmation OTP) have
+  not been tested against live SMTP or Hubtel delivery.
 - **Background slider** still runs on all devices by project decision; it pauses when the
   tab is hidden and is disabled for reduced-motion users, but it continues to cost some
   mobile bandwidth and battery.
