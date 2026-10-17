@@ -65,7 +65,29 @@ migrations/versions/7f2c1d4e8a90_add_appointment_confirmation_otp.py
 `start.sh` applies it via `flask db upgrade`. Confirm the deploy log shows the upgrade
 running without error.
 
-## 4. Post-deploy verification
+## 4. Local verification performed before deploy
+
+Two automated checks were run against this branch on an isolated SQLite database.
+
+**Two-browser WebRTC call** — patient and doctor in separate Chrome instances, both
+opening the same confirmed appointment:
+
+- Each side received two remote media tracks with 640x480 video.
+- Both connection badges reached "Connected" and the timers advanced in step.
+- Role-specific UI held: the patient saw "Send My Latest Vitals", the doctor did not.
+
+**Appointment notifications and OTP** — the delivery functions were replaced with
+recorders so nothing was actually sent:
+
+- Booking queued the doctor alert by email and SMS.
+- Confirming queued the patient OTP by email and SMS with the same six-digit code.
+- The code was stored hashed with an expiry, never in plain text.
+- The consultation was blocked before verification, a wrong code was rejected, and the
+  correct code unlocked the room.
+
+Real delivery through SMTP and Hubtel is still untested.
+
+## 5. Post-deploy verification
 
 1. **Signalling** — open the consultation room as two users on two different networks and
    confirm the badge reaches "Connected" and the timer starts on both sides.
@@ -79,7 +101,7 @@ running without error.
 6. **Security headers** — confirm the response still carries the CSP, X-Frame-Options,
    X-Content-Type-Options, Referrer-Policy, and Permissions-Policy headers.
 
-## 5. Known deployment notes
+## 6. Known deployment notes
 
 - The consultation room requires HTTPS for camera and microphone access. Render provides
   this by default; do not test over plain HTTP.
