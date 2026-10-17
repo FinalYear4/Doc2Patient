@@ -43,7 +43,12 @@
                                 {% if current_user.role == 'patient' %}<a href="{{ url_for('my_vitals') }}" class="text-gray-700 hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium">My Vitals</a>{% endif %}
                                 <a href="{{ url_for('health_library') }}" class="text-gray-700 hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium">Health Library</a>
                                 <a href="{{ url_for('profile') }}" class="text-gray-700 hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium">Profile</a>
-                                <a href="{{ url_for('logout') }}" class="text-gray-700 hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium">Logout</a>
+                                <form method="post" action="{{ url_for('logout') }}" class="inline" onsubmit="return confirm('Sign out of Doc2Patient?');">
+                                    <button type="submit" class="inline-flex items-center gap-2 text-red-600 hover:bg-red-50 px-3 py-2 rounded-md text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500">
+                                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H3m0 0 4-4m-4 4 4 4m5-10V5a2 2 0 0 1 2-2h5v18h-5a2 2 0 0 1-2-2v-1"></path></svg>
+                                        Logout
+                                    </button>
+                                </form>
                             {% endif %}
                         </div>
                     </div>
@@ -72,7 +77,12 @@
                         {% if current_user.role == 'patient' %}<a href="{{ url_for('my_vitals') }}" class="text-gray-700 block hover:bg-gray-100 px-3 py-2 rounded-md text-base font-medium">My Vitals</a>{% endif %}
                         <a href="{{ url_for('health_library') }}" class="text-gray-700 block hover:bg-gray-100 px-3 py-2 rounded-md text-base font-medium">Health Library</a>
                         <a href="{{ url_for('profile') }}" class="text-gray-700 block hover:bg-gray-100 px-3 py-2 rounded-md text-base font-medium">Profile</a>
-                        <a href="{{ url_for('logout') }}" class="text-gray-700 block hover:bg-gray-100 px-3 py-2 rounded-md text-base font-medium">Logout</a>
+                        <form method="post" action="{{ url_for('logout') }}" class="block" onsubmit="return confirm('Sign out of Doc2Patient?');">
+                            <button type="submit" class="flex w-full items-center gap-2 rounded-md px-3 py-3 text-left text-base font-semibold text-red-600 hover:bg-red-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500">
+                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H3m0 0 4-4m-4 4 4 4m5-10V5a2 2 0 0 1 2-2h5v18h-5a2 2 0 0 1-2-2v-1"></path></svg>
+                                Logout
+                            </button>
+                        </form>
                     {% endif %}
                 </div>
             </div>

@@ -1,15 +1,20 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1 class="text-3xl font-bold text-gray-900 mb-6">{{ _('Doctor Dashboard') }}</h1>
+<h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">{{ _('Doctor Dashboard') }}</h1>
 
 <!-- Section 1: Upcoming Appointments -->
-<div class="bg-white shadow-md rounded-lg p-6">
-    <h2 class="text-xl font-semibold mb-4">{{ _('Your Upcoming Appointments') }}</h2>
+<div class="bg-white shadow-md rounded-lg p-4 sm:p-6">
+    <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <h2 class="text-xl font-semibold">{{ _('Your Upcoming Appointments') }}</h2>
+        <span class="rounded-full bg-yellow-100 px-3 py-1 text-xs font-semibold text-yellow-800">
+            {{ appointments|selectattr('status', 'equalto', 'pending')|list|length }} {{ _('pending') }}
+        </span>
+    </div>
     {% if appointments %}
         <ul class="divide-y divide-gray-200">
             {% for appt in appointments %}
-            <li class="py-4 space-y-2">
+            <li class="border-t border-gray-100 py-4 first:border-t-0 space-y-2">
                 <p><strong>{{ _('Patient') }}:</strong> 
                     {{ appt.patient.username }}
                     <a href="{{ url_for('view_patient_vitals', patient_id=appt.patient.id) }}" class="ml-2 text-xs text-blue-500 hover:underline">(View Vitals History)</a>
@@ -22,8 +27,12 @@
                 <p><strong>{{ _('Reason') }}:</strong> {{ appt.notes }}</p>
                 <div class="flex flex-wrap items-center gap-3 pt-2">
                     {% if appt.status == 'pending' %}
-                        <form action="{{ url_for('confirm_appointment', appointment_id=appt.id) }}" method="post"><button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">{{ _('Confirm') }}</button></form>
-                        <form action="{{ url_for('decline_appointment', appointment_id=appt.id) }}" method="post"><button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">{{ _('Decline') }}</button></form>
+                        <form action="{{ url_for('confirm_appointment', appointment_id=appt.id) }}" method="post">
+                            <button type="submit" class="w-full sm:w-auto bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500">{{ _('Confirm') }}</button>
+                        </form>
+                        <form action="{{ url_for('decline_appointment', appointment_id=appt.id) }}" method="post" onsubmit="return confirm('Decline this appointment request?');">
+                            <button type="submit" class="w-full sm:w-auto bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500">{{ _('Decline') }}</button>
+                        </form>
                     {% elif appt.status == 'confirmed' %}
                         <a href="{{ url_for('consultation', appointment_id=appt.id) }}" class="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">{{ _('Join Consultation') }}</a>
                     {% endif %}

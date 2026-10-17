@@ -275,6 +275,12 @@ deployed environment.
 - **Consultation room** phases A–D are implemented and browser-verified, including a
   two-browser end-to-end call on the same host. Real-network NAT traversal still needs
   the deployed instance and TURN credentials.
+- The mobile stage is sticky while the lower content scrolls. Vitals are collapsed by
+  default below `lg` and can be expanded on any viewport; all eight readings remain
+  available.
+- Mute and camera controls now show their active state visually and through
+  `aria-pressed`. The doctor appointment queue uses wrapping mobile actions, clear POST
+  actions, and clearer pending status presentation.
 - **WebRTC over the internet** is unverified: the local test used fake devices on the same
   host. A cross-network test on the deployed site is still required.
 - **Notifications** (doctor appointment email/SMS and the patient confirmation message)

@@ -511,7 +511,7 @@ def login_2fa():
     
     return render_template('login_2fa.html', title='Verify 2FA', form=form)
 
-@app.route('/logout')
+@app.route('/logout', methods=['GET', 'POST'])
 def logout():
     logout_user()
     return redirect(url_for('landing'))
@@ -812,6 +812,19 @@ def my_vitals():
 # LIVE CONSULTATION ROUTE & SOCKET.IO HANDLERS
 # =============================================================================
 
+def get_socket_appointment(data):
+    """Return an appointment only when the socket user belongs to its room."""
+    if not current_user.is_authenticated:
+        return None
+    try:
+        appointment_id = int(data.get('room'))
+    except (TypeError, ValueError):
+        return None
+    appointment = db.session.get(Appointment, appointment_id)
+    if not appointment or current_user.id not in (appointment.patient_id, appointment.doctor_id):
+        return None
+    return appointment
+
 @app.route('/consultation/<int:appointment_id>')
 @login_required
 def consultation(appointment_id):
@@ -827,37 +840,49 @@ def consultation(appointment_id):
 
 @socketio.on('join')
 def on_join(data):
+    appointment = get_socket_appointment(data)
+    if not appointment:
+        emit('socket_error', {'message': 'You are not authorized to join this consultation.'})
+        return
     username = current_user.username
     room = data['room']
     join_room(room)
     if current_user.role == 'doctor':
-        appointment = Appointment.query.get(int(room))
-        if appointment:
-            patient = User.query.get(appointment.patient_id)
-            if patient and patient.phone_number:
-                message = f"Dr. {current_user.username} has just joined your consultation room. You can join now."
-                send_sms(to=patient.phone_number, message=message)
+        patient = User.query.get(appointment.patient_id)
+        if patient and patient.phone_number:
+            message = f"Dr. {current_user.username} has just joined your consultation room. You can join now."
+            send_sms(to=patient.phone_number, message=message)
     send({'username': 'System', 'msg': f'{username} has entered the room.'}, to=room)
 
 @socketio.on('i_am_ready')
 def on_ready(data):
+    if not get_socket_appointment(data):
+        return
     room = data['room']
     emit('peer_is_ready', to=room, include_self=False)
 
 @socketio.on('message')
 def handle_message(data):
+    appointment = get_socket_appointment(data)
+    if not appointment:
+        return
     room = data['room']
-    appointment_id = int(room)
-    new_message = ChatMessage(appointment_id=appointment_id, user_id=current_user.id, username=data['username'], message=data['msg'])
+    message = str(data.get('msg', '')).strip()
+    if not message:
+        return
+    new_message = ChatMessage(appointment_id=appointment.id, user_id=current_user.id, username=current_user.username, message=message)
     db.session.add(new_message)
     db.session.commit()
-    send(data, to=room)
+    send({'username': current_user.username, 'msg': message}, to=room)
 
 @socketio.on('fetch_latest_vitals')
 def handle_fetch_vitals(data):
+    appointment = get_socket_appointment(data)
+    if not appointment:
+        return
     room = data['room']
-    if current_user.role == 'patient':
-        latest_vitals = VitalsRecord.query.filter_by(patient_id=current_user.id).order_by(VitalsRecord.timestamp.desc()).first()
+    if current_user.role == 'patient' and current_user.id == appointment.patient_id:
+        latest_vitals = VitalsRecord.query.filter_by(patient_id=appointment.patient_id).order_by(VitalsRecord.timestamp.desc()).first()
         vitals_data = {}
         if latest_vitals:
             vitals_data = {
@@ -875,20 +900,28 @@ def handle_fetch_vitals(data):
 
 @socketio.on('hang_up')
 def on_hang_up(data):
+    if not get_socket_appointment(data):
+        return
     room = data['room']
     emit('peer_left', to=room, include_self=False)
 
 @socketio.on('offer')
 def handle_offer(data):
+    if not get_socket_appointment(data):
+        return
     room = data['room']
     emit('offer', data['offer'], to=room, include_self=False)
 
 @socketio.on('answer')
 def handle_answer(data):
+    if not get_socket_appointment(data):
+        return
     room = data['room']
     emit('answer', data['answer'], to=room, include_self=False)
 
 @socketio.on('candidate')
 def handle_candidate(data):
+    if not get_socket_appointment(data):
+        return
     room = data['room']
     emit('candidate', data['candidate'], to=room, include_self=False)

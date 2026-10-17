@@ -7,7 +7,7 @@
 <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6 lg:h-[calc(100vh-120px)]">
 
     <!-- Left Column (Video Panel) -->
-    <div class="md:col-span-2 lg:col-span-3 flex flex-col bg-gray-100 p-2 sm:p-3 lg:p-4 rounded-lg min-h-0">
+    <div class="md:col-span-2 lg:col-span-3 sticky top-0 z-30 self-start flex flex-col bg-gray-100 p-2 sm:p-3 lg:p-4 rounded-lg min-h-0 lg:static lg:z-auto">
         <h1 class="text-sm font-semibold text-gray-700 mb-2 lg:text-2xl lg:font-bold lg:text-gray-800 lg:mb-4 flex-shrink-0">{{ _('Consultation Room') }}</h1>
 
         <!-- Video Container -->
@@ -63,9 +63,12 @@
     <!-- Right Sidebar: vitals and chat stay visible together, as on desktop -->
     <div class="md:col-span-1 lg:col-span-1 flex flex-col gap-4 lg:gap-6 lg:overflow-y-auto bg-gray-100 p-3 sm:p-4 rounded-lg">
         <!-- Vitals Panel -->
-        <div class="bg-white shadow-md rounded-lg p-5 sm:p-6 flex-shrink-0">
-            <h2 class="text-xl font-semibold mb-4">{{ _('Latest Vitals') }}</h2>
-            <div class="space-y-3 text-md">
+        <details id="vitals-panel" open class="bg-white shadow-md rounded-lg p-5 sm:p-6 flex-shrink-0">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-3 text-xl font-semibold [&::-webkit-details-marker]:hidden">
+                <span>{{ _('Latest Vitals') }}</span>
+                <svg class="vitals-chevron h-5 w-5 flex-shrink-0 text-gray-500 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"></path></svg>
+            </summary>
+            <div class="mt-4 space-y-3 text-md">
                 <div class="flex justify-between"><strong>{{ _('Blood Pressure') }}:</strong> <span id="bp-data">--/--</span> mmHg</div>
                 <div class="flex justify-between"><strong>{{ _('Heart Rate') }}:</strong> <span id="pulse-data">--</span> BPM</div>
                 <div class="flex justify-between"><strong>{{ _('Temperature') }}:</strong> <span id="temp-data">--</span> °C</div>
@@ -78,7 +81,7 @@
             {% if current_user.role == 'patient' %}
                 <button id="send-vitals-btn" class="mt-6 w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">{{ _('Send My Latest Vitals') }}</button>
             {% endif %}
-        </div>
+        </details>
 
         <!-- Chat Panel -->
         <div class="bg-white shadow-md rounded-lg p-5 sm:p-6 flex flex-col min-h-[320px] max-h-[55dvh] lg:max-h-none lg:min-h-[400px] lg:flex-grow">
@@ -146,6 +149,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const connectionDot = document.getElementById('connection-dot');
     const connectionText = document.getElementById('connection-text');
     const callTimer = document.getElementById('call-timer');
+    const vitalsPanel = document.getElementById('vitals-panel');
+
+    if (vitalsPanel && window.matchMedia('(max-width: 1023px)').matches) {
+        vitalsPanel.removeAttribute('open');
+    }
 
     const CONNECTION_STATES = {
         connecting: { label: '{{ _('Connecting') }}', dot: 'bg-yellow-400' },
@@ -275,7 +283,10 @@ document.addEventListener('DOMContentLoaded', () => {
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
     socket.on('message', (data) => {
         const messageElement = document.createElement('div');
-        messageElement.innerHTML = `<strong>${data.username}:</strong> ${data.msg}`;
+        const author = document.createElement('strong');
+        author.textContent = `${data.username}:`;
+        messageElement.appendChild(author);
+        messageElement.appendChild(document.createTextNode(` ${data.msg}`));
         messagesDiv.appendChild(messageElement);
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
     });
@@ -306,6 +317,10 @@ document.addEventListener('DOMContentLoaded', () => {
         localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
         peerConnection.ontrack = (event) => { remoteVideo.srcObject = event.streams[0]; };
         peerConnection.onicecandidate = (event) => { if (event.candidate) { socket.emit('candidate', { room: room, candidate: event.candidate }); } };
+        peerConnection.onicecandidateerror = (event) => {
+            console.error('ICE candidate error', event.errorCode, event.errorText, event.url);
+            if (event.errorCode >= 700 && !remoteVideo.srcObject) { setConnectionState('reconnecting'); }
+        };
         peerConnection.addEventListener('connectionstatechange', () => {
             const state = peerConnection.connectionState;
             if (state === 'connected') { setConnectionState('connected'); startTimer(); }
@@ -317,8 +332,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     socket.on('peer_is_ready', () => { createPeerConnection(); peerConnection.createOffer().then(offer => peerConnection.setLocalDescription(offer)).then(() => { socket.emit('offer', { room: room, offer: peerConnection.localDescription }); }).catch(e => console.error(e)); });
     socket.on('offer', (offer) => { createPeerConnection(); peerConnection.setRemoteDescription(new RTCSessionDescription(offer)).then(() => { remoteDescriptionSet = true; return flushCandidates(); }).then(() => peerConnection.createAnswer()).then(answer => peerConnection.setLocalDescription(answer)).then(() => { socket.emit('answer', { room: room, answer: peerConnection.localDescription }); }).catch(e => console.error('WebRTC offer failed', e)); });
-    socket.on('answer', (answer) => { peerConnection.setRemoteDescription(new RTCSessionDescription(answer)).catch(e => console.error(e)); });
+    socket.on('answer', (answer) => {
+        peerConnection.setRemoteDescription(new RTCSessionDescription(answer))
+            .then(() => { remoteDescriptionSet = true; return flushCandidates(); })
+            .catch(e => console.error('WebRTC answer failed', e));
+    });
     socket.on('candidate', (candidate) => { const iceCandidate = new RTCIceCandidate(candidate); if (!peerConnection || !remoteDescriptionSet) { pendingCandidates.push(iceCandidate); } else { peerConnection.addIceCandidate(iceCandidate).catch(e => console.error('ICE candidate failed', e)); } });
+    socket.on('socket_error', (data) => { setConnectionState('failed'); console.error(data.message); });
 
     const voiceBtn = document.getElementById('voice-btn');
     if (voiceBtn) {

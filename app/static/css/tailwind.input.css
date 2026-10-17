@@ -133,9 +133,19 @@ nav button:focus-visible,
 /* Keep the stage compact while the on-screen keyboard is open on phones/tablets,
    so the chat input and the newest messages stay reachable. */
 @media (max-width: 1023px) {
-    .room-stage.keyboard-open {
+.room-stage.keyboard-open {
         max-height: 26dvh;
     }
+}
+
+details[open] .vitals-chevron {
+    transform: rotate(180deg);
+}
+
+summary:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+    border-radius: 0.375rem;
 }
 
 .article-content {

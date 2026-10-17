@@ -108,7 +108,31 @@ Real delivery through SMTP and Hubtel is still untested.
 6. **Security headers** — confirm the response still carries the CSP, X-Frame-Options,
    X-Content-Type-Options, Referrer-Policy, and Permissions-Policy headers.
 
-## 6. Known deployment notes
+## 6. WebRTC reliability notes
+
+The original implementation used public STUN servers only. That can work on simple
+networks but is not sufficient for all mobile carriers, symmetric NATs, VPNs, or office
+firewalls. The current client accepts an optional TURN server through
+`WEBRTC_TURN_URL`, `WEBRTC_TURN_USERNAME`, and `WEBRTC_TURN_CREDENTIAL`.
+
+TURN is not an ordinary application API key. It is an ICE relay endpoint plus temporary
+or static credentials. Metered or another managed TURN provider supplies these values.
+The values must be entered in Render's environment settings for cross-network calls.
+
+The client now flushes queued ICE candidates after both the offer and answer remote
+descriptions are set. Socket.IO room handlers also verify that the authenticated user
+belongs to the appointment before relaying signalling, chat, or vitals events.
+
+## 7. UI updates
+
+- Mobile consultation video remains sticky while the user scrolls.
+- Vitals are collapsed by default on mobile and expandable on desktop and mobile.
+- Mute/camera controls expose visible state and ARIA state.
+- Logout is a red, CSRF-protected POST action with confirmation.
+- Doctor pending appointment requests use mobile-friendly cards and clear Confirm/
+  Decline POST actions.
+
+## 8. Known deployment notes
 
 - The consultation room requires HTTPS for camera and microphone access. Render provides
   this by default; do not test over plain HTTP.
