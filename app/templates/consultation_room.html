@@ -11,7 +11,7 @@
         <h1 class="text-sm font-semibold text-gray-700 mb-2 lg:text-2xl lg:font-bold lg:text-gray-800 lg:mb-4 flex-shrink-0">{{ _('Consultation Room') }}</h1>
 
         <!-- Video Container -->
-        <div class="relative bg-black rounded-lg shadow-2xl overflow-hidden flex flex-col aspect-video max-h-[46dvh] lg:aspect-auto lg:max-h-none lg:flex-grow">
+        <div id="call-stage" class="room-stage relative bg-black rounded-lg shadow-2xl overflow-hidden flex flex-col aspect-video max-h-[46dvh] lg:aspect-auto lg:max-h-none lg:flex-grow">
             <!-- Video Streams Wrapper -->
             <div class="absolute inset-0 lg:relative lg:inset-auto lg:flex-grow lg:grid lg:grid-cols-2 lg:gap-2 lg:p-2">
                 <!-- Remote (other participant) - fills the stage -->
@@ -27,10 +27,19 @@
                 </div>
             </div>
 
-            <!-- Mobile stage header: who you are talking to -->
-            <div class="lg:hidden absolute inset-x-0 top-0 z-20 bg-gradient-to-b from-black/75 to-transparent px-3 pt-2 pb-8 pointer-events-none">
-                <p class="truncate text-sm font-semibold text-white">{% if current_user.role == 'patient' %}Dr. {{ appointment.doctor.username }}{% else %}{{ appointment.patient.username }}{% endif %}</p>
-                <p class="text-[11px] text-white/70">{% if current_user.role == 'patient' %}{{ _('Doctor') }}{% else %}{{ _('Patient') }}{% endif %}</p>
+            <!-- Mobile stage header: who you are talking to, plus connection state and timer -->
+            <div class="lg:hidden absolute inset-x-0 top-0 z-20 flex items-start justify-between gap-2 bg-gradient-to-b from-black/75 to-transparent px-3 pt-2 pb-8 pointer-events-none">
+                <div class="min-w-0">
+                    <p class="truncate text-sm font-semibold text-white">{% if current_user.role == 'patient' %}Dr. {{ appointment.doctor.username }}{% else %}{{ appointment.patient.username }}{% endif %}</p>
+                    <p class="text-[11px] text-white/70">{% if current_user.role == 'patient' %}{{ _('Doctor') }}{% else %}{{ _('Patient') }}{% endif %}</p>
+                </div>
+                <div class="flex flex-shrink-0 flex-col items-end gap-1">
+                    <span class="inline-flex items-center gap-1 rounded-full bg-black/50 px-2 py-0.5 text-[10px] font-medium text-white/85">
+                        <span id="connection-dot" class="h-1.5 w-1.5 rounded-full bg-yellow-400" aria-hidden="true"></span>
+                        <span id="connection-text" role="status" aria-live="polite">{{ _('Connecting') }}</span>
+                    </span>
+                    <span id="call-timer" class="rounded-full bg-black/50 px-2 py-0.5 text-[10px] font-medium tabular-nums text-white/85">00:00</span>
+                </div>
             </div>
 
             <!-- Control Bar: inside the stage on mobile, floating pill on desktop -->
@@ -133,6 +142,75 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // --- Connection badge and call timer (mobile stage header) ---
+    const connectionDot = document.getElementById('connection-dot');
+    const connectionText = document.getElementById('connection-text');
+    const callTimer = document.getElementById('call-timer');
+
+    const CONNECTION_STATES = {
+        connecting: { label: '{{ _('Connecting') }}', dot: 'bg-yellow-400' },
+        connected: { label: '{{ _('Connected') }}', dot: 'bg-green-400' },
+        reconnecting: { label: '{{ _('Reconnecting') }}', dot: 'bg-yellow-400' },
+        failed: { label: '{{ _('Connection failed') }}', dot: 'bg-red-500' },
+        disconnected: { label: '{{ _('Disconnected') }}', dot: 'bg-gray-400' }
+    };
+
+    function setConnectionState(state) {
+        const config = CONNECTION_STATES[state] || CONNECTION_STATES.connecting;
+        if (connectionText) { connectionText.textContent = config.label; }
+        if (connectionDot) {
+            connectionDot.className = 'h-1.5 w-1.5 rounded-full ' + config.dot;
+        }
+    }
+
+    let timerHandle = null;
+    let callStartedAt = null;
+
+    function updateTimer() {
+        if (!callTimer || callStartedAt === null) { return; }
+        const elapsed = Math.floor((Date.now() - callStartedAt) / 1000);
+        const minutes = String(Math.floor(elapsed / 60)).padStart(2, '0');
+        const seconds = String(elapsed % 60).padStart(2, '0');
+        callTimer.textContent = minutes + ':' + seconds;
+    }
+
+    function startTimer() {
+        if (timerHandle || callStartedAt !== null) { return; }
+        callStartedAt = Date.now();
+        updateTimer();
+        timerHandle = setInterval(updateTimer, 1000);
+    }
+
+    function stopTimer() {
+        if (timerHandle) { clearInterval(timerHandle); timerHandle = null; }
+    }
+
+    function resetTimer() {
+        stopTimer();
+        callStartedAt = null;
+        if (callTimer) { callTimer.textContent = '00:00'; }
+    }
+
+    // --- Keep the stage compact while the on-screen keyboard is open ---
+    const callStage = document.getElementById('call-stage');
+    const messageInput = document.getElementById('message-input');
+
+    if (window.visualViewport && callStage) {
+        const syncKeyboardState = () => {
+            const keyboardOpen = (window.innerHeight - window.visualViewport.height) > 150;
+            callStage.classList.toggle('keyboard-open', keyboardOpen);
+        };
+        window.visualViewport.addEventListener('resize', syncKeyboardState);
+        window.visualViewport.addEventListener('scroll', syncKeyboardState);
+        syncKeyboardState();
+    }
+
+    if (messageInput) {
+        messageInput.addEventListener('focus', () => {
+            setTimeout(() => { messageInput.scrollIntoView({ block: 'nearest' }); }, 250);
+        });
+    }
+
     function setMutedState(muted) {
         isMuted = muted;
         if (localStream && localStream.getAudioTracks()[0]) { localStream.getAudioTracks()[0].enabled = !muted; }
@@ -167,6 +245,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function endConsultation() {
         if (peerConnection) { peerConnection.close(); }
         if (localStream) { localStream.getTracks().forEach(track => track.stop()); }
+        resetTimer();
+        setConnectionState('disconnected');
         socket.emit('hang_up', { room: room });
         {% if current_user.role == 'doctor' %} window.location.href = "{{ url_for('post_consultation', appointment_id=appointment.id) }}"; {% else %} window.location.href = "{{ url_for('patient_dashboard') }}"; {% endif %}
     }
@@ -181,7 +261,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (event.key === 'Escape' && !endCallDialog.classList.contains('hidden')) { closeEndCallDialog(); }
     });
 
-    socket.on('connect', () => { socket.emit('join', { room: room }); });
+    socket.on('connect', () => {
+        socket.emit('join', { room: room });
+        if (!peerConnection || peerConnection.connectionState !== 'connected') { setConnectionState('connecting'); }
+    });
+    socket.on('disconnect', () => { setConnectionState('reconnecting'); });
     socket.on('peer_left', () => {
         alert('The other participant has left the call.'); remoteVideo.srcObject = null;
         if (peerConnection) { peerConnection.close(); }
@@ -222,6 +306,14 @@ document.addEventListener('DOMContentLoaded', () => {
         localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
         peerConnection.ontrack = (event) => { remoteVideo.srcObject = event.streams[0]; };
         peerConnection.onicecandidate = (event) => { if (event.candidate) { socket.emit('candidate', { room: room, candidate: event.candidate }); } };
+        peerConnection.addEventListener('connectionstatechange', () => {
+            const state = peerConnection.connectionState;
+            if (state === 'connected') { setConnectionState('connected'); startTimer(); }
+            else if (state === 'new' || state === 'connecting') { setConnectionState('connecting'); }
+            else if (state === 'disconnected') { setConnectionState('reconnecting'); }
+            else if (state === 'failed') { setConnectionState('failed'); resetTimer(); }
+            else if (state === 'closed') { setConnectionState('disconnected'); resetTimer(); }
+        });
     }
     socket.on('peer_is_ready', () => { createPeerConnection(); peerConnection.createOffer().then(offer => peerConnection.setLocalDescription(offer)).then(() => { socket.emit('offer', { room: room, offer: peerConnection.localDescription }); }).catch(e => console.error(e)); });
     socket.on('offer', (offer) => { createPeerConnection(); peerConnection.setRemoteDescription(new RTCSessionDescription(offer)).then(() => { remoteDescriptionSet = true; return flushCandidates(); }).then(() => peerConnection.createAnswer()).then(answer => peerConnection.setLocalDescription(answer)).then(() => { socket.emit('answer', { room: room, answer: peerConnection.localDescription }); }).catch(e => console.error('WebRTC offer failed', e)); });

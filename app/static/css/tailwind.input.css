@@ -130,6 +130,14 @@ nav button:focus-visible,
     display: block;
 }
 
+/* Keep the stage compact while the on-screen keyboard is open on phones/tablets,
+   so the chat input and the newest messages stay reachable. */
+@media (max-width: 1023px) {
+    .room-stage.keyboard-open {
+        max-height: 26dvh;
+    }
+}
+
 .article-content {
     color: #374151;
     font-size: 1.125rem;
