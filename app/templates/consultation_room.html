@@ -130,14 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let localStream, peerConnection, isMuted = false, isCameraOff = false, lastFocusedElement = null;
     let remoteDescriptionSet = false;
     const pendingCandidates = [];
-    const iceServers = {
-        iceServers: [
-            { urls: ['stun:stun.l.google.com:19302', 'stun:stun1.l.google.com:19302'] }
-            {% if config.WEBRTC_TURN_URL %},
-            { urls: {{ config.WEBRTC_TURN_URL|tojson }}, username: {{ config.WEBRTC_TURN_USERNAME|tojson }}, credential: {{ config.WEBRTC_TURN_CREDENTIAL|tojson }} }
-            {% endif %}
-        ]
-    };
+    const iceServers = { iceServers: {{ ice_servers|tojson }} };
 
     async function flushCandidates() {
         while (pendingCandidates.length && peerConnection && remoteDescriptionSet) {

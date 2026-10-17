@@ -31,6 +31,7 @@ from datetime import datetime, time
 
 from app.email import send_new_appointment_email
 from app.sms import send_new_appointment_sms
+from app.webrtc import get_ice_servers
 
 # =============================================================================
 # TOP-LEVEL & LANGUAGE ROUTES
@@ -866,7 +867,12 @@ def consultation(appointment_id):
         flash('This appointment has not been confirmed yet.', 'warning')
         return redirect(url_for('index'))
     previous_messages = appointment.chat_messages.order_by(ChatMessage.timestamp.asc()).all()
-    return render_template('consultation_room.html', appointment=appointment, previous_messages=previous_messages)
+    return render_template(
+        'consultation_room.html',
+        appointment=appointment,
+        previous_messages=previous_messages,
+        ice_servers=get_ice_servers(),
+    )
 
 @socketio.on('join')
 def on_join(data):

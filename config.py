@@ -48,6 +48,9 @@ class Config:
     WEBRTC_TURN_URL = os.environ.get('WEBRTC_TURN_URL')
     WEBRTC_TURN_USERNAME = os.environ.get('WEBRTC_TURN_USERNAME')
     WEBRTC_TURN_CREDENTIAL = os.environ.get('WEBRTC_TURN_CREDENTIAL')
+    TURN_SERVICE_URL = os.environ.get('TURN_SERVICE_URL')
+    TURN_SERVICE_TOKEN = os.environ.get('TURN_SERVICE_TOKEN')
+    TURN_SERVICE_TIMEOUT_SECONDS = float(os.environ.get('TURN_SERVICE_TIMEOUT_SECONDS') or 5)
 
     # --- DEVELOPER ADMIN CONFIG ---
     ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME')

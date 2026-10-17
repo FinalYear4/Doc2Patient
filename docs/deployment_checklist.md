@@ -25,7 +25,44 @@ provide WebSocket support, which is what previously broke the consultation room
 signalling while the rest of the site kept working. Keep `--workers 1` because
 Flask-SocketIO is not using a shared message queue yet.
 
-## 2. Environment variables
+## 2. TURN service (Node sidecar)
+
+The repository now contains `turn-service/`, a separate Node.js Render service. Set its
+Root Directory to `turn-service`, Build Command to `npm ci`, and Start Command to
+`npm start`.
+
+Set these variables on the Node service:
+
+- `METERED_APP_NAME=doc2patient`
+- `METERED_SECRET_KEY` — server-side only; never put this in Flask, browser code, or Git
+- `TURN_SERVICE_TOKEN` — shared only between the Node service and Flask
+- `DATABASE_URL` — the same managed Postgres connection used by the application
+- `METERED_CREDENTIAL_TTL_SECONDS=86400`
+- `METERED_ROTATION_INTERVAL_MS=43200000`
+- `METERED_PROPAGATION_DELAY_MS=120000`
+- `METERED_USAGE_INTERVAL_MS=900000`
+
+The service creates credentials that expire after 24 hours and rotates them every 12
+hours, leaving overlap for existing calls. It keeps the active credential metadata in
+Postgres, serves browser-safe ICE servers through `/internal/ice-servers`, and monitors
+usage through Metered's per-credential usage endpoint. The secret key never leaves the
+Node service.
+
+Set these variables on the Flask service:
+
+- `TURN_SERVICE_URL=https://<your-turn-service>.onrender.com`
+- `TURN_SERVICE_TOKEN` — the same value configured on the Node service
+
+Flask fetches the ICE configuration server-to-server and passes only the ICE server
+array to the browser. If the Node service is unavailable, Flask falls back to its
+static STUN/TURN variables and logs a warning.
+
+Metered documents a 48-hour credential rotated every 24 hours as its safer default. This
+implementation uses the requested 24-hour lifetime with a 12-hour rotation interval;
+increase the lifetime to 48 hours if long-running consultations or delayed clients are
+expected.
+
+## 3. Environment variables
 
 Set these in the Render dashboard (Environment tab). Never commit them.
 
@@ -55,7 +92,7 @@ Without TURN, calls only work when both peers can reach each other directly. Sym
 a call that connects on the same Wi-Fi but hangs at "Connecting" across mobile data or
 different networks.
 
-## 3. Database
+## 4. Database
 
 Two migrations are applied in order. The first added appointment confirmation code
 columns, and the second removes them again, so the final schema has no OTP columns:
@@ -68,7 +105,7 @@ migrations/versions/c4a1b8e2d7f3_remove_appointment_confirmation_otp.py
 `start.sh` applies both via `flask db upgrade`. Confirm the deploy log shows the upgrades
 running without error.
 
-## 4. Local verification performed before deploy
+## 5. Local verification performed before deploy
 
 Two automated checks were run against this branch on an isolated SQLite database.
 
@@ -93,7 +130,7 @@ nothing was actually sent:
 
 Real delivery through SMTP and Hubtel is still untested.
 
-## 5. Post-deploy verification
+## 6. Post-deploy verification
 
 1. **Signalling** — open the consultation room as two users on two different networks and
    confirm the badge reaches "Connected" and the timer starts on both sides.
@@ -108,7 +145,7 @@ Real delivery through SMTP and Hubtel is still untested.
 6. **Security headers** — confirm the response still carries the CSP, X-Frame-Options,
    X-Content-Type-Options, Referrer-Policy, and Permissions-Policy headers.
 
-## 6. WebRTC reliability notes
+## 7. WebRTC reliability notes
 
 The original implementation used public STUN servers only. That can work on simple
 networks but is not sufficient for all mobile carriers, symmetric NATs, VPNs, or office
@@ -123,7 +160,7 @@ The client now flushes queued ICE candidates after both the offer and answer rem
 descriptions are set. Socket.IO room handlers also verify that the authenticated user
 belongs to the appointment before relaying signalling, chat, or vitals events.
 
-## 7. UI updates
+## 8. UI updates
 
 - Mobile consultation video remains sticky while the user scrolls.
 - Vitals are collapsed by default on mobile and expandable on desktop and mobile.
@@ -135,7 +172,7 @@ belongs to the appointment before relaying signalling, chat, or vitals events.
   time, and existing attachments/recommendations. Patients can access a dedicated
   consultation-history queue and individual records after completion.
 
-## 8. Known deployment notes
+## 9. Known deployment notes
 
 - The consultation room requires HTTPS for camera and microphone access. Render provides
   this by default; do not test over plain HTTP.
