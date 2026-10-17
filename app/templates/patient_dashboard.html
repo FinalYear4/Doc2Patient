@@ -104,7 +104,10 @@
 
 <!-- Bottom Section: Follow-ups from Completed Appointments -->
 <div class="mt-12">
-    <h2 class="text-2xl font-bold text-gray-800 mb-4">{{ _('Care Plans & Follow-Ups') }}</h2>
+    <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <h2 class="text-2xl font-bold text-gray-800">{{ _('Care Plans & Follow-Ups') }}</h2>
+        <a href="{{ url_for('consultation_history') }}" class="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700">{{ _('View Consultation History') }}</a>
+    </div>
     {% if completed_appointments %}
         {% for appt in completed_appointments %}
             <div class="bg-white shadow-md rounded-lg p-6 mb-4">
@@ -112,10 +115,17 @@
                 
                 <div class="space-y-6">
                     <!-- Custom Notes Section -->
-                    {% if appt.custom_follow_up_notes %}
+                    {% if appt.clinical_findings or appt.custom_follow_up_notes %}
                     <div>
-                        <h4 class="font-semibold text-gray-700">{{ _('Doctor\'s Notes:') }}</h4>
-                        <p class="mt-1 text-gray-600 whitespace-pre-wrap">{{ appt.custom_follow_up_notes }}</p>
+                        <h4 class="font-semibold text-gray-700">{{ _('Doctor\'s Findings:') }}</h4>
+                        <p class="mt-1 text-gray-600 whitespace-pre-wrap">{{ appt.clinical_findings or appt.custom_follow_up_notes }}</p>
+                    </div>
+                    {% endif %}
+
+                    {% if appt.care_plan %}
+                    <div>
+                        <h4 class="font-semibold text-gray-700">{{ _('Care Plan:') }}</h4>
+                        <p class="mt-1 text-gray-600 whitespace-pre-wrap">{{ appt.care_plan }}</p>
                     </div>
                     {% endif %}
 
@@ -152,7 +162,7 @@
                     {% endif %}
 
                     <!-- No Follow-ups Message -->
-                    {% if not appt.custom_follow_up_notes and not appt.recommended_articles.all() and not appt.uploaded_document_filename and not appt.youtube_video_url %}
+                    {% if not appt.clinical_findings and not appt.care_plan and not appt.custom_follow_up_notes and not appt.recommended_articles.all() and not appt.uploaded_document_filename and not appt.youtube_video_url %}
                         <p class="text-gray-600">{{ _('No specific follow-up instructions were provided for this appointment.') }}</p>
                     {% endif %}
                 </div>

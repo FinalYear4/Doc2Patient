@@ -131,6 +131,9 @@ belongs to the appointment before relaying signalling, chat, or vitals events.
 - Logout is a red, CSRF-protected POST action with confirmation.
 - Doctor pending appointment requests use mobile-friendly cards and clear Confirm/
   Decline POST actions.
+- Completed consultations now store structured clinical findings, care plans, completion
+  time, and existing attachments/recommendations. Patients can access a dedicated
+  consultation-history queue and individual records after completion.
 
 ## 8. Known deployment notes
 

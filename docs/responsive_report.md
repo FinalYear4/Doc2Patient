@@ -285,6 +285,8 @@ deployed environment.
   host. A cross-network test on the deployed site is still required.
 - **Notifications** (doctor appointment email/SMS and the patient confirmation message)
   have not been tested against live SMTP or Hubtel delivery.
+- Patients now have a responsive consultation-history queue and detail view for completed
+  doctor findings, care plans, recommended articles, and attached documents.
 - **Background slider** still runs on all devices by project decision; it pauses when the
   tab is hidden and is disabled for reduced-motion users, but it continues to cost some
   mobile bandwidth and battery.

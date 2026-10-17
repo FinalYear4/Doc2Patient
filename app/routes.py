@@ -223,6 +223,33 @@ def patient_dashboard():
         search_query=search_query
     )
 
+@app.route('/consultation-history')
+@login_required
+def consultation_history():
+    if current_user.role != 'patient':
+        flash('Consultation history is available to patients only.', 'warning')
+        return redirect(url_for('index'))
+    records = Appointment.query.filter_by(
+        patient_id=current_user.id,
+        status='completed'
+    ).order_by(
+        Appointment.completed_at.desc().nullslast(),
+        Appointment.appointment_time.desc()
+    ).all()
+    return render_template('consultation_history.html', title='Consultation History', records=records)
+
+@app.route('/consultation-history/<int:appointment_id>')
+@login_required
+def consultation_history_detail(appointment_id):
+    appointment = Appointment.query.get_or_404(appointment_id)
+    if current_user.role != 'patient' or appointment.patient_id != current_user.id:
+        flash('You are not authorized to view this consultation record.', 'danger')
+        return redirect(url_for('index'))
+    if appointment.status != 'completed':
+        flash('This consultation record is not complete yet.', 'warning')
+        return redirect(url_for('consultation_history'))
+    return render_template('consultation_history_detail.html', title='Consultation Record', appointment=appointment)
+
 @app.route('/view_patient_vitals/<int:patient_id>')
 @login_required
 def view_patient_vitals(patient_id):
@@ -401,6 +428,9 @@ def post_consultation(appointment_id):
     
     if request.method == 'POST':
         appointment.custom_follow_up_notes = request.form.get('custom_notes')
+        appointment.clinical_findings = request.form.get('clinical_findings')
+        appointment.care_plan = request.form.get('care_plan')
+        appointment.completed_at = datetime.utcnow()
         appointment.youtube_video_url = request.form.get('youtube_url')
         if 'document' in request.files:
             file = request.files['document']
