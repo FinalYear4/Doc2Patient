@@ -1,0 +1,5 @@
+Hello {{ patient.username }},
+
+Your appointment with Dr. {{ doctor.username }} on {{ appointment.appointment_time.strftime('%b %d at %H:%M') }} is confirmed.
+
+Please join the consultation from your dashboard at the scheduled time.

@@ -1,7 +1,8 @@
 # Deployment checklist (Render)
 
 This checklist covers deploying the `video-interface` branch, which adds the WebRTC
-hardening, appointment OTP, responsive layout, and the consultation room redesign.
+hardening, appointment notifications, responsive layout, and the consultation room
+redesign.
 
 ## 1. Service configuration
 
@@ -35,12 +36,12 @@ Required:
 - `SESSION_COOKIE_SECURE=1` (the deployed site is HTTPS)
 - `ADMIN_USERNAME`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`
 
-Email (doctor appointment alerts and the patient confirmation OTP):
+Email (doctor appointment alerts and patient confirmations):
 
 - `MAIL_SERVER`, `MAIL_PORT`, `MAIL_USE_TLS`, `MAIL_USERNAME`, `MAIL_PASSWORD`
 - `MAIL_DEFAULT_SENDER`
 
-SMS (doctor appointment alerts and the patient confirmation OTP):
+SMS (doctor appointment alerts and patient confirmations):
 
 - `HUBTEL_CLIENT_ID`, `HUBTEL_CLIENT_SECRET`, `HUBTEL_SENDER_ID`
 
@@ -56,13 +57,15 @@ different networks.
 
 ## 3. Database
 
-The new migration adds the appointment confirmation OTP columns:
+Two migrations are applied in order. The first added appointment confirmation code
+columns, and the second removes them again, so the final schema has no OTP columns:
 
 ```
 migrations/versions/7f2c1d4e8a90_add_appointment_confirmation_otp.py
+migrations/versions/c4a1b8e2d7f3_remove_appointment_confirmation_otp.py
 ```
 
-`start.sh` applies it via `flask db upgrade`. Confirm the deploy log shows the upgrade
+`start.sh` applies both via `flask db upgrade`. Confirm the deploy log shows the upgrades
 running without error.
 
 ## 4. Local verification performed before deploy
@@ -76,14 +79,17 @@ opening the same confirmed appointment:
 - Both connection badges reached "Connected" and the timers advanced in step.
 - Role-specific UI held: the patient saw "Send My Latest Vitals", the doctor did not.
 
-**Appointment notifications and OTP** — the delivery functions were replaced with
-recorders so nothing was actually sent:
+**Appointment notifications** — the delivery functions were replaced with recorders so
+nothing was actually sent:
 
 - Booking queued the doctor alert by email and SMS.
-- Confirming queued the patient OTP by email and SMS with the same six-digit code.
-- The code was stored hashed with an expiry, never in plain text.
-- The consultation was blocked before verification, a wrong code was rejected, and the
-  correct code unlocked the room.
+- Confirming queued the patient confirmation by email and SMS.
+- The patient SMS carries no verification code and simply states the appointment is
+  confirmed.
+- The patient reached the consultation room immediately after confirmation, with no
+  verification step.
+- The old `/appointment/<id>/verify` URL no longer resolves, and the appointment table has
+  no OTP columns.
 
 Real delivery through SMTP and Hubtel is still untested.
 
@@ -96,8 +102,9 @@ Real delivery through SMTP and Hubtel is still untested.
    missing or wrong.
 4. **Doctor alert** — book an appointment as a patient and confirm the doctor receives the
    email and SMS.
-5. **Appointment OTP** — confirm the appointment as the doctor, then check the patient
-   receives the six-digit code by SMS and email, and that joining the room requires it.
+5. **Patient confirmation** — confirm the appointment as the doctor, then check the patient
+   receives the confirmation by SMS and email, and can join the room directly from the
+   dashboard with no code.
 6. **Security headers** — confirm the response still carries the CSP, X-Frame-Options,
    X-Content-Type-Options, Referrer-Policy, and Permissions-Policy headers.
 

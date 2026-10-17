@@ -40,11 +40,11 @@ def send_new_appointment_email(doctor, patient, appointment):
                                   doctor=doctor, patient=patient, appointment=appointment)
     )
 
-def send_appointment_confirmation_email(patient, doctor, appointment, code):
+def send_appointment_confirmed_email(patient, doctor, appointment):
     send_email(
-        '[Doc2Patient] Appointment confirmed - verification code',
+        '[Doc2Patient] Your appointment is confirmed',
         sender=app.config['MAIL_DEFAULT_SENDER'],
         recipients=[patient.email],
-        text_body=render_template('email/appointment_confirmation.txt', patient=patient, doctor=doctor, appointment=appointment, code=code),
-        html_body=render_template('email/appointment_confirmation.html', patient=patient, doctor=doctor, appointment=appointment, code=code)
+        text_body=render_template('email/appointment_confirmed.txt', patient=patient, doctor=doctor, appointment=appointment),
+        html_body=render_template('email/appointment_confirmed.html', patient=patient, doctor=doctor, appointment=appointment)
     )

@@ -77,7 +77,7 @@ Background slider (kept on all devices, per project decision):
   and the iframe has a `title`.
 - `doctor_dashboard.html`: Confirm/Decline action row now wraps.
 - `profile.html`, `login.html`, `register.html`, `report_issue.html`,
-  `post_consultation.html`, `enable_2fa.html`, `verify_appointment.html`,
+  `post_consultation.html`, `enable_2fa.html`,
   `view_article.html`: responsive padding, wrapping layouts, and constrained media.
 - `enable_2fa.html`: QR image is now size-constrained with intrinsic dimensions, and the
   code entry form stacks on phones.
@@ -277,8 +277,8 @@ deployed environment.
   the deployed instance and TURN credentials.
 - **WebRTC over the internet** is unverified: the local test used fake devices on the same
   host. A cross-network test on the deployed site is still required.
-- **Notifications** (doctor appointment email/SMS and the patient confirmation OTP) have
-  not been tested against live SMTP or Hubtel delivery.
+- **Notifications** (doctor appointment email/SMS and the patient confirmation message)
+  have not been tested against live SMTP or Hubtel delivery.
 - **Background slider** still runs on all devices by project decision; it pauses when the
   tab is hidden and is disabled for reduced-motion users, but it continues to cost some
   mobile bandwidth and battery.
