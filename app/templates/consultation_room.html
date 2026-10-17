@@ -1,42 +1,60 @@
 {% extends "base.html" %}
 
 {% block content %}
-<!-- Main Grid Container: Establishes the two-column layout -->
-<div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 h-[calc(100vh-120px)]">
+{# Mobile and tablet (< lg): the other participant fills the stage, your own video is a
+   small thumbnail, and the call controls sit inside the stage over a scrim.
+   Desktop (lg and up) keeps the original three-column layout and floating control bar. #}
+<div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6 lg:h-[calc(100vh-120px)]">
 
     <!-- Left Column (Video Panel) -->
-    <div class="md:col-span-2 lg:col-span-3 flex flex-col bg-gray-100 p-4 rounded-lg">
-        <h1 class="text-2xl font-bold text-gray-800 mb-4 flex-shrink-0">{{ _('Consultation Room') }}</h1>
-        
+    <div class="md:col-span-2 lg:col-span-3 flex flex-col bg-gray-100 p-2 sm:p-3 lg:p-4 rounded-lg min-h-0">
+        <h1 class="text-sm font-semibold text-gray-700 mb-2 lg:text-2xl lg:font-bold lg:text-gray-800 lg:mb-4 flex-shrink-0">{{ _('Consultation Room') }}</h1>
+
         <!-- Video Container -->
-        <div class="relative bg-black rounded-lg shadow-2xl flex-grow flex flex-col">
+        <div class="relative bg-black rounded-lg shadow-2xl overflow-hidden flex flex-col aspect-video max-h-[46dvh] lg:aspect-auto lg:max-h-none lg:flex-grow">
             <!-- Video Streams Wrapper -->
-            <div class="flex-grow grid grid-cols-1 md:grid-cols-2 gap-2 p-2">
-                <!-- Local Video -->
-                <div class="relative w-full h-full bg-gray-900 rounded-md">
-                    <video id="localVideo" autoplay playsinline muted class="w-full h-full object-cover rounded-md"></video>
-                    <h3 class="absolute bottom-2 left-2 text-white text-sm bg-black bg-opacity-50 px-2 py-1 rounded">{{ current_user.username }} (You)</h3>
+            <div class="absolute inset-0 lg:relative lg:inset-auto lg:flex-grow lg:grid lg:grid-cols-2 lg:gap-2 lg:p-2">
+                <!-- Remote (other participant) - fills the stage -->
+                <div class="absolute inset-0 lg:relative lg:inset-auto bg-gray-900 lg:rounded-md overflow-hidden">
+                    <video id="remoteVideo" autoplay playsinline class="w-full h-full object-cover"></video>
+                    <h3 class="hidden lg:block absolute bottom-2 left-2 text-white text-sm bg-black bg-opacity-50 px-2 py-1 rounded">{% if current_user.role == 'patient' %} Dr. {{ appointment.doctor.username }} {% else %} {{ appointment.patient.username }} {% endif %}</h3>
                 </div>
-                <!-- Remote Video -->
-                <div class="relative w-full h-full bg-gray-900 rounded-md">
-                    <video id="remoteVideo" autoplay playsinline class="w-full h-full object-cover rounded-md"></video>
-                    <h3 class="absolute bottom-2 left-2 text-white text-sm bg-black bg-opacity-50 px-2 py-1 rounded">{% if current_user.role == 'patient' %} Dr. {{ appointment.doctor.username }} {% else %} {{ appointment.patient.username }} {% endif %}</h3>
+                <!-- Local - self-view thumbnail on mobile -->
+                <div class="absolute right-2 top-12 w-24 sm:w-28 overflow-hidden rounded-lg ring-2 ring-white/40 shadow-lg bg-gray-900 lg:relative lg:inset-auto lg:top-auto lg:right-auto lg:w-auto lg:rounded-md lg:ring-0 lg:shadow-none">
+                    <video id="localVideo" autoplay playsinline muted class="w-full aspect-video object-cover lg:h-full lg:aspect-auto lg:rounded-md"></video>
+                    <span class="lg:hidden absolute bottom-0 left-0 bg-black/60 text-white text-[10px] leading-4 px-1.5 rounded-tr-md">{{ _('You') }}</span>
+                    <h3 class="hidden lg:block absolute bottom-2 left-2 text-white text-sm bg-black bg-opacity-50 px-2 py-1 rounded">{{ current_user.username }} (You)</h3>
                 </div>
             </div>
-            
-            <!-- Control Bar (Unchanged) -->
-            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center justify-center space-x-2 md:space-x-4 bg-gray-800 bg-opacity-70 p-3 rounded-full z-20">
-                 <button id="muteBtn" class="bg-gray-600 hover:bg-gray-500 p-3 rounded-full text-white focus:outline-none" title="Mute/Unmute Microphone"><svg id="micIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg></button>
-                <button id="cameraBtn" class="bg-gray-600 hover:bg-gray-500 p-3 rounded-full text-white focus:outline-none" title="Start/Stop Camera"><svg id="cameraIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg></button>
-                <button id="endCallBtn" class="bg-red-600 hover:bg-red-700 p-3 rounded-full text-white focus:outline-none" title="End Call"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7.707 7.707a1 1 0 011.414 0L10 8.586l.879-.879a1 1 0 111.414 1.414L11.414 10l.879.879a1 1 0 11-1.414 1.414L10 11.414l-.879.879a1 1 0 01-1.414-1.414L8.586 10 7.707 9.121a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg></button>
+
+            <!-- Mobile stage header: who you are talking to -->
+            <div class="lg:hidden absolute inset-x-0 top-0 z-20 bg-gradient-to-b from-black/75 to-transparent px-3 pt-2 pb-8 pointer-events-none">
+                <p class="truncate text-sm font-semibold text-white">{% if current_user.role == 'patient' %}Dr. {{ appointment.doctor.username }}{% else %}{{ appointment.patient.username }}{% endif %}</p>
+                <p class="text-[11px] text-white/70">{% if current_user.role == 'patient' %}{{ _('Doctor') }}{% else %}{{ _('Patient') }}{% endif %}</p>
+            </div>
+
+            <!-- Control Bar: inside the stage on mobile, floating pill on desktop -->
+            <div class="absolute inset-x-0 bottom-0 z-20 lg:inset-x-auto lg:bottom-4 lg:left-1/2 lg:-translate-x-1/2">
+                <div class="lg:hidden absolute inset-x-0 bottom-0 top-[-3rem] bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none" aria-hidden="true"></div>
+                <div class="relative flex items-center justify-center gap-4 px-4 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))] lg:p-3 lg:bg-gray-800 lg:bg-opacity-70 lg:rounded-full">
+                    <button id="muteBtn" type="button" aria-pressed="false" aria-label="{{ _('Mute microphone') }}" title="{{ _('Mute or unmute microphone') }}" class="flex items-center justify-center h-12 w-12 rounded-full text-white bg-gray-600 hover:bg-gray-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+                    </button>
+                    <button id="cameraBtn" type="button" aria-pressed="false" aria-label="{{ _('Turn camera off') }}" title="{{ _('Start or stop camera') }}" class="flex items-center justify-center h-12 w-12 rounded-full text-white bg-gray-600 hover:bg-gray-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                    </button>
+                    <button id="endCallBtn" type="button" aria-label="{{ _('End consultation') }}" title="{{ _('End consultation') }}" class="flex items-center justify-center h-12 w-12 rounded-full text-white bg-red-600 hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7.707 7.707a1 1 0 011.414 0L10 8.586l.879-.879a1 1 0 111.414 1.414L11.414 10l.879.879a1 1 0 11-1.414 1.414L10 11.414l-.879.879a1 1 0 01-1.414-1.414L8.586 10 7.707 9.121a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Right Sidebar (This will scroll independently) -->
-    <div class="md:col-span-1 lg:col-span-1 flex flex-col gap-6 overflow-y-auto bg-gray-100 p-4 rounded-lg">
+    <!-- Right Sidebar: vitals and chat stay visible together, as on desktop -->
+    <div class="md:col-span-1 lg:col-span-1 flex flex-col gap-4 lg:gap-6 lg:overflow-y-auto bg-gray-100 p-3 sm:p-4 rounded-lg">
         <!-- Vitals Panel -->
-        <div class="bg-white shadow-md rounded-lg p-6 flex-shrink-0">
+        <div class="bg-white shadow-md rounded-lg p-5 sm:p-6 flex-shrink-0">
             <h2 class="text-xl font-semibold mb-4">{{ _('Latest Vitals') }}</h2>
             <div class="space-y-3 text-md">
                 <div class="flex justify-between"><strong>{{ _('Blood Pressure') }}:</strong> <span id="bp-data">--/--</span> mmHg</div>
@@ -51,24 +69,33 @@
             {% if current_user.role == 'patient' %}
                 <button id="send-vitals-btn" class="mt-6 w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">{{ _('Send My Latest Vitals') }}</button>
             {% endif %}
-            {% if current_user.role == 'doctor' %}
-                <a href="{{ url_for('post_consultation', appointment_id=appointment.id) }}" class="mt-6 w-full text-center block bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded">Plan Follow-Up</a>
-            {% endif %}
         </div>
-        
+
         <!-- Chat Panel -->
-        <div class="bg-white shadow-md rounded-lg p-6 flex-grow flex flex-col min-h-[400px]">
+        <div class="bg-white shadow-md rounded-lg p-5 sm:p-6 flex flex-col min-h-[320px] max-h-[55dvh] lg:max-h-none lg:min-h-[400px] lg:flex-grow">
             <h2 class="text-xl font-semibold mb-4 flex-shrink-0">{{ _('Live Chat') }}</h2>
-            <div id="messages" class="flex-grow overflow-y-auto p-4 border rounded-md mb-4 bg-gray-50">
+            <div id="messages" class="flex-grow overflow-y-auto p-4 border rounded-md mb-4 bg-gray-50" role="log" aria-live="polite">
                 {% for msg in previous_messages %}
                     <div class="mb-2"><strong>{{ msg.username }}:</strong> {{ msg.message }}</div>
                 {% endfor %}
             </div>
             <form id="message-form" class="flex items-center flex-shrink-0">
-                <input id="message-input" type="text" placeholder="{{ _('Type your message...') }}" class="flex-grow px-3 py-2 border border-gray-300 rounded-l-md">
-                <button type="button" id="voice-btn" title="Voice-to-Text" class="bg-gray-200 text-gray-700 px-4 py-2 border-t border-b border-gray-300 hover:bg-gray-300">🎤</button>
+                <input id="message-input" type="text" placeholder="{{ _('Type your message...') }}" class="flex-grow min-w-0 px-3 py-2 border border-gray-300 rounded-l-md">
+                <button type="button" id="voice-btn" title="{{ _('Voice to text') }}" class="bg-gray-200 text-gray-700 px-4 py-2 border-t border-b border-gray-300 hover:bg-gray-300">🎤</button>
                 <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-r-md hover:bg-blue-700">{{ _('Send') }}</button>
             </form>
+        </div>
+    </div>
+</div>
+
+<!-- End-call confirmation -->
+<div id="end-call-dialog" class="hidden fixed inset-0 z-50 items-center justify-center bg-black/60 p-4" role="dialog" aria-modal="true" aria-labelledby="end-call-title">
+    <div class="w-full max-w-sm rounded-xl bg-white p-5 shadow-xl">
+        <h2 id="end-call-title" class="text-lg font-semibold text-gray-900">{{ _('End this consultation?') }}</h2>
+        <p class="mt-2 text-sm text-gray-600">{{ _('This ends the call for both participants, so it cannot be undone.') }}</p>
+        <div class="mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+            <button type="button" id="end-call-cancel" class="w-full sm:w-auto rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">{{ _('Keep the call') }}</button>
+            <button type="button" id="end-call-confirm" class="w-full sm:w-auto rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500">{{ _('End consultation') }}</button>
         </div>
     </div>
 </div>
@@ -85,7 +112,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const muteBtn = document.getElementById('muteBtn');
     const cameraBtn = document.getElementById('cameraBtn');
     const endCallBtn = document.getElementById('endCallBtn');
-    let localStream, peerConnection, isMuted = false, isCameraOff = false;
+    const endCallDialog = document.getElementById('end-call-dialog');
+    const endCallCancel = document.getElementById('end-call-cancel');
+    const endCallConfirm = document.getElementById('end-call-confirm');
+    let localStream, peerConnection, isMuted = false, isCameraOff = false, lastFocusedElement = null;
     let remoteDescriptionSet = false;
     const pendingCandidates = [];
     const iceServers = {
@@ -103,12 +133,52 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    muteBtn.addEventListener('click', () => { if (!localStream) return; isMuted = !isMuted; localStream.getAudioTracks()[0].enabled = !isMuted; muteBtn.classList.toggle('bg-red-600', isMuted); muteBtn.classList.toggle('bg-gray-600', !isMuted); });
-    cameraBtn.addEventListener('click', () => { if (!localStream) return; isCameraOff = !isCameraOff; localStream.getVideoTracks()[0].enabled = !isCameraOff; cameraBtn.classList.toggle('bg-red-600', isCameraOff); cameraBtn.classList.toggle('bg-gray-600', !isCameraOff); });
-    endCallBtn.addEventListener('click', () => {
-        if (peerConnection) { peerConnection.close(); } if (localStream) { localStream.getTracks().forEach(track => track.stop()); }
+    function setMutedState(muted) {
+        isMuted = muted;
+        if (localStream && localStream.getAudioTracks()[0]) { localStream.getAudioTracks()[0].enabled = !muted; }
+        muteBtn.classList.toggle('bg-red-600', muted);
+        muteBtn.classList.toggle('bg-gray-600', !muted);
+        muteBtn.setAttribute('aria-pressed', String(muted));
+        muteBtn.setAttribute('aria-label', muted ? "{{ _('Unmute microphone') }}" : "{{ _('Mute microphone') }}");
+    }
+
+    function setCameraState(off) {
+        isCameraOff = off;
+        if (localStream && localStream.getVideoTracks()[0]) { localStream.getVideoTracks()[0].enabled = !off; }
+        cameraBtn.classList.toggle('bg-red-600', off);
+        cameraBtn.classList.toggle('bg-gray-600', !off);
+        cameraBtn.setAttribute('aria-pressed', String(off));
+        cameraBtn.setAttribute('aria-label', off ? "{{ _('Turn camera on') }}" : "{{ _('Turn camera off') }}");
+    }
+
+    function openEndCallDialog() {
+        lastFocusedElement = document.activeElement;
+        endCallDialog.classList.remove('hidden');
+        endCallDialog.classList.add('flex');
+        endCallCancel.focus();
+    }
+
+    function closeEndCallDialog() {
+        endCallDialog.classList.add('hidden');
+        endCallDialog.classList.remove('flex');
+        if (lastFocusedElement) { lastFocusedElement.focus(); }
+    }
+
+    function endConsultation() {
+        if (peerConnection) { peerConnection.close(); }
+        if (localStream) { localStream.getTracks().forEach(track => track.stop()); }
         socket.emit('hang_up', { room: room });
         {% if current_user.role == 'doctor' %} window.location.href = "{{ url_for('post_consultation', appointment_id=appointment.id) }}"; {% else %} window.location.href = "{{ url_for('patient_dashboard') }}"; {% endif %}
+    }
+
+    muteBtn.addEventListener('click', () => { if (!localStream) return; setMutedState(!isMuted); });
+    cameraBtn.addEventListener('click', () => { if (!localStream) return; setCameraState(!isCameraOff); });
+    endCallBtn.addEventListener('click', openEndCallDialog);
+    endCallCancel.addEventListener('click', closeEndCallDialog);
+    endCallConfirm.addEventListener('click', endConsultation);
+    endCallDialog.addEventListener('click', (event) => { if (event.target === endCallDialog) { closeEndCallDialog(); } });
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && !endCallDialog.classList.contains('hidden')) { closeEndCallDialog(); }
     });
 
     socket.on('connect', () => { socket.emit('join', { room: room }); });
@@ -132,7 +202,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (input.value) { socket.emit('message', { room: room, msg: input.value, username: "{{ current_user.username }}" }); input.value = ''; }
     }
 
-    // THE FIX: The listener now updates all the new fields
     socket.on('vitals_update', (data) => {
         document.getElementById('temp-data').textContent = data.temperature;
         document.getElementById('pulse-data').textContent = data.pulse;
@@ -146,7 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const sendVitalsBtn = document.getElementById('send-vitals-btn');
     if (sendVitalsBtn) { sendVitalsBtn.addEventListener('click', () => { socket.emit('fetch_latest_vitals', { room: room }); }); }
-    
+
     function createPeerConnection() {
         if (peerConnection) return;
         peerConnection = new RTCPeerConnection(iceServers);
@@ -170,7 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
             voiceBtn.addEventListener('click', () => { if (isRecognizing) { recognition.stop(); } else { recognition.start(); } });
         } else { voiceBtn.style.display = 'none'; }
     }
-    
+
     async function initializeMedia() {
         try {
             localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
