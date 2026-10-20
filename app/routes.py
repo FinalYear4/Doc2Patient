@@ -208,18 +208,23 @@ def patient_dashboard():
         Appointment.status.in_(['pending', 'confirmed', 'declined'])
     ).order_by(Appointment.appointment_time.asc()).all()
     
-    # Get completed appointments for the follow-up section
-    completed_appointments = Appointment.query.filter_by(
-        patient_id=current_user.id, 
+    completed_query = Appointment.query.filter_by(
+        patient_id=current_user.id,
         status='completed'
-    ).order_by(Appointment.appointment_time.desc()).all()
+    )
+    completed_count = completed_query.count()
+    latest_completed_appointment = completed_query.order_by(
+        Appointment.completed_at.desc().nullslast(),
+        Appointment.appointment_time.desc()
+    ).first()
 
     return render_template(
         'patient_dashboard.html', 
         title='Patient Dashboard', 
         form=form, 
         appointments=active_appointments,
-        completed_appointments=completed_appointments,
+        completed_count=completed_count,
+        latest_completed_appointment=latest_completed_appointment,
         doctors=doctors,
         search_query=search_query
     )

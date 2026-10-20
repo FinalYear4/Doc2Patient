@@ -102,89 +102,34 @@
     </div>
 </div>
 
-<!-- Bottom Section: Follow-ups from Completed Appointments -->
-<div class="mt-12">
-    <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
-        <h2 class="text-2xl font-bold text-gray-800">{{ _('Care Plans & Follow-Ups') }}</h2>
-        <a href="{{ url_for('consultation_history') }}" class="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700">{{ _('View Consultation History') }}</a>
-    </div>
-    {% if completed_appointments %}
-        {% for appt in completed_appointments %}
-            <div class="bg-white shadow-md rounded-lg p-6 mb-4">
-                <h3 class="text-lg font-semibold border-b pb-2 mb-4">{{ _('Follow-up from your appointment on') }} {{ appt.appointment_time.strftime('%b %d, %Y') }} {{ _('with') }} Dr. {{ appt.doctor.username }}</h3>
-                
-                <div class="space-y-6">
-                    <!-- Custom Notes Section -->
-                    {% if appt.clinical_findings or appt.custom_follow_up_notes %}
-                    <div>
-                        <h4 class="font-semibold text-gray-700">{{ _('Doctor\'s Findings:') }}</h4>
-                        <p class="mt-1 text-gray-600 whitespace-pre-wrap">{{ appt.clinical_findings or appt.custom_follow_up_notes }}</p>
-                    </div>
-                    {% endif %}
-
-                    {% if appt.care_plan %}
-                    <div>
-                        <h4 class="font-semibold text-gray-700">{{ _('Care Plan:') }}</h4>
-                        <p class="mt-1 text-gray-600 whitespace-pre-wrap">{{ appt.care_plan }}</p>
-                    </div>
-                    {% endif %}
-
-                    <!-- Recommended Articles Section -->
-                    {% if appt.recommended_articles.all() %}
-                    <div>
-                        <h4 class="font-semibold text-gray-700">{{ _('Recommended Reading:') }}</h4>
-                        <ul class="list-disc list-inside mt-1 space-y-1">
-                            {% for rec in appt.recommended_articles %}
-                                <li><a href="{{ url_for('view_article', article_id=rec.article.id) }}" class="text-blue-600 hover:underline">{{ rec.article.title }}</a></li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                    {% endif %}
-
-                    <!-- Document Download Section -->
-                    {% if appt.uploaded_document_filename %}
-                    <div>
-                        <h4 class="font-semibold text-gray-700">{{ _('Attached Document:') }}</h4>
-                        <a href="{{ url_for('download_document', appointment_id=appt.id) }}" class="mt-1 inline-block bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-3 rounded text-sm">
-                            ↓ Download {{ appt.uploaded_document_filename }}
-                        </a>
-                    </div>
-                    {% endif %}
-
-                    <!-- YouTube Video Section -->
-                    {% if appt.youtube_video_url %}
-                    <div>
-                        <h4 class="font-semibold text-gray-700">{{ _('Recommended Video:') }}</h4>
-                        <div class="aspect-video mt-2 overflow-hidden rounded-lg">
-                            <iframe src="https://www.youtube.com/embed/{{ appt.youtube_video_url | youtube_id }}" title="{{ _('Recommended video') }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="rounded-lg shadow-md w-full h-full"></iframe>
-                        </div>
-                    </div>
-                    {% endif %}
-
-                    <!-- No Follow-ups Message -->
-                    {% if not appt.clinical_findings and not appt.care_plan and not appt.custom_follow_up_notes and not appt.recommended_articles.all() and not appt.uploaded_document_filename and not appt.youtube_video_url %}
-                        <p class="text-gray-600">{{ _('No specific follow-up instructions were provided for this appointment.') }}</p>
-                    {% endif %}
-                </div>
-            </div>
-        	    <!-- NEW REVIEW BUTTON LOGIC -->
-        	    <div class="border-t pt-4 mt-4">
-            		{% if appt.review %}
-                	    <p class="text-sm text-green-600">✓ You have already reviewed this appointment.</p>
-            		{% else %}
-                	    <a href="{{ url_for('leave_review', appointment_id=appt.id) }}" class="inline-block bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded">
-                    		Leave a Review
-                	    </a>
-            		{% endif %}
-        	     </div>
-    		   </div>
-		</div>
-        {% endfor %}
-    {% else %}
-        <div class="bg-white shadow-md rounded-lg p-6">
-            <p>{{ _('You have no completed care plans yet.') }}</p>
+<!-- Consultation history summary -->
+<section class="mt-12">
+    <div class="flex flex-wrap items-end justify-between gap-3 mb-4">
+        <div>
+            <p class="text-sm font-semibold uppercase tracking-wide text-blue-600">{{ _('Patient records') }}</p>
+            <h2 class="text-2xl font-bold text-gray-800">{{ _('Consultation History') }}</h2>
         </div>
+        <a href="{{ url_for('consultation_history') }}" class="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700">{{ _('View All Records') }}</a>
+    </div>
+
+    {% if latest_completed_appointment %}
+    <div class="rounded-xl bg-white p-5 shadow-md ring-1 ring-gray-100 sm:p-6">
+        <div class="flex flex-wrap items-start justify-between gap-3">
+            <div>
+                <p class="text-sm text-gray-500">{{ completed_count }} {{ _('completed consultation(s)') }}</p>
+                <h3 class="mt-1 text-lg font-semibold text-gray-900">{{ _('Latest consultation with') }} Dr. {{ latest_completed_appointment.doctor.username }}</h3>
+                <p class="mt-1 text-sm text-gray-500">{{ (latest_completed_appointment.completed_at or latest_completed_appointment.appointment_time).strftime('%b %d, %Y at %H:%M') }}</p>
+            </div>
+            <span class="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-800">{{ _('Completed') }}</span>
+        </div>
+        <p class="mt-4 line-clamp-3 whitespace-pre-wrap text-sm text-gray-600">{{ latest_completed_appointment.clinical_findings or latest_completed_appointment.custom_follow_up_notes or _('No findings were recorded.') }}</p>
+        <a href="{{ url_for('consultation_history_detail', appointment_id=latest_completed_appointment.id) }}" class="mt-4 inline-flex rounded-md bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700 hover:bg-blue-100">{{ _('Open Latest Record') }}</a>
+    </div>
+    {% else %}
+    <div class="rounded-xl bg-white p-6 text-center shadow-md">
+        <p class="text-gray-600">{{ _('Completed doctor findings and care plans will appear here.') }}</p>
+    </div>
     {% endif %}
-</div>
+</section>
 
 {% endblock %}
